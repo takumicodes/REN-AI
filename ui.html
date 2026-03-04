@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>REN AI</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at center, #001f3f 0%, #000814 70%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* MAIN CORE */
+.core {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transform: scale(1.8);
+}
+
+/* CENTER CIRCLE */
+.center-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 3px solid #00e5ff;
+    box-shadow: 0 0 40px #04ab01d1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #00e5ff;
+    font-size: 32px;
+    letter-spacing: 6px;
+    font-family: Arial, sans-serif;
+    text-shadow: 0 0 20px #00e5ff;
+    z-index: 10;
+}
+
+/* OUTER RINGS */
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px dashed #06ec4b;
+    box-shadow: 0 0 20px #018613;
+}
+
+
+/* GLOW PULSE */
+.pulse {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,255,0.4) 0%, transparent 70%);
+    animation: pulseAnim 2s infinite;
+    z-index: 1;
+}
+
+/* ANIMATIONS */
+@keyframes rotateClockwise {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes rotateCounter {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+@keyframes pulseAnim {
+    0% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 0.2; }
+    100% { transform: scale(1); opacity: 0.6; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="core">
+    <div class="ring ring3"></div>
+    <div class="ring ring2"></div>
+    <div class="ring ring1"></div>
+    <div class="pulse"></div>
+    <div class="center-circle">REN AI</div>
+</div>
+
+</body>
+</html>

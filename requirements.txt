@@ -1,0 +1,36 @@
+"""Pinned requirements for the REN AI project.
+
+This file is intended to be consumed directly by ``pip``.  It lists the
+third‑party packages the application imports along with conservative
+version bounds so that a fresh checkout can be reproduced reliably.  To
+install everything create a virtual environment and run::
+
+	python -m venv .venv   # or your preferred venv tool
+	.venv\Scripts\activate   # Windows cmd/powershell example
+	pip install -r requirements.txt
+
+Only external packages are listed; modules from the standard library are
+omitted (e.g. ``subprocess`` or ``platform``).  If you add a new import
+from PyPI be sure to update this file accordingly.
+
+You may also ``pip install`` individual packages by name if you don't
+need the whole set at once.
+"""
+
+# core dependencies used by the Jarvis codebase
+numpy>=1.24.0              # numeric computations
+opencv-python>=4.8.1.78    # computer vision (imported as ``cv2``)
+pyttsx3>=2.90              # offline text‑to‑speech
+pyaudio>=0.2.13            # microphone/audio capture
+psutil>=5.9.5              # system monitoring utilities
+mediapipe>=1.1.10          # hand/face landmark detection
+pyautogui>=0.9.55          # GUI automation (mouse/keyboard control)
+vosk>=0.3.45               # speech recognition
+
+# optional (not referenced in current code but often useful)
+matplotlib>=3.8.0          # plotting/debugging
+
+
+
+
+
