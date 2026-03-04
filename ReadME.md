@@ -3,7 +3,7 @@
 Thank you for downloading **REN AI**.
 
 This repository contains the source code for the REN AI project.  
-Note that this distribution does **not** include any large language model; only the hard‑coded functions included by the author will operate. If you wish to extend the assistant with your own commands you must modify `back_end.py` (or the relevant function definitions).
+Note that this distribution does **not** include any large language model; only the hard‑coded functions included by me will operate. If you wish to extend the assistant with your own commands you must modify `back_end.py` (or the relevant function definitions).
 
 ---
 
