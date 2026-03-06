@@ -9,7 +9,7 @@ Note that this distribution does **not** include any large language model; only 
 
 ## Contributors
 
-- **Satoshi Codes** (Author)
+- **Cyan Code** (Author)
 - The YouTube community
 - The developers of Visual Studio Code
 
