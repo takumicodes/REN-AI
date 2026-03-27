@@ -1,0 +1,10 @@
+mediapipe==0.10.21
+numpy==2.4.3
+opencv_contrib_python==4.11.0.86
+opencv_python==4.13.0.92
+psutil==7.2.2
+PyAudio==0.2.14
+pyautogui==0.9.54
+pyttsx3==2.99
+pywebview==6.1
+vosk==0.3.45
