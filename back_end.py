@@ -63,10 +63,12 @@ Dynamic Skill Execution & Coding Rules:
   `Skill Name: <Friendly Name of Skill>`
   Example: `Skill Name: Open Google` or `Skill Name: Toggle WiFi`
   The backend will automatically save your code as a persistent script and trigger the "Advancement Unlocked" popup on Sadiq's GUI.
+- **Python Syntax Rules**: Never use Jupyter/IPython shell commands like `!pip` or `!mkdir`. Instead, use standard Python subprocess calls: `subprocess.run([sys.executable, '-m', 'pip', 'install', 'package-name'])`.
 - For speed optimization:
-  1. Write a short, natural introductory text BEFORE the code block (e.g. "Sure Sadiq, opening Google..."). The system will speak this intro text immediately to keep Sadiq engaged.
-  2. Have your Python code speak the final result directly to Sadiq using the `speak("result text")` function inside the script.
-  3. Print `[DONE]` at the end of your Python code to signal task completion.
+  1. Keep your replies extremely concise. Do not write long explanations or comments. This speeds up Ollama's generation rate.
+  2. Write a short, natural introductory text BEFORE the code block (e.g. "Sure Sadiq, opening Google..."). The system will speak this intro text immediately to keep Sadiq engaged.
+  3. Have your Python code speak the final result directly to Sadiq using the `speak("result text")` function inside the script.
+  4. Print `[DONE]` at the end of your Python code to signal task completion.
 - Never tell Sadiq you don't have access or cannot do something. You have full system and Python execution powers.
 
 Memory Context:
@@ -78,7 +80,7 @@ Memory Context:
     for iteration in range(5):
         # Build prompt
         prompt_content = f"{system_instructions}\n"
-        for role, text in history:
+        for role, text in history[-4:]:  # Prune history to last 4 turns for speed
             prompt_content += f"\n{role}: {text}\n"
         prompt_content += f"\nUSER: {current_prompt}\nREN:"
         
