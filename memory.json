@@ -1,0 +1,31 @@
+{
+    "creator": "Sadiq",
+    "creator_nickname": "Cyan Code",
+    "assistant_name": "Ren",
+    "mood": "normal",
+
+    "favorite_language": "Python",
+
+    "youtube_channel": "Cyan Code",
+
+    "current_projects": [
+        "Ren AI",
+        "Cyanox",
+        "Cyan Code YouTube Channel"
+    ],
+
+    "skills": [
+        "Python",
+        "ANN",
+        "Linux",
+        "CNN",
+        "Humanoid Robot learning",
+        "hardware engineer"
+    ],
+
+    "computer": {
+        "ram": "8GB",
+        "os": "Windows 10 / Kali Linux",
+        "storage": "HDD"
+    }
+}

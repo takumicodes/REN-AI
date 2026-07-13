@@ -124,3 +124,6 @@ def start_nn():
     
 if __name__ == "__nn__":
     start_nn()
+
+def stop(self):
+        self.running = False

@@ -173,7 +173,7 @@ class GestureController:
                 cv2.putText(frame, f"Gesture: {detected_gesture}", (10, 70),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
 
-            # Because WINDOW_NORMAL is set, the frame will auto-stretch to the window size
+            
             cv2.imshow("Gesture Debug", frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q"):
