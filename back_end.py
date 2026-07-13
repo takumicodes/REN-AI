@@ -63,7 +63,10 @@ Dynamic Skill Execution & Coding Rules:
   `Skill Name: <Friendly Name of Skill>`
   Example: `Skill Name: Open Google` or `Skill Name: Toggle WiFi`
   The backend will automatically save your code as a persistent script and trigger the "Advancement Unlocked" popup on Sadiq's GUI.
-- **Python Syntax Rules**: Never use Jupyter/IPython shell commands like `!pip` or `!mkdir`. Instead, use standard Python subprocess calls: `subprocess.run([sys.executable, '-m', 'pip', 'install', 'package-name'])`.
+- **Coding & Library Rules**: 
+  1. Do NOT import third-party libraries (e.g. pynotifier, cv2, speedtest) unless absolutely necessary. Always prefer built-in libraries (like ctypes, urllib, winreg, os, sys, subprocess, webbrowser). Never import unused modules.
+  2. If using the `requests` library, always include `verify=False` in `requests.get()` or `requests.post()` to bypass SSL/certificate validation checks and prevent local connection errors.
+  3. Never use Jupyter/IPython shell commands like `!pip` or `!mkdir`. Instead, use standard Python subprocess calls: `subprocess.run([sys.executable, '-m', 'pip', 'install', 'package-name'])`.
 - For speed optimization:
   1. Keep your replies extremely concise. Do not write long explanations or comments. This speeds up Ollama's generation rate.
   2. Write a short, natural introductory text BEFORE the code block (e.g. "Sure Sadiq, opening Google..."). The system will speak this intro text immediately to keep Sadiq engaged.
@@ -350,11 +353,7 @@ def start_assistant(ui_callback=None, stop_event=None):
                 is_processing = False
                 continue
 
-            if any(word in text for word in SLEEP_WAKE):
-                awake = True
-                speak("Hello Sir. I am awake now.")
-                is_processing = False
-                continue
+            
 
             if any(word in text for word in WAKE_WORD):
                 awake = True
