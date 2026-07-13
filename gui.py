@@ -59,6 +59,11 @@ class Api:
         submit_typed_prompt(prompt)
         return "Prompt received by REN-AI Core."
 
+    def refresh_skills(self):
+        from back_end import refresh_skills_ui
+        refresh_skills_ui()
+        return "Skills list refreshed."
+
 def main():
     api = Api()
     

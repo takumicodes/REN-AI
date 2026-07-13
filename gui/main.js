@@ -424,6 +424,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         // Start diagnostics updates
                         setInterval(updateDiagnostics, 2000);
                         updateDiagnostics();
+                        // Populate skills list on startup
+                        if (window.pywebview.api.refresh_skills) {
+                            window.pywebview.api.refresh_skills();
+                        }
                     })
                     .catch(err => {
                         logToHUD(`Cognitive thread crash error: ${err}`, "system");
