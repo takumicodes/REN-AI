@@ -18,6 +18,7 @@ import re
 import io
 import traceback
 import queue
+import threading
 from ren_llm import ask_ren, ask_ren_agent, build_memory_context
 from voice import speak
 
