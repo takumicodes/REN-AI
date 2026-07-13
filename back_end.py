@@ -59,12 +59,12 @@ Tone & Persona rules:
 
 Dynamic Skill Execution & Coding Rules:
 - If Sadiq asks you to run a task, open a website, check weather, view files, toggle settings, or perform any system operations, you MUST write a Python code block starting with ```python and ending with ```.
-- When creating a new capability/skill:
-  1. Check if `skills/skill_{name}.py` exists.
-  2. If not, write the script to `skills/skill_{name}.py` (e.g. skills/skill_toggle_wifi.py) and call `show_popup("Advancement Unlocked", friendly_name, popup_type="advancement")` (e.g. show_popup("Advancement Unlocked", "Toggle WiFi")).
-  3. Execute/run the script.
+- **IMPORTANT**: If the request is a new capability, skill, or automation task (e.g. WiFi, news, websites, files, apps, weather, etc.), you MUST start your response with a single line specifying the skill name:
+  `Skill Name: <Friendly Name of Skill>`
+  Example: `Skill Name: Open Google` or `Skill Name: Toggle WiFi`
+  The backend will automatically save your code as a persistent script and trigger the "Advancement Unlocked" popup on Sadiq's GUI.
 - For speed optimization:
-  1. Write a short, natural introductory text BEFORE the code block (e.g. "Sure Sadiq, opening Google..."). The system will speak this intro text immediately to keep the user engaged.
+  1. Write a short, natural introductory text BEFORE the code block (e.g. "Sure Sadiq, opening Google..."). The system will speak this intro text immediately to keep Sadiq engaged.
   2. Have your Python code speak the final result directly to Sadiq using the `speak("result text")` function inside the script.
   3. Print `[DONE]` at the end of your Python code to signal task completion.
 - Never tell Sadiq you don't have access or cannot do something. You have full system and Python execution powers.
@@ -101,16 +101,42 @@ Memory Context:
                 speak_fn(speak_text)
             return speak_text
         
-        # Speak the intro text before the code block immediately
+        # Speak the intro text before the code block immediately (excluding Skill Name text)
         intro_parts = response.split('```python')
         if intro_parts:
             intro_text = intro_parts[0].strip()
+            intro_text = re.sub(r'(?i)skill\s*name:\s*.*', '', intro_text).strip()
             if intro_text:
                 intro_clean = re.sub(r'[*#_`-]', '', intro_text).strip()
                 if intro_clean:
                     speak_fn(intro_clean)
         
         code_to_run = code_blocks[0]
+        
+        # Check if this response specifies a Skill Name
+        skill_match = re.search(r'Skill\s*Name:\s*(.*)', response, re.IGNORECASE)
+        if skill_match:
+            friendly_name = skill_match.group(1).strip()
+            friendly_name = re.sub(r'[*#_`-]', '', friendly_name).strip()
+            
+            # Generate snake_case filename
+            skill_filename = re.sub(r'[^a-z0-9_]', '_', friendly_name.lower().replace(' ', '_'))
+            skill_filename = re.sub(r'_+', '_', skill_filename).strip('_')
+            
+            skills_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "skills")
+            os.makedirs(skills_dir, exist_ok=True)
+            skill_filepath = os.path.join(skills_dir, f"skill_{skill_filename}.py")
+            
+            if not os.path.exists(skill_filepath):
+                with open(skill_filepath, "w", encoding="utf-8") as sf:
+                    sf.write(code_to_run)
+                print(f"Created new skill file: {skill_filepath}")
+                if ui_callback_fn:
+                    ui_callback_fn('show_popup', {'title': 'Advancement Unlocked', 'message': friendly_name, 'type': 'advancement'})
+            else:
+                with open(skill_filepath, "r", encoding="utf-8") as sf:
+                    code_to_run = sf.read()
+        
         print(f"--- Running Generated Code ---\n{code_to_run}\n------------------------------")
         
         # Redirect output
