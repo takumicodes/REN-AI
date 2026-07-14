@@ -19,6 +19,7 @@ import io
 import traceback
 import queue
 import threading
+import socket
 from ren_llm import ask_ren, ask_ren_agent, build_memory_context
 from voice import speak
 
@@ -33,10 +34,8 @@ FILE_EXPLORER = (
     "open explore",
     "open file explorer",
     "open file manager",
-    "open manager",
-    "file",
-    "manager",
-    "explorer",
+    "open manager"
+    
 )
 PRASIE_WORD = ("nice", "wow", "good", "good job", "nice work", "thank you")
 YOUTUBE = "https://www.youtube.com"
@@ -265,67 +264,88 @@ def start_assistant(ui_callback=None, stop_event=None):
     
     # Initialize lists and modules
     refresh_skills_ui()
+    # Check internet availability for Speech Recognition
+    from voice import is_internet_available
+    internet_active = is_internet_available()
+    
     status = system_status()
     gesture = GestureController()
-    recognizer = sr.Recognizer()
-    mic = sr.Microphone()
-
-    recognizer.dynamic_energy_threshold = True  
-    recognizer.energy_threshold = 180
-
-    with mic as source:
-        print("Adjusting for background noise... Please wait.")
-        recognizer.adjust_for_ambient_noise(source, duration=0.5)
     
-    print("Speech Recognition initialized.")
-    if ui_callback:
-        ui_callback('status', 'initialized')
+    if internet_active:
+        try:
+            recognizer = sr.Recognizer()
+            mic = sr.Microphone()
+
+            recognizer.dynamic_energy_threshold = True  
+            recognizer.energy_threshold = 180
+
+            with mic as source:
+                print("Adjusting for background noise... Please wait.")
+                recognizer.adjust_for_ambient_noise(source, duration=0.5)
+            
+            print("Speech Recognition initialized.")
+            if ui_callback:
+                ui_callback('status', 'initialized')
+        except Exception as e:
+            print(f"Microphone or Speech Recognition setup error: {e}")
+            internet_active = False
+            
+    if not internet_active:
+        print("No internet connection detected. Running in Offline Type Command Mode.")
+        if ui_callback:
+            ui_callback('status', 'offline')
+
     awake = True
 
     # Voice listener thread function
-    def mic_listener():
-        global is_processing
-        with mic as source:
-            while stop_event is None or not stop_event.is_set():
-                if is_processing:
-                    time.sleep(0.2)
-                    continue
-                
-                if ui_callback:
-                    ui_callback('status', 'listening' if awake else 'offline')
-                try:
-                    audio_data = recognizer.listen(source, timeout=1.0, phrase_time_limit=8)
+    if internet_active:
+        def mic_listener():
+            global is_processing
+            with mic as source:
+                while stop_event is None or not stop_event.is_set():
                     if is_processing:
+                        time.sleep(0.2)
                         continue
+                    
                     if ui_callback:
-                        ui_callback('status', 'thinking')
-                    raw_text = recognizer.recognize_google(audio_data)
-                    text = raw_text.lower().strip()
-                    if text:
-                        input_queue.put(('speech', raw_text))
-                except sr.WaitTimeoutError:
-                    continue
-                except sr.UnknownValueError:
-                    continue
-                except sr.RequestError:
-                    print("API Request connection error.")
-                    time.sleep(1.0)
-                    continue
-                except Exception as e:
-                    print(f"Mic listener error: {e}")
-                    time.sleep(0.5)
-                    continue
+                        ui_callback('status', 'listening' if awake else 'offline')
+                    try:
+                        audio_data = recognizer.listen(source, timeout=1.0, phrase_time_limit=8)
+                        if is_processing:
+                            continue
+                        if ui_callback:
+                            ui_callback('status', 'thinking')
+                        raw_text = recognizer.recognize_google(audio_data)
+                        text = raw_text.lower().strip()
+                        if text:
+                            input_queue.put(('speech', raw_text))
+                    except sr.WaitTimeoutError:
+                        continue
+                    except sr.UnknownValueError:
+                        continue
+                    except sr.RequestError:
+                        print("API Request connection error.")
+                        time.sleep(1.0)
+                        continue
+                    except Exception as e:
+                        print(f"Mic listener error: {e}")
+                        time.sleep(0.5)
+                        continue
 
-    # Start the mic listener thread
-    listener_thread = threading.Thread(target=mic_listener, daemon=True)
-    listener_thread.start()
+        # Start the mic listener thread
+        listener_thread = threading.Thread(target=mic_listener, daemon=True)
+        listener_thread.start()
 
-    speak("Hello Sadiq sir, glad to see you again.")
-    print("Listening... Speak or type now!")
+    if internet_active:
+        speak("Hello Sadiq sir, glad to see you again.")
+        print("Listening... Speak or type now!")
+    else:
+        speak("Hello Sadiq sir. Running in offline type mode. Voice recognition is disabled.")
+        print("Offline mode active. Type your commands in the text box!")
 
     while stop_event is None or not stop_event.is_set():
         if ui_callback:
-            ui_callback('status', 'listening' if awake else 'offline')
+            ui_callback('status', ('listening' if awake else 'offline') if internet_active else 'offline')
         
         try:
             # Wait for text/speech prompt from queue
