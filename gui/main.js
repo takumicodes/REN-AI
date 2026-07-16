@@ -460,8 +460,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 logs.forEach((logText, idx) => {
                     setTimeout(() => {
                         const line = document.createElement("div");
-                        line.className = "dream-line " + (logText.includes("RESOLVED") ? "learned" : (logText.includes("ANALYZING") ? "analyzing" : "resolving"));
-                        line.textContent = logText;
+                        let cleanText = logText;
+                        let className = "resolving";
+                        
+                        if (logText.startsWith("RESEARCHED:")) {
+                            className = "researched";
+                            cleanText = logText.replace("RESEARCHED:", "").trim();
+                        } else if (logText.startsWith("READING:")) {
+                            className = "reading";
+                            cleanText = logText.replace("READING:", "").trim();
+                        } else if (logText.startsWith("SYSTEM:")) {
+                            className = "system";
+                            cleanText = logText.replace("SYSTEM:", "").trim();
+                        } else if (logText.startsWith("LEARNED:")) {
+                            className = "learned";
+                            cleanText = logText.replace("LEARNED:", "").trim();
+                        } else if (logText.startsWith("RESOLVED:")) {
+                            className = "learned";
+                        } else if (logText.startsWith("ANALYZING:")) {
+                            className = "analyzing";
+                        }
+                        
+                        line.className = "dream-line " + className;
+                        line.textContent = cleanText;
                         dreamLogsContainer.appendChild(line);
                         dreamLogsContainer.scrollTop = dreamLogsContainer.scrollHeight;
                     }, idx * 800);

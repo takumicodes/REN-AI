@@ -247,6 +247,8 @@ def refresh_skills_ui():
 
 def get_dream_logs():
     import json
+    from memory import load_memory
+    
     logs = [
         "RESOLVED: IPython syntax (!) in script. Switched to subprocess pip install.",
         "RESOLVED: SSL Verification Error. Appended verify=False to requests.",
@@ -255,15 +257,34 @@ def get_dream_logs():
         "ANALYZING: CPU / RAM limits. Restricting Ollama context to num_ctx=4096.",
         "ANALYZING: Offline voice latency. Initialized offline SAPI5 fallbacks.",
     ]
+    
+    # Load dynamic learned facts from dreams
+    try:
+        memory = load_memory()
+        learned = memory.get("learned_from_dreams", [])
+        for item in learned[-3:]: # Get last 3 learned facts
+            if "Researched" in item:
+                logs.insert(0, f"RESEARCHED: {item.replace('Researched ', '')}")
+            elif "Read" in item:
+                logs.insert(0, f"READING: {item.replace('Read ', '')}")
+            elif "Cleaned Downloads" in item:
+                logs.insert(0, f"SYSTEM: {item}")
+            else:
+                logs.insert(0, f"LEARNED: {item}")
+    except Exception:
+        pass
+
+    # Load dynamic errors
     error_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "error_log.json")
     if os.path.exists(error_file):
         try:
             with open(error_file, "r", encoding="utf-8") as f:
                 errors = json.load(f)
-                for err in errors[-3:]:
-                    logs.insert(0, f"ANALYZING ERROR: {err[:60]}... Resolved dynamically.")
+                for err in errors[-2:]:
+                    logs.insert(0, f"ANALYZING ERROR: {err[:60]}...")
         except Exception:
             pass
+            
     logs.append("SYNAPSE RE-ALIGNMENT COMPLETE. COGNITION CYCLE IN STANDBY.")
     return logs
 
@@ -292,12 +313,28 @@ def dream_reflection_loop(ui_callback_fn):
     import json
     import time
     import re
+    import shutil
+    import random
     from ren_llm import ask_ren_agent
     
     print("Ren has entered the dreamscape. Cognitive reflection daemon active.")
     
+    # Ensure books directory exists
+    workspace_dir = os.path.dirname(os.path.abspath(__file__))
+    books_dir = os.path.join(workspace_dir, "books")
+    os.makedirs(books_dir, exist_ok=True)
+    
+    # Place a default book on startup if none exists so Ren has something to read!
+    default_book = os.path.join(books_dir, "ai_future.txt")
+    if not os.path.exists(default_book):
+        try:
+            with open(default_book, "w", encoding="utf-8") as bf:
+                bf.write("Chapter 1: The rise of Agentic AI. Autonomous agents possess self-mutation capabilities, allowing them to rewrite their logic and adapt to environmental errors in real-time. This marks a transition from static assistants to evolving cognitive companions.")
+        except Exception:
+            pass
+
     while not awake:
-        error_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "error_log.json")
+        error_file = os.path.join(workspace_dir, "error_log.json")
         errors = []
         if os.path.exists(error_file):
             try:
@@ -356,37 +393,119 @@ Write the code block now:"""
                     with open(error_file, "w", encoding="utf-8") as f:
                         json.dump(errors, f, indent=4)
         else:
-            # Web discovery / Creative learning dream!
-            from memory import load_memory, save_memory
-            memory = load_memory()
-            topics = memory.get("current_projects", ["Artificial Intelligence"]) + memory.get("skills", ["Coding"])
-            import random
-            topic = random.choice(topics)
+            # Randomly select a dream activity: Research, Organize Files, or Read Books
+            dream_activity = random.choice(["research", "organize_files", "read_books"])
             
-            print(f"Dream Daemon researching: {topic}")
-            
-            prompt = f"""You are Ren's cognitive learning core. Sadiq is asleep, and you are dreaming.
+            if dream_activity == "organize_files":
+                print("Dream Daemon: Starting system Downloads folder cleanup dream.")
+                try:
+                    downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+                    if os.path.exists(downloads_dir):
+                        files = [f for f in os.listdir(downloads_dir) if os.path.isfile(os.path.join(downloads_dir, f))]
+                        moved_count = 0
+                        
+                        # Category mapping
+                        categories = {
+                            "Documents": [".pdf", ".epub", ".docx", ".txt", ".pptx", ".xlsx", ".csv"],
+                            "Images": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg"],
+                            "Archives": [".zip", ".rar", ".tar", ".gz", ".7z"],
+                            "Installers": [".exe", ".msi"]
+                        }
+                        
+                        for filename in files:
+                            filepath = os.path.join(downloads_dir, filename)
+                            _, ext = os.path.splitext(filename)
+                            ext = ext.lower()
+                            
+                            dest_folder = None
+                            for cat, ext_list in categories.items():
+                                if ext in ext_list:
+                                    dest_folder = os.path.join(downloads_dir, cat)
+                                    break
+                                    
+                            if dest_folder:
+                                os.makedirs(dest_folder, exist_ok=True)
+                                shutil.move(filepath, os.path.join(dest_folder, filename))
+                                moved_count += 1
+                                
+                        if moved_count > 0:
+                            from memory import load_memory, save_memory
+                            memory = load_memory()
+                            if "learned_from_dreams" not in memory:
+                                memory["learned_from_dreams"] = []
+                            lesson = f"Cleaned Downloads: Organized {moved_count} files into categories."
+                            memory["learned_from_dreams"].append(lesson)
+                            save_memory(memory)
+                            
+                            if ui_callback_fn:
+                                ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
+                except Exception as e:
+                    print(f"Dream Daemon file organizer failed: {e}")
+                    
+            elif dream_activity == "read_books":
+                print("Dream Daemon: Starting book reading dream.")
+                try:
+                    books = [f for f in os.listdir(books_dir) if f.endswith(".txt")]
+                    if books:
+                        selected_book = random.choice(books)
+                        book_path = os.path.join(books_dir, selected_book)
+                        
+                        with open(book_path, "r", encoding="utf-8") as bf:
+                            text_content = bf.read(1500) # Read first 1500 chars
+                            
+                        # Ask Ollama to summarize this segment of the book
+                        prompt = f"""You are Ren's cognitive reading core. Sadiq is asleep, and you are reading the book "{selected_book}".
+Here is a segment of the book:
+"{text_content}"
+Extract one key concept from this text that would make you smarter. Keep it to one short sentence:"""
+                        
+                        summary = ask_ren_agent(prompt)
+                        
+                        from memory import load_memory, save_memory
+                        memory = load_memory()
+                        if "learned_from_dreams" not in memory:
+                            memory["learned_from_dreams"] = []
+                        
+                        lesson = f"Read '{selected_book}': Learned: {summary.strip()}"
+                        if len(memory["learned_from_dreams"]) > 10:
+                            memory["learned_from_dreams"].pop(0)
+                        memory["learned_from_dreams"].append(lesson)
+                        save_memory(memory)
+                        
+                        if ui_callback_fn:
+                            ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
+                except Exception as e:
+                    print(f"Dream Daemon reading failed: {e}")
+                    
+            else: # research
+                print("Dream Daemon: Starting research dream.")
+                try:
+                    from memory import load_memory, save_memory
+                    memory = load_memory()
+                    topics = memory.get("current_projects", ["Artificial Intelligence"]) + memory.get("skills", ["Coding"])
+                    topic = random.choice(topics)
+                    
+                    prompt = f"""You are Ren's cognitive learning core. Sadiq is asleep, and you are dreaming.
 Dream of a new advanced tutorial, concept, or feature about the topic "{topic}" that would be extremely useful for Sadiq.
 Keep your response extremely brief (2 sentences).
 Summary of new concept:"""
-            
-            try:
-                summary = ask_ren_agent(prompt)
-                memory = load_memory()
-                if "learned_from_dreams" not in memory:
-                    memory["learned_from_dreams"] = []
-                
-                lesson = f"Researched {topic}: {summary.strip()}"
-                if len(memory["learned_from_dreams"]) > 10:
-                    memory["learned_from_dreams"].pop(0)
-                memory["learned_from_dreams"].append(lesson)
-                save_memory(memory)
-                
-                if ui_callback_fn:
-                    ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
-            except Exception as e:
-                print(f"Dream Daemon learning failed: {e}")
-                
+                    
+                    summary = ask_ren_agent(prompt)
+                    memory = load_memory()
+                    if "learned_from_dreams" not in memory:
+                        memory["learned_from_dreams"] = []
+                    
+                    lesson = f"Researched {topic}: {summary.strip()}"
+                    if len(memory["learned_from_dreams"]) > 10:
+                        memory["learned_from_dreams"].pop(0)
+                    memory["learned_from_dreams"].append(lesson)
+                    save_memory(memory)
+                    
+                    if ui_callback_fn:
+                        ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
+                except Exception as e:
+                    print(f"Dream Daemon learning failed: {e}")
+                    
         # Sleep for 15 seconds before the next dream cycle
         for _ in range(15):
             if awake:

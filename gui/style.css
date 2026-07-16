@@ -812,6 +812,33 @@ body {
     color: var(--neon-blue);
 }
 
+.dream-line.researched {
+    color: #38bdf8;
+    text-shadow: 0 0 5px rgba(56, 189, 248, 0.3);
+}
+.dream-line.researched::before {
+    content: '[🔬 RESEARCH] ';
+    color: #38bdf8;
+}
+
+.dream-line.reading {
+    color: #c084fc;
+    text-shadow: 0 0 5px rgba(192, 132, 252, 0.3);
+}
+.dream-line.reading::before {
+    content: '[📖 READING] ';
+    color: #c084fc;
+}
+
+.dream-line.system {
+    color: #34d399;
+    text-shadow: 0 0 5px rgba(52, 211, 153, 0.3);
+}
+.dream-line.system::before {
+    content: '[🖥️ SYSTEM] ';
+    color: #34d399;
+}
+
 .dream-metrics {
     display: flex;
     justify-content: space-between;
