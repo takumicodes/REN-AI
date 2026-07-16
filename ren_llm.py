@@ -77,9 +77,14 @@ REN:
             json={
                 "model": MODEL_NAME,
                 "prompt": full_prompt,
-                "stream": False
+                "stream": False,
+                "options": {
+                    "num_predict": 256,
+                    "num_ctx": 4096,
+                    "temperature": 0.5
+                }
             },
-            timeout=180
+            timeout=300
         )
 
         response.raise_for_status()
@@ -107,9 +112,14 @@ def ask_ren_agent(full_prompt):
             json={
                 "model": MODEL_NAME,
                 "prompt": full_prompt,
-                "stream": False
+                "stream": False,
+                "options": {
+                    "num_predict": 384,
+                    "num_ctx": 4096,
+                    "temperature": 0.5
+                }
             },
-            timeout=180
+            timeout=300
         )
         response.raise_for_status()
         data = response.json()
