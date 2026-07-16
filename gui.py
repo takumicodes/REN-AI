@@ -11,6 +11,7 @@ class Api:
         self.stop_event = threading.Event()
         self.assistant_thread = None
         self._window = None
+        self._ui_callback = None
 
     def start_assistant(self):
         if self.assistant_thread and self.assistant_thread.is_alive():
@@ -41,6 +42,7 @@ class Api:
             except Exception as e:
                 print(f"Error in UI callback: {e}", file=sys.stderr)
 
+        self._ui_callback = ui_callback
         self.assistant_thread = threading.Thread(
             target=start_assistant, 
             args=(ui_callback, self.stop_event),
@@ -71,8 +73,10 @@ class Api:
         if back_end.is_processing:
             return "Cognitive focus active. Postponing reflection sequence."
         
+        back_end.awake = False
         logs = back_end.get_dream_logs()
         self._window.evaluate_js(f"window.setReflectMode(true, {json.dumps(logs)})")
+        back_end.start_dream_daemon(self._ui_callback)
         return "Cognitive reflection cycle initialized."
 
     def exit_reflect_mode(self):

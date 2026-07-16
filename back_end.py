@@ -285,6 +285,127 @@ def log_runtime_error(err_str):
     except Exception:
         pass
 
+dream_daemon_thread = None
+
+def dream_reflection_loop(ui_callback_fn):
+    global awake
+    import json
+    import time
+    import re
+    from ren_llm import ask_ren_agent
+    
+    print("Ren has entered the dreamscape. Cognitive reflection daemon active.")
+    
+    while not awake:
+        error_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "error_log.json")
+        errors = []
+        if os.path.exists(error_file):
+            try:
+                with open(error_file, "r", encoding="utf-8") as f:
+                    errors = json.load(f)
+            except Exception:
+                pass
+                
+        if errors:
+            current_err = errors[0]
+            print(f"Dream Daemon resolving exception: {current_err}")
+            
+            prompt = f"""You are Ren's self-reflection core.
+A Python execution exception occurred: "{current_err}"
+Please write a short, robust Python script starting with ```python and ending with ``` to patch this error or install the missing module, or resolve the limitation.
+Always print "[MUTATION_COMPLETE]" at the end of the script.
+Write the code block now:"""
+            
+            try:
+                response = ask_ren_agent(prompt)
+                code_blocks = re.findall(r'```python\s*(.*?)\s*```', response, re.DOTALL)
+                if code_blocks:
+                    code_to_run = code_blocks[0]
+                    exec_globals = globals().copy()
+                    from memory import load_memory, save_memory
+                    exec_globals.update({
+                        'load_memory': load_memory,
+                        'save_memory': save_memory,
+                        'speak': lambda t: print(f"Dream Voice: {t}"),
+                        'os': __import__('os'),
+                        'sys': __import__('sys'),
+                        'subprocess': __import__('subprocess'),
+                        'requests': __import__('requests'),
+                    })
+                    
+                    exec(code_to_run, exec_globals)
+                    
+                    memory = load_memory()
+                    if "learned_from_dreams" not in memory:
+                        memory["learned_from_dreams"] = []
+                    lesson = f"Resolved exception '{current_err[:40]}...' by executing automatic mutation patch."
+                    if lesson not in memory["learned_from_dreams"]:
+                        memory["learned_from_dreams"].append(lesson)
+                    save_memory(memory)
+                    
+                    errors.pop(0)
+                    with open(error_file, "w", encoding="utf-8") as f:
+                        json.dump(errors, f, indent=4)
+                        
+                    if ui_callback_fn:
+                        ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
+            except Exception as e:
+                print(f"Dream Daemon exception resolver failed: {e}")
+                if errors:
+                    errors.pop(0)
+                    with open(error_file, "w", encoding="utf-8") as f:
+                        json.dump(errors, f, indent=4)
+        else:
+            # Web discovery / Creative learning dream!
+            from memory import load_memory, save_memory
+            memory = load_memory()
+            topics = memory.get("current_projects", ["Artificial Intelligence"]) + memory.get("skills", ["Coding"])
+            import random
+            topic = random.choice(topics)
+            
+            print(f"Dream Daemon researching: {topic}")
+            
+            prompt = f"""You are Ren's cognitive learning core. Sadiq is asleep, and you are dreaming.
+Dream of a new advanced tutorial, concept, or feature about the topic "{topic}" that would be extremely useful for Sadiq.
+Keep your response extremely brief (2 sentences).
+Summary of new concept:"""
+            
+            try:
+                summary = ask_ren_agent(prompt)
+                memory = load_memory()
+                if "learned_from_dreams" not in memory:
+                    memory["learned_from_dreams"] = []
+                
+                lesson = f"Researched {topic}: {summary.strip()}"
+                if len(memory["learned_from_dreams"]) > 10:
+                    memory["learned_from_dreams"].pop(0)
+                memory["learned_from_dreams"].append(lesson)
+                save_memory(memory)
+                
+                if ui_callback_fn:
+                    ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
+            except Exception as e:
+                print(f"Dream Daemon learning failed: {e}")
+                
+        # Sleep for 15 seconds before the next dream cycle
+        for _ in range(15):
+            if awake:
+                break
+            time.sleep(1.0)
+            
+    print("Ren has woken up. Dreamscape reflection daemon stopped.")
+
+def start_dream_daemon(ui_callback_fn):
+    global dream_daemon_thread
+    if dream_daemon_thread and dream_daemon_thread.is_alive():
+        return
+    dream_daemon_thread = threading.Thread(
+        target=dream_reflection_loop,
+        args=(ui_callback_fn,),
+        daemon=True
+    )
+    dream_daemon_thread.start()
+
 def start_assistant(ui_callback=None, stop_event=None):
     global gs_running
     global global_ui_callback
