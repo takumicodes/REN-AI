@@ -621,6 +621,10 @@ body {
     display: none;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .advancement-icon {
     font-size: 2.2rem;
     animation: bounce 1s infinite alternate;

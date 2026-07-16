@@ -428,6 +428,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (window.pywebview.api.refresh_skills) {
                             window.pywebview.api.refresh_skills();
                         }
+                        isBooted = true;
+                        resetIdleTimer();
                     })
                     .catch(err => {
                         logToHUD(`Cognitive thread crash error: ${err}`, "system");
@@ -489,8 +491,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Idle Timer for Dream Mode
     let idleTimeout = null;
     let isReflecting = false;
+    let isBooted = false;
 
     function resetIdleTimer() {
+        if (!isBooted) return;
         clearTimeout(idleTimeout);
         
         // If we are currently in dream mode, any key/mouse activity wakes us up!
@@ -522,7 +526,4 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("mousemove", resetIdleTimer);
     window.addEventListener("keydown", resetIdleTimer);
     window.addEventListener("click", resetIdleTimer);
-
-    // Initial start of idle timer
-    resetIdleTimer();
 });
