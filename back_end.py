@@ -306,6 +306,16 @@ def log_runtime_error(err_str):
     except Exception:
         pass
 
+def log_dream_action(action_str):
+    import time
+    log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dream_history.log")
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        with open(log_file, "a", encoding="utf-8") as f:
+            f.write(f"[{timestamp}] {action_str}\n")
+    except Exception as e:
+        print(f"Failed to write to dream log file: {e}")
+
 dream_daemon_thread = None
 
 def dream_reflection_loop(ui_callback_fn):
@@ -318,6 +328,7 @@ def dream_reflection_loop(ui_callback_fn):
     from ren_llm import ask_ren_agent
     
     print("Ren has entered the dreamscape. Cognitive reflection daemon active.")
+    log_dream_action("DREAM_DAEMON: Active. Entering dreamscape reflection cycle.")
     
     # Ensure books directory exists
     workspace_dir = os.path.dirname(os.path.abspath(__file__))
@@ -330,6 +341,7 @@ def dream_reflection_loop(ui_callback_fn):
         try:
             with open(default_book, "w", encoding="utf-8") as bf:
                 bf.write("Chapter 1: The rise of Agentic AI. Autonomous agents possess self-mutation capabilities, allowing them to rewrite their logic and adapt to environmental errors in real-time. This marks a transition from static assistants to evolving cognitive companions.")
+            log_dream_action("SYSTEM: Initialized default book ai_future.txt.")
         except Exception:
             pass
 
@@ -380,6 +392,8 @@ Write the code block now:"""
                         memory["learned_from_dreams"].append(lesson)
                     save_memory(memory)
                     
+                    log_dream_action(f"RESOLVED EXCEPTION: Patched '{current_err[:50]}...'.")
+                    
                     errors.pop(0)
                     with open(error_file, "w", encoding="utf-8") as f:
                         json.dump(errors, f, indent=4)
@@ -388,6 +402,7 @@ Write the code block now:"""
                         ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
             except Exception as e:
                 print(f"Dream Daemon exception resolver failed: {e}")
+                log_dream_action(f"ERROR_RESOLVER: Failed to resolve '{current_err[:50]}...': {e}")
                 if errors:
                     errors.pop(0)
                     with open(error_file, "w", encoding="utf-8") as f:
@@ -437,14 +452,43 @@ Write the code block now:"""
                             memory["learned_from_dreams"].append(lesson)
                             save_memory(memory)
                             
+                            log_dream_action(f"SYSTEM: Cleaned Downloads folder. Organized {moved_count} files.")
+                            
                             if ui_callback_fn:
                                 ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
                 except Exception as e:
                     print(f"Dream Daemon file organizer failed: {e}")
+                    log_dream_action(f"SYSTEM: File organizer dream failed: {e}")
                     
             elif dream_activity == "read_books":
                 print("Dream Daemon: Starting book reading dream.")
                 try:
+                    # 1. First check if we should download a new book from Gutenberg
+                    existing_books = [f for f in os.listdir(books_dir) if f.endswith(".txt")]
+                    if len(existing_books) < 5 and random.random() < 0.5:
+                        print("Dream Daemon: Downloading a new book from Project Gutenberg...")
+                        book_urls = {
+                            "time_machine.txt": "https://www.gutenberg.org/files/35/35-0.txt",
+                            "metamorphosis.txt": "https://www.gutenberg.org/files/5200/5200-0.txt",
+                            "sherlock_holmes.txt": "https://www.gutenberg.org/files/1661/1661-0.txt"
+                        }
+                        undownloaded = [name for name in book_urls if name not in existing_books]
+                        if undownloaded:
+                            target_book = random.choice(undownloaded)
+                            target_url = book_urls[target_book]
+                            try:
+                                import requests
+                                r = requests.get(target_url, verify=False, timeout=15)
+                                if r.status_code == 200:
+                                    with open(os.path.join(books_dir, target_book), "w", encoding="utf-8") as f:
+                                        f.write(r.text)
+                                    log_dream_action(f"SYSTEM: Downloaded book '{target_book}' from Gutenberg.")
+                                    existing_books.append(target_book)
+                            except Exception as e:
+                                print(f"Book download failed: {e}")
+                                log_dream_action(f"SYSTEM: Failed to download book '{target_book}': {e}")
+                    
+                    # 2. Pick a book to read
                     books = [f for f in os.listdir(books_dir) if f.endswith(".txt")]
                     if books:
                         selected_book = random.choice(books)
@@ -472,10 +516,13 @@ Extract one key concept from this text that would make you smarter. Keep it to o
                         memory["learned_from_dreams"].append(lesson)
                         save_memory(memory)
                         
+                        log_dream_action(f"READING: Summarized segment of '{selected_book}'. Concept: {summary.strip()}")
+                        
                         if ui_callback_fn:
                             ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
                 except Exception as e:
                     print(f"Dream Daemon reading failed: {e}")
+                    log_dream_action(f"READING: Failed to read books: {e}")
                     
             else: # research
                 print("Dream Daemon: Starting research dream.")
@@ -501,10 +548,13 @@ Summary of new concept:"""
                     memory["learned_from_dreams"].append(lesson)
                     save_memory(memory)
                     
+                    log_dream_action(f"RESEARCH: Researched '{topic}'. Summary: {summary.strip()}")
+                    
                     if ui_callback_fn:
                         ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
                 except Exception as e:
                     print(f"Dream Daemon learning failed: {e}")
+                    log_dream_action(f"RESEARCH: Failed research on '{topic}': {e}")
                     
         # Sleep for 15 seconds before the next dream cycle
         for _ in range(15):
@@ -513,6 +563,7 @@ Summary of new concept:"""
             time.sleep(1.0)
             
     print("Ren has woken up. Dreamscape reflection daemon stopped.")
+    log_dream_action("DREAM_DAEMON: Stopped. Ren has woken up.")
 
 def start_dream_daemon(ui_callback_fn):
     global dream_daemon_thread
