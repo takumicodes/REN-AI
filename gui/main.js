@@ -479,6 +479,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             className = "learned";
                         } else if (logText.startsWith("ANALYZING:")) {
                             className = "analyzing";
+                        } else if (logText.includes("SYNAPSE RE-ALIGNMENT") || logText.includes("STANDBY")) {
+                            className = "standby";
                         }
                         
                         line.className = "dream-line " + className;

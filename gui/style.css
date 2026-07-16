@@ -839,6 +839,19 @@ body {
     color: #34d399;
 }
 
+.dream-line.standby {
+    color: var(--neon-blue);
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+    border-top: 1px dashed rgba(0, 240, 255, 0.15);
+    padding-top: 8px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+.dream-line.standby::before {
+    content: '✓ ';
+    color: var(--neon-blue);
+}
+
 .dream-metrics {
     display: flex;
     justify-content: space-between;
