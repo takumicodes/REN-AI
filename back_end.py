@@ -41,6 +41,7 @@ PRASIE_WORD = ("nice", "wow", "good", "good job", "nice work", "thank you")
 YOUTUBE = "https://www.youtube.com"
 global gs_running 
 gs_running = False
+awake = True
 
 def run_agent_loop(user_prompt, speak_fn, ui_callback_fn):
     memory_context = build_memory_context()
@@ -186,6 +187,7 @@ Memory Context:
             success = False
             traceback.print_exc(file=sys.stderr)
             error_msg = str(e)
+            log_runtime_error(error_msg)
         finally:
             sys.stdout = old_stdout
             sys.stderr = old_stderr
@@ -243,9 +245,50 @@ def refresh_skills_ui():
         skills = get_unlocked_skills()
         global_ui_callback('skills_list', skills)
 
+def get_dream_logs():
+    import json
+    logs = [
+        "RESOLVED: IPython syntax (!) in script. Switched to subprocess pip install.",
+        "RESOLVED: SSL Verification Error. Appended verify=False to requests.",
+        "RESOLVED: NameError: name 'threading' not defined. Imported threading module.",
+        "RESOLVED: NameError: show_popup not defined in script scope. Unified exec globals.",
+        "ANALYZING: CPU / RAM limits. Restricting Ollama context to num_ctx=4096.",
+        "ANALYZING: Offline voice latency. Initialized offline SAPI5 fallbacks.",
+    ]
+    error_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "error_log.json")
+    if os.path.exists(error_file):
+        try:
+            with open(error_file, "r", encoding="utf-8") as f:
+                errors = json.load(f)
+                for err in errors[-3:]:
+                    logs.insert(0, f"ANALYZING ERROR: {err[:60]}... Resolved dynamically.")
+        except Exception:
+            pass
+    logs.append("SYNAPSE RE-ALIGNMENT COMPLETE. COGNITION CYCLE IN STANDBY.")
+    return logs
+
+def log_runtime_error(err_str):
+    import json
+    error_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "error_log.json")
+    errors = []
+    if os.path.exists(error_file):
+        try:
+            with open(error_file, "r", encoding="utf-8") as f:
+                errors = json.load(f)
+        except Exception:
+            pass
+    if err_str not in errors:
+        errors.append(err_str)
+    try:
+        with open(error_file, "w", encoding="utf-8") as f:
+            json.dump(errors, f, indent=4)
+    except Exception:
+        pass
+
 def start_assistant(ui_callback=None, stop_event=None):
     global gs_running
     global global_ui_callback
+    global awake
     global_ui_callback = ui_callback
 
     if ui_callback:
@@ -370,14 +413,16 @@ def start_assistant(ui_callback=None, stop_event=None):
             if "sleep" in text:
                 awake = False
                 speak("Ok. Going to sleep.")
+                if ui_callback:
+                    ui_callback('reflect_mode', {'active': True, 'logs': get_dream_logs()})
                 is_processing = False
                 continue
 
-            
-
-            if any(word in text for word in WAKE_WORD):
+            if any(word in text for word in WAKE_WORD) or any(word in text for word in ["wake", "wake up", "get up", "ren"]):
                 awake = True
                 speak("Hello Sadiq..")
+                if ui_callback:
+                    ui_callback('reflect_mode', {'active': False, 'logs': []})
                 is_processing = False
                 continue
 

@@ -36,6 +36,8 @@ class Api:
                     self._window.evaluate_js(f"window.showPopup({json.dumps(data)});")
                 elif event_type == 'skills_list':
                     self._window.evaluate_js(f"window.updateSkillsList({json.dumps(data)});")
+                elif event_type == 'reflect_mode':
+                    self._window.evaluate_js(f"window.setReflectMode({json.dumps(data['active'])}, {json.dumps(data['logs'])});")
             except Exception as e:
                 print(f"Error in UI callback: {e}", file=sys.stderr)
 
@@ -63,6 +65,19 @@ class Api:
         from back_end import refresh_skills_ui
         refresh_skills_ui()
         return "Skills list refreshed."
+
+    def enter_reflect_mode(self):
+        import back_end
+        if back_end.is_processing:
+            return "Cognitive focus active. Postponing reflection sequence."
+        
+        logs = back_end.get_dream_logs()
+        self._window.evaluate_js(f"window.setReflectMode(true, {json.dumps(logs)})")
+        return "Cognitive reflection cycle initialized."
+
+    def exit_reflect_mode(self):
+        self._window.evaluate_js("window.setReflectMode(false)")
+        return "Cognitive core waking up."
 
 def main():
     api = Api()

@@ -438,4 +438,91 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }, 1500);
     });
+
+    // Reflect/Dream Mode handlers
+    const reflectPanel = document.getElementById("reflect-panel");
+    const dreamLogsContainer = document.getElementById("dream-logs");
+    const dreamEntropyVal = document.getElementById("dream-entropy");
+    const container = document.querySelector(".container");
+
+    let entropyInterval = null;
+
+    window.setReflectMode = function(active, logs) {
+        if (active) {
+            container.classList.add("reflect-active");
+            reflectPanel.classList.remove("hidden");
+            
+            // Populate dream logs
+            dreamLogsContainer.innerHTML = "";
+            if (logs && logs.length > 0) {
+                logs.forEach((logText, idx) => {
+                    setTimeout(() => {
+                        const line = document.createElement("div");
+                        line.className = "dream-line " + (logText.includes("RESOLVED") ? "learned" : (logText.includes("ANALYZING") ? "analyzing" : "resolving"));
+                        line.textContent = logText;
+                        dreamLogsContainer.appendChild(line);
+                        dreamLogsContainer.scrollTop = dreamLogsContainer.scrollHeight;
+                    }, idx * 800);
+                });
+            } else {
+                dreamLogsContainer.innerHTML = "<div class='dream-line analyzing'>Reflecting on baseline cognition weights...</div>";
+            }
+
+            // Simulate entropy fluctuations
+            let entropy = 0.00;
+            clearInterval(entropyInterval);
+            entropyInterval = setInterval(() => {
+                entropy = (Math.random() * 5).toFixed(2);
+                dreamEntropyVal.textContent = entropy + "%";
+            }, 1500);
+
+            logToHUD("Cognitive reflection cycle authorized. Dreams initialized.", "system");
+        } else {
+            container.classList.remove("reflect-active");
+            reflectPanel.classList.add("hidden");
+            clearInterval(entropyInterval);
+            dreamEntropyVal.textContent = "0.00%";
+            logToHUD("Cognitive state restored to awake.", "system");
+        }
+    };
+
+    // Idle Timer for Dream Mode
+    let idleTimeout = null;
+    let isReflecting = false;
+
+    function resetIdleTimer() {
+        clearTimeout(idleTimeout);
+        
+        // If we are currently in dream mode, any key/mouse activity wakes us up!
+        if (isReflecting) {
+            isReflecting = false;
+            if (window.pywebview && window.pywebview.api) {
+                window.pywebview.api.exit_reflect_mode()
+                    .then(msg => {
+                        logToHUD(msg, "system");
+                    });
+            }
+        }
+        
+        // Set idle timeout of 1 minute (60,000ms)
+        idleTimeout = setTimeout(() => {
+            if (!isReflecting) {
+                isReflecting = true;
+                if (window.pywebview && window.pywebview.api) {
+                    window.pywebview.api.enter_reflect_mode()
+                        .then(msg => {
+                            logToHUD(msg, "system");
+                        });
+                }
+            }
+        }, 60000);
+    }
+
+    // Attach user activity listeners
+    window.addEventListener("mousemove", resetIdleTimer);
+    window.addEventListener("keydown", resetIdleTimer);
+    window.addEventListener("click", resetIdleTimer);
+
+    // Initial start of idle timer
+    resetIdleTimer();
 });
