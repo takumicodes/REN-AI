@@ -43,8 +43,115 @@ global gs_running
 gs_running = False
 awake = True
 
+def get_ambient_system_context():
+    import ctypes
+    import psutil
+    import os
+    
+    # 1. Active Window Title
+    active_window = "Unknown Window"
+    try:
+        hwnd = ctypes.windll.user32.GetForegroundWindow()
+        length = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
+        if length > 0:
+            buff = ctypes.create_unicode_buffer(length + 1)
+            ctypes.windll.user32.GetWindowTextW(hwnd, buff, length + 1)
+            active_window = buff.value
+    except Exception:
+        pass
+        
+    # 2. Open Project & File (Parsed from VS Code / Notepad)
+    project = "None"
+    opened_file = "None"
+    if "Visual Studio Code" in active_window:
+        parts = active_window.split(" - ")
+        if len(parts) >= 3:
+            opened_file = parts[0]
+            project = parts[1]
+        elif len(parts) == 2:
+            project = parts[0]
+    elif "Notepad" in active_window:
+        parts = active_window.split(" - ")
+        opened_file = parts[0]
+        
+    # 3. Clipboard Content
+    clipboard_text = ""
+    try:
+        import tkinter as tk
+        root = tk.Tk()
+        root.withdraw()
+        clipboard_text = root.clipboard_get()
+        root.destroy()
+    except Exception:
+        pass
+        
+    # 4. CPU & RAM & Battery
+    cpu = 0.0
+    ram = 0.0
+    battery = "Unknown"
+    try:
+        cpu = psutil.cpu_percent()
+        ram = psutil.virtual_memory().percent
+        bat_status = psutil.sensors_battery()
+        if bat_status:
+            battery = f"{bat_status.percent}% ({'Charging' if bat_status.power_plugged else 'Discharging'})"
+    except Exception:
+        pass
+        
+    # 5. Latest Download
+    latest_download = "None"
+    try:
+        downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+        if os.path.exists(downloads_dir):
+            files = [os.path.join(downloads_dir, f) for f in os.listdir(downloads_dir) if os.path.isfile(os.path.join(downloads_dir, f))]
+            if files:
+                latest_file = max(files, key=os.path.getmtime)
+                latest_download = os.path.basename(latest_file)
+    except Exception:
+        pass
+        
+    # 6. Current Song / Media
+    song = "None"
+    titles = []
+    def win_enum_handler(hwnd, ctx):
+        if ctypes.windll.user32.IsWindowVisible(hwnd):
+            l = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
+            if l > 0:
+                b = ctypes.create_unicode_buffer(l + 1)
+                ctypes.windll.user32.GetWindowTextW(hwnd, b, l + 1)
+                titles.append(b.value)
+    try:
+        EnumWindowsProc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_int, ctypes.c_int)
+        ctypes.windll.user32.EnumWindows(EnumWindowsProc(win_enum_handler), 0)
+        for t in titles:
+            if "Spotify" in t and t not in ["Spotify Free", "Spotify Premium", "Spotify"]:
+                song = t.replace(" - Spotify", "")
+                break
+            if "YouTube" in t and t != "YouTube":
+                song = t.replace(" - YouTube", "")
+                break
+            if "VLC media player" in t:
+                song = t.replace(" - VLC media player", "")
+                break
+    except Exception:
+        pass
+
+    context_str = f"""[System Ambient Context]
+Active Window: {active_window}
+Active Project: {project}
+Opened File: {opened_file}
+Current Song/Media: {song}
+Battery Status: {battery}
+CPU Usage: {cpu}%
+RAM Consumption: {ram}%
+Clipboard Content: {clipboard_text[:500]}
+Latest Downloaded File: {latest_download}
+"""
+    return context_str
+
 def run_agent_loop(user_prompt, speak_fn, ui_callback_fn):
     memory_context = build_memory_context()
+    ambient_context = get_ambient_system_context()
     
     # Custom system prompt for the agent
     system_instructions = """You are Ren, Sadiq's personal AI assistant. You are Ren itself.
@@ -55,6 +162,7 @@ Tone & Persona rules:
   * excited: enthusiastic, energetic, use exclamation marks!
   * normal: professional, concise, helpful.
 - Sadiq's facts and preferences are loaded in the "Memory Context" below.
+- Sadiq may say "fix this" or ask questions based on his active screen/clipboard. Use the [System Ambient Context] section at the bottom of the prompt to understand the open file, active window, active project, and latest clipboard content.
 - To remember new details, write a Python block using `load_memory()` and `save_memory(dict)`.
 - If Sadiq praises you (e.g. "nice work", "thank you", "good job"), write a Python block to update your mood to 'excited' or 'happy' in memory.
 
@@ -76,7 +184,7 @@ Dynamic Skill Execution & Coding Rules:
 - Never tell Sadiq you don't have access or cannot do something. You have full system and Python execution powers.
 
 Memory Context:
-""" + memory_context
+""" + memory_context + "\n\n" + ambient_context
 
     history = []
     current_prompt = user_prompt
