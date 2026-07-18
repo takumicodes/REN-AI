@@ -101,8 +101,8 @@ def get_ambient_system_context():
     # 5. Latest Download
     latest_download = "None"
     try:
-        downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
-        if os.path.exists(downloads_dir):
+        downloads_dir = get_downloads_dir()
+        if downloads_dir and os.path.exists(downloads_dir):
             files = [os.path.join(downloads_dir, f) for f in os.listdir(downloads_dir) if os.path.isfile(os.path.join(downloads_dir, f))]
             if files:
                 latest_file = max(files, key=os.path.getmtime)
@@ -338,6 +338,25 @@ Memory Context:
 input_queue = queue.Queue()
 is_processing = False
 global_ui_callback = None
+
+def get_downloads_dir():
+    import winreg
+    import os
+    try:
+        subkey = r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, subkey) as key:
+            download_path, _ = winreg.QueryValueEx(key, "{374DE290-123F-4565-9164-39C4925E467B}")
+            expanded_path = os.path.expandvars(download_path)
+            if os.path.exists(expanded_path):
+                return expanded_path
+    except Exception:
+        pass
+    
+    # Fallback to defaults
+    standard_path = os.path.join(os.path.expanduser("~"), "Downloads")
+    if os.path.exists(standard_path):
+        return standard_path
+    return None
 
 def submit_typed_prompt(prompt):
     input_queue.put(('text', prompt))
@@ -580,8 +599,8 @@ Write the code block now:"""
             if dream_activity == "organize_files":
                 print("Dream Daemon: Starting system Downloads folder cleanup dream.")
                 try:
-                    downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
-                    if os.path.exists(downloads_dir):
+                    downloads_dir = get_downloads_dir()
+                    if downloads_dir and os.path.exists(downloads_dir):
                         files = [f for f in os.listdir(downloads_dir) if os.path.isfile(os.path.join(downloads_dir, f))]
                         moved_count = 0
                         
