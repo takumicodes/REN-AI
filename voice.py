@@ -45,3 +45,12 @@ def speak(text):
         engine.runAndWait()
     except Exception as e:
         print(f"Offline SAPI5 TTS failed: {e}")
+
+def stop_speaking():
+    try:
+        import pygame
+        if pygame.mixer.get_init():
+            pygame.mixer.music.stop()
+            pygame.mixer.music.unload()
+    except Exception as e:
+        print(f"Failed to stop music mixer: {e}")

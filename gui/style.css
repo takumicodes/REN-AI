@@ -705,6 +705,26 @@ body {
     box-shadow: 0 0 15px var(--neon-blue-glow);
 }
 
+#btn-stop-ops {
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+    font-family: var(--font-family-tech);
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 0 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#btn-stop-ops:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
 /* Skills Unlocked Panel Items */
 .skill-item {
     font-size: 0.85rem;

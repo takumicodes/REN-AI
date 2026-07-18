@@ -83,8 +83,16 @@ class Api:
         return "Cognitive reflection cycle initialized."
 
     def exit_reflect_mode(self):
+        import back_end
+        back_end.awake = True
         self._window.evaluate_js("window.setReflectMode(false)")
         return "Cognitive core waking up."
+
+    def stop_operations(self):
+        import back_end
+        result = back_end.stop_operations()
+        self._window.evaluate_js("window.updatePipelineStage('idle');")
+        return result
 
 def main():
     api = Api()

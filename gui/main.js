@@ -401,6 +401,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    const btnStopOps = document.getElementById("btn-stop-ops");
+    if (btnStopOps) {
+        btnStopOps.addEventListener("click", () => {
+            if (window.pywebview && window.pywebview.api) {
+                window.pywebview.api.stop_operations().then((msg) => {
+                    logToHUD("Operations stopped: " + msg, "system");
+                    window.updateStatus("ACTIVE");
+                });
+            }
+        });
+    }
+
+    const btnWakeUp = document.getElementById("btn-wake-up");
+    if (btnWakeUp) {
+        btnWakeUp.addEventListener("click", () => {
+            if (window.pywebview && window.pywebview.api) {
+                window.pywebview.api.exit_reflect_mode().then((msg) => {
+                    logToHUD(msg, "system");
+                });
+            }
+        });
+    }
+
     // Initialize core system click trigger
     btnInitialize.addEventListener("click", async () => {
         logToHUD("Core reactor ignition sequence authorized.", "system");
@@ -449,10 +472,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let entropyInterval = null;
 
-    window.setReflectMode = function(active, logs) {
+    let isManualSleep = false;
+
+    window.setReflectMode = function(active, logs, isManual = false) {
         if (active) {
             container.classList.add("reflect-active");
             reflectPanel.classList.remove("hidden");
+            isReflecting = true;
+            isManualSleep = isManual;
+            
+            const wakeBtn = document.getElementById("btn-wake-up");
+            if (wakeBtn) {
+                wakeBtn.style.display = isManual ? "block" : "none";
+            }
             
             // Populate dream logs
             dreamLogsContainer.innerHTML = "";
@@ -520,8 +552,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isBooted) return;
         clearTimeout(idleTimeout);
         
-        // If we are currently in dream mode, any key/mouse activity wakes us up!
-        if (isReflecting) {
+        // If we are currently in dream mode, any key/mouse activity wakes us up (unless it is manual sleep)!
+        if (isReflecting && !isManualSleep) {
             isReflecting = false;
             if (window.pywebview && window.pywebview.api) {
                 window.pywebview.api.exit_reflect_mode()
@@ -531,18 +563,20 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         
-        // Set idle timeout of 1 minute (60,000ms)
-        idleTimeout = setTimeout(() => {
-            if (!isReflecting) {
-                isReflecting = true;
-                if (window.pywebview && window.pywebview.api) {
-                    window.pywebview.api.enter_reflect_mode()
-                        .then(msg => {
-                            logToHUD(msg, "system");
-                        });
+        // Only set the auto-sleep timeout if we are NOT manually asleep!
+        if (!isManualSleep) {
+            idleTimeout = setTimeout(() => {
+                if (!isReflecting) {
+                    isReflecting = true;
+                    if (window.pywebview && window.pywebview.api) {
+                        window.pywebview.api.enter_reflect_mode()
+                            .then(msg => {
+                                logToHUD(msg, "system");
+                            });
+                    }
                 }
-            }
-        }, 60000);
+            }, 60000);
+        }
     }
 
     // Attach user activity listeners

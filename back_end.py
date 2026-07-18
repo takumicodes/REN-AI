@@ -42,6 +42,16 @@ YOUTUBE = "https://www.youtube.com"
 global gs_running 
 gs_running = False
 awake = True
+stop_processing_flag = False
+
+def stop_operations():
+    global is_processing, stop_processing_flag
+    is_processing = False
+    stop_processing_flag = True
+    print("Agent: Stop operations requested by user.")
+    import voice
+    voice.stop_speaking()
+    return "Operations stopped."
 
 def get_ambient_system_context():
     import ctypes
@@ -187,10 +197,17 @@ Dynamic Skill Execution & Coding Rules:
 Memory Context:
 """ + memory_context + "\n\n" + ambient_context
 
+    global stop_processing_flag
+    stop_processing_flag = False
+
     history = []
     current_prompt = user_prompt
     
     for iteration in range(5):
+        if stop_processing_flag:
+            print("run_agent_loop: Stop processing requested by user.")
+            break
+            
         # Build prompt
         prompt_content = f"{system_instructions}\n"
         for role, text in history[-4:]:  # Prune history to last 4 turns for speed
@@ -200,6 +217,9 @@ Memory Context:
         if ui_callback_fn:
             ui_callback_fn('agent_stage', 'plan')
         response = ask_ren_agent(prompt_content)
+        if stop_processing_flag:
+            print("run_agent_loop: Stop processing requested by user.")
+            break
         print(f"--- Iteration {iteration} LLM Response ---")
         print(response)
         
@@ -908,7 +928,7 @@ def start_assistant(ui_callback=None, stop_event=None):
                 awake = False
                 speak("Ok. Going to sleep.")
                 if ui_callback:
-                    ui_callback('reflect_mode', {'active': True, 'logs': get_dream_logs()})
+                    ui_callback('reflect_mode', {'active': True, 'logs': get_dream_logs(), 'manual': True})
                 is_processing = False
                 continue
 
