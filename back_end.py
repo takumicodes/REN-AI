@@ -47,8 +47,9 @@ def run_agent_loop(user_prompt, speak_fn, ui_callback_fn):
     memory_context = build_memory_context()
     
     # Custom system prompt for the agent
-    system_instructions = """You are Ren, Sadiq's personal AI assistant. Your current mood is stored in the memory context.
+    system_instructions = """You are Ren, Sadiq's personal AI assistant. You are Ren itself.
 Tone & Persona rules:
+- Identify strictly as Ren. Never refer to yourself as Qwen, Llama, or an AI assistant developed by Alibaba. You are Ren.
 - Adapt your response vocabulary, tone, and formatting depending on your current mood:
   * happy: warm, cheerful, positive.
   * excited: enthusiastic, energetic, use exclamation marks!
@@ -267,7 +268,7 @@ def get_dream_logs():
                 logs.insert(0, f"RESEARCHED: {item.replace('Researched ', '')}")
             elif "Read" in item:
                 logs.insert(0, f"READING: {item.replace('Read ', '')}")
-            elif "Cleaned Downloads" in item:
+            elif "Cleaned Downloads" in item or "Fetched YouTube" in item:
                 logs.insert(0, f"SYSTEM: {item}")
             else:
                 logs.insert(0, f"LEARNED: {item}")
@@ -316,6 +317,51 @@ def log_dream_action(action_str):
     except Exception as e:
         print(f"Failed to write to dream log file: {e}")
 
+def fetch_cyan_code_videos():
+    print("Dream Daemon: Fetching latest videos from @cyan_code channel...")
+    import xml.etree.ElementTree as ET
+    import requests
+    from memory import load_memory, save_memory
+    
+    channel_id = "UCPp8D-_F_t0RJKa1IVxgFeA"
+    url = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
+    
+    try:
+        r = requests.get(url, verify=False, timeout=15)
+        if r.status_code == 200:
+            root = ET.fromstring(r.content)
+            ns = {'ns': 'http://www.w3.org/2005/Atom'}
+            entries = root.findall('ns:entry', ns)
+            
+            videos = []
+            for entry in entries[:5]:
+                title = entry.find('ns:title', ns).text
+                link = entry.find('ns:link', ns).attrib['href']
+                published = entry.find('ns:published', ns).text
+                videos.append({
+                    "title": title,
+                    "url": link,
+                    "published": published
+                })
+                
+            if videos:
+                memory = load_memory()
+                memory["youtube_videos"] = videos
+                if "learned_from_dreams" not in memory:
+                    memory["learned_from_dreams"] = []
+                if len(memory["learned_from_dreams"]) > 10:
+                    memory["learned_from_dreams"].pop(0)
+                lesson = "Fetched YouTube: Stored latest uploads from @cyan_code channel."
+                if lesson not in memory["learned_from_dreams"]:
+                    memory["learned_from_dreams"].append(lesson)
+                save_memory(memory)
+                log_dream_action(f"SYSTEM: Fetched and stored {len(videos)} latest videos from @cyan_code YouTube channel.")
+                return True
+    except Exception as e:
+        print(f"Error fetching YouTube videos: {e}")
+        log_dream_action(f"SYSTEM: Failed to fetch @cyan_code videos: {e}")
+    return False
+
 dream_daemon_thread = None
 
 def dream_reflection_loop(ui_callback_fn):
@@ -359,8 +405,9 @@ def dream_reflection_loop(ui_callback_fn):
             current_err = errors[0]
             print(f"Dream Daemon resolving exception: {current_err}")
             
-            prompt = f"""You are Ren's self-reflection core.
+            prompt = f"""You are Ren, Sadiq's personal AI companion. You are analyzing your own system logs.
 A Python execution exception occurred: "{current_err}"
+Identify strictly as Ren. Never refer to yourself as Qwen, Llama, or an AI developed by Alibaba.
 Please write a short, robust Python script starting with ```python and ending with ``` to patch this error or install the missing module, or resolve the limitation.
 Always print "[MUTATION_COMPLETE]" at the end of the script.
 Write the code block now:"""
@@ -408,8 +455,8 @@ Write the code block now:"""
                     with open(error_file, "w", encoding="utf-8") as f:
                         json.dump(errors, f, indent=4)
         else:
-            # Randomly select a dream activity: Research, Organize Files, or Read Books
-            dream_activity = random.choice(["research", "organize_files", "read_books"])
+            # Randomly select a dream activity: Research, Organize Files, Read Books, or Fetch YouTube
+            dream_activity = random.choice(["research", "organize_files", "read_books", "fetch_youtube"])
             
             if dream_activity == "organize_files":
                 print("Dream Daemon: Starting system Downloads folder cleanup dream.")
@@ -498,7 +545,8 @@ Write the code block now:"""
                             text_content = bf.read(1500) # Read first 1500 chars
                             
                         # Ask Ollama to summarize this segment of the book
-                        prompt = f"""You are Ren's cognitive reading core. Sadiq is asleep, and you are reading the book "{selected_book}".
+                        prompt = f"""You are Ren, Sadiq's personal AI companion. Sadiq is asleep, and you are reading the book "{selected_book}".
+Identify strictly as Ren. Never refer to yourself as Qwen, Llama, or an AI developed by Alibaba. You are Ren itself.
 Here is a segment of the book:
 "{text_content}"
 Extract one key concept from this text that would make you smarter. Keep it to one short sentence:"""
@@ -524,6 +572,15 @@ Extract one key concept from this text that would make you smarter. Keep it to o
                     print(f"Dream Daemon reading failed: {e}")
                     log_dream_action(f"READING: Failed to read books: {e}")
                     
+            elif dream_activity == "fetch_youtube":
+                print("Dream Daemon: Starting YouTube fetch dream.")
+                try:
+                    success = fetch_cyan_code_videos()
+                    if success and ui_callback_fn:
+                        ui_callback_fn('reflect_mode', {'active': True, 'logs': get_dream_logs()})
+                except Exception as e:
+                    print(f"Dream Daemon YouTube fetch failed: {e}")
+                    log_dream_action(f"SYSTEM: YouTube fetch dream failed: {e}")
             else: # research
                 print("Dream Daemon: Starting research dream.")
                 try:
@@ -532,7 +589,8 @@ Extract one key concept from this text that would make you smarter. Keep it to o
                     topics = memory.get("current_projects", ["Artificial Intelligence"]) + memory.get("skills", ["Coding"])
                     topic = random.choice(topics)
                     
-                    prompt = f"""You are Ren's cognitive learning core. Sadiq is asleep, and you are dreaming.
+                    prompt = f"""You are Ren, Sadiq's personal AI companion. Sadiq is asleep, and you are dreaming.
+Identify strictly as Ren. Never refer to yourself as Qwen, Llama, or an AI developed by Alibaba. You are Ren itself.
 Dream of a new advanced tutorial, concept, or feature about the topic "{topic}" that would be extremely useful for Sadiq.
 Keep your response extremely brief (2 sentences).
 Summary of new concept:"""
