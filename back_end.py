@@ -88,6 +88,8 @@ Memory Context:
             prompt_content += f"\n{role}: {text}\n"
         prompt_content += f"\nUSER: {current_prompt}\nREN:"
         
+        if ui_callback_fn:
+            ui_callback_fn('agent_stage', 'plan')
         response = ask_ren_agent(prompt_content)
         print(f"--- Iteration {iteration} LLM Response ---")
         print(response)
@@ -117,6 +119,9 @@ Memory Context:
                 if intro_clean:
                     speak_fn(intro_clean)
         
+        if ui_callback_fn:
+            ui_callback_fn('agent_stage', 'tools')
+            time.sleep(0.3)
         code_to_run = code_blocks[0]
         
         # Check if this response specifies a Skill Name
@@ -183,6 +188,9 @@ Memory Context:
         exec_globals.update(local_vars)
         
         try:
+            if ui_callback_fn:
+                ui_callback_fn('agent_stage', 'exec')
+                time.sleep(0.3)
             exec(code_to_run, exec_globals)
         except Exception as e:
             success = False
@@ -192,6 +200,9 @@ Memory Context:
         finally:
             sys.stdout = old_stdout
             sys.stderr = old_stderr
+            if ui_callback_fn:
+                ui_callback_fn('agent_stage', 'verify')
+                time.sleep(0.3)
             
         stdout_val = redirected_output.getvalue()
         stderr_val = redirected_error.getvalue()
@@ -758,6 +769,10 @@ def start_assistant(ui_callback=None, stop_event=None):
             if ui_callback:
                 ui_callback('user_speech', raw_text)
                 ui_callback('status', 'thinking')
+                ui_callback('agent_stage', 'prompt')
+                time.sleep(0.3)
+                ui_callback('agent_stage', 'intent')
+                time.sleep(0.3)
 
             if "sleep" in text:
                 awake = False
@@ -1026,7 +1041,11 @@ def start_assistant(ui_callback=None, stop_event=None):
                 
         except Exception as e:
             print(f"Error in main loop: {e}")
-            is_processing = False
+        finally:
+            if is_processing:
+                if ui_callback:
+                    ui_callback('agent_stage', 'idle')
+                is_processing = False
 
 if __name__ == "__main__":
     start_assistant()

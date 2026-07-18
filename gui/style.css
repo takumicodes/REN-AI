@@ -886,3 +886,67 @@ body {
     filter: blur(4px);
     transition: all 0.5s ease-in-out;
 }
+
+/* Cognitive Pipeline Styling */
+.cognitive-pipeline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 10px auto 25px auto;
+    padding: 10px 15px;
+    background: rgba(10, 15, 30, 0.6);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    border-radius: 6px;
+    width: 95%;
+    max-width: 900px;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.05);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.pipeline-step {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(226, 232, 240, 0.1);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: rgba(226, 232, 240, 0.4);
+    text-transform: uppercase;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.pipeline-arrow {
+    color: rgba(0, 240, 255, 0.2);
+    font-size: 0.8rem;
+    font-weight: bold;
+    user-select: none;
+    transition: color 0.3s ease;
+}
+
+/* Active stages styling */
+.pipeline-step.active {
+    background: rgba(0, 240, 255, 0.1);
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.pipeline-step.completed {
+    background: rgba(52, 211, 153, 0.05);
+    border-color: #34d399;
+    color: #34d399;
+    text-shadow: 0 0 5px rgba(52, 211, 153, 0.3);
+}
+
+.pipeline-step.active + .pipeline-arrow,
+.pipeline-step.completed + .pipeline-arrow {
+    color: var(--neon-blue);
+}

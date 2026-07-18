@@ -13,6 +13,7 @@ class Api:
         self._window = None
         self._ui_callback = None
 
+
     def start_assistant(self):
         if self.assistant_thread and self.assistant_thread.is_alive():
             return "Assistant is already running."
@@ -39,6 +40,8 @@ class Api:
                     self._window.evaluate_js(f"window.updateSkillsList({json.dumps(data)});")
                 elif event_type == 'reflect_mode':
                     self._window.evaluate_js(f"window.setReflectMode({json.dumps(data['active'])}, {json.dumps(data['logs'])});")
+                elif event_type == 'agent_stage':
+                    self._window.evaluate_js(f"window.updatePipelineStage({json.dumps(data)});")
             except Exception as e:
                 print(f"Error in UI callback: {e}", file=sys.stderr)
 

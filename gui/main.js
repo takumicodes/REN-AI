@@ -549,4 +549,29 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("mousemove", resetIdleTimer);
     window.addEventListener("keydown", resetIdleTimer);
     window.addEventListener("click", resetIdleTimer);
+
+    window.updatePipelineStage = (stage) => {
+        const steps = ["prompt", "intent", "plan", "tools", "exec", "verify"];
+        steps.forEach(s => {
+            const el = document.getElementById(`step-${s}`);
+            if (el) el.className = "pipeline-step";
+        });
+        
+        if (stage === "idle" || !stage) return;
+        
+        const activeIdx = steps.indexOf(stage);
+        if (activeIdx !== -1) {
+            for (let i = 0; i <= activeIdx; i++) {
+                const s = steps[i];
+                const el = document.getElementById(`step-${s}`);
+                if (el) {
+                    if (i === activeIdx) {
+                        el.classList.add("active");
+                    } else {
+                        el.classList.add("completed");
+                    }
+                }
+            }
+        }
+    };
 });
