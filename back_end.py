@@ -733,8 +733,9 @@ Summary of new concept:"""
                     print(f"Dream Daemon learning failed: {e}")
                     log_dream_action(f"RESEARCH: Failed research on '{topic}': {e}")
                     
-        # Sleep for 15 seconds before the next dream cycle
-        for _ in range(15):
+        # Sleep for 180 seconds (3 minutes) before the next dream cycle
+        # This gives Ollama enough time to unload the model and free system memory/RAM!
+        for _ in range(180):
             if awake:
                 break
             time.sleep(1.0)

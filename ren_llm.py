@@ -79,8 +79,8 @@ REN:
                 "prompt": full_prompt,
                 "stream": False,
                 "options": {
-                    "num_predict": 256,
-                    "num_ctx": 4096,
+                    "num_predict": 192,
+                    "num_ctx": 2048,
                     "temperature": 0.5
                 }
             },
@@ -114,8 +114,8 @@ def ask_ren_agent(full_prompt):
                 "prompt": full_prompt,
                 "stream": False,
                 "options": {
-                    "num_predict": 384,
-                    "num_ctx": 4096,
+                    "num_predict": 256,
+                    "num_ctx": 2048,
                     "temperature": 0.5
                 }
             },
