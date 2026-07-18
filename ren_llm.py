@@ -43,7 +43,13 @@ def build_memory_context():
         context_lines = []
         for key, value in memory.items():
             if isinstance(value, list):
-                val_str = ", ".join(value)
+                str_items = []
+                for item in value:
+                    if isinstance(item, dict):
+                        str_items.append(json.dumps(item))
+                    else:
+                        str_items.append(str(item))
+                val_str = ", ".join(str_items)
             elif isinstance(value, dict):
                 val_str = json.dumps(value)
             else:

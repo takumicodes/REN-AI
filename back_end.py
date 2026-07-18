@@ -173,12 +173,13 @@ Dynamic Skill Execution & Coding Rules:
   Example: `Skill Name: Open Google` or `Skill Name: Toggle WiFi`
   The backend will automatically save your code as a persistent script and trigger the "Advancement Unlocked" popup on Sadiq's GUI.
 - **Coding & Library Rules**: 
-  1. Do NOT import third-party libraries (e.g. pynotifier, cv2, speedtest) unless absolutely necessary. Always prefer built-in libraries (like ctypes, urllib, winreg, os, sys, subprocess, webbrowser). Never import unused modules.
-  2. If using the `requests` library, always include `verify=False` in `requests.get()` or `requests.post()` to bypass SSL/certificate validation checks and prevent local connection errors.
-  3. Never use Jupyter/IPython shell commands like `!pip` or `!mkdir`. Instead, use standard Python subprocess calls: `subprocess.run([sys.executable, '-m', 'pip', 'install', 'package-name'])`.
+  1. To get the path to Sadiq's Downloads directory in your Python scripts, you MUST use the built-in function `get_downloads_dir()` instead of `os.path.expanduser("~/Downloads")` or hardcoded C/D paths.
+  2. Do NOT import third-party libraries (e.g. pynotifier, cv2, speedtest) unless absolutely necessary. Always prefer built-in libraries (like ctypes, urllib, winreg, os, sys, subprocess, webbrowser). Never import unused modules.
+  3. If using the `requests` library, always include `verify=False` in `requests.get()` or `requests.post()` to bypass SSL/certificate validation checks and prevent local connection errors.
+  4. Never use Jupyter/IPython shell commands like `!pip` or `!mkdir`. Instead, use standard Python subprocess calls: `subprocess.run([sys.executable, '-m', 'pip', 'install', 'package-name'])`.
 - For speed optimization:
   1. Keep your replies extremely concise. Do not write long explanations or comments. This speeds up Ollama's generation rate.
-  2. Write a short, natural introductory text BEFORE the code block (e.g. "Sure Sadiq, opening Google..."). The system will speak this intro text immediately to keep Sadiq engaged.
+  2. Write a short, natural introductory text BEFORE the code block matching Sadiq's request (e.g. if he asks to open Google, say "Sure Sadiq, opening Google...". If he asks to organize files, say "Sure Sadiq, organizing your Downloads folder now..."). Never copy the example literally if it doesn't match the task. The system will speak this intro text immediately to keep Sadiq engaged.
   3. Have your Python code speak the final result directly to Sadiq using the `speak("result text")` function inside the script.
   4. Print `[DONE]` at the end of your Python code to signal task completion.
 - Never tell Sadiq you don't have access or cannot do something. You have full system and Python execution powers.
@@ -282,6 +283,7 @@ Memory Context:
             'show_popup': show_popup,
             'load_memory': load_memory,
             'save_memory': save_memory,
+            'get_downloads_dir': get_downloads_dir,
             'winreg': __import__('winreg') if sys.platform == 'win32' else None,
             'os': __import__('os'),
             'sys': __import__('sys'),
