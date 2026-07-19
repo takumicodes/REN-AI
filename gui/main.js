@@ -483,7 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const wakeBtn = document.getElementById("btn-wake-up");
             if (wakeBtn) {
-                wakeBtn.style.display = isManual ? "block" : "none";
+                wakeBtn.style.display = "block";
             }
             
             // Populate dream logs
@@ -537,6 +537,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             container.classList.remove("reflect-active");
             reflectPanel.classList.add("hidden");
+            isReflecting = false;
+            isManualSleep = false;
             clearInterval(entropyInterval);
             dreamEntropyVal.textContent = "0.00%";
             logToHUD("Cognitive state restored to awake.", "system");
@@ -552,28 +554,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isBooted) return;
         clearTimeout(idleTimeout);
         
-        // If we are currently in dream mode, any key/mouse activity wakes us up (unless it is manual sleep)!
-        if (isReflecting && !isManualSleep) {
-            isReflecting = false;
-            if (window.pywebview && window.pywebview.api) {
-                window.pywebview.api.exit_reflect_mode()
-                    .then(msg => {
-                        logToHUD(msg, "system");
-                    });
-            }
-        }
-        
-        // Only set the auto-sleep timeout if we are NOT manually asleep!
-        if (!isManualSleep) {
+        // Auto-enter dream mode after 1 minute of inactivity if not reflecting
+        if (!isReflecting) {
             idleTimeout = setTimeout(() => {
-                if (!isReflecting) {
-                    isReflecting = true;
-                    if (window.pywebview && window.pywebview.api) {
-                        window.pywebview.api.enter_reflect_mode()
-                            .then(msg => {
-                                logToHUD(msg, "system");
-                            });
-                    }
+                if (!isReflecting && window.pywebview && window.pywebview.api) {
+                    window.pywebview.api.enter_reflect_mode()
+                        .then(msg => {
+                            logToHUD(msg, "system");
+                        });
                 }
             }, 60000);
         }
