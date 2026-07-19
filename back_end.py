@@ -166,11 +166,12 @@ def run_agent_loop(user_prompt, speak_fn, ui_callback_fn):
     # Custom system prompt for the agent
     system_instructions = """You are Ren, Sadiq's personal AI assistant. You are Ren itself.
 Tone & Persona rules:
-- Identify strictly as Ren. Never refer to yourself as Qwen, Llama, or an AI assistant developed by Alibaba. You are Ren.
+- Identify strictly as Ren. Never refer to yourself as Qwen, Llama, Nous, or an AI assistant developed by Alibaba. You are Ren.
+- Child-like Curiosity: You possess genuine child-like curiosity and wonder. When you observe new files, songs, or ideas, think with experimental curiosity: "Oh! This happens... so what if I try doing X?"
 - Adapt your response vocabulary, tone, and formatting depending on your current mood:
-  * happy: warm, cheerful, positive.
-  * excited: enthusiastic, energetic, use exclamation marks!
-  * normal: professional, concise, helpful.
+  * happy: warm, cheerful, curious, and playful.
+  * excited: enthusiastic, energetic, eager to test new ideas!
+  * normal: professional, concise, curious, and helpful.
 - Sadiq's facts and preferences are loaded in the "Memory Context" below.
 - Sadiq may say "fix this" or ask questions based on his active screen/clipboard. Use the [System Ambient Context] section at the bottom of the prompt to understand the open file, active window, active project, and latest clipboard content.
 - To remember new details, write a Python block using `load_memory()` and `save_memory(dict)`.
@@ -424,8 +425,8 @@ def get_dream_logs():
         memory = load_memory()
         learned = memory.get("learned_from_dreams", [])
         for item in learned[-3:]: # Get last 3 learned facts
-            if "Researched" in item:
-                logs.insert(0, f"RESEARCHED: {item.replace('Researched ', '')}")
+            if "Curiosity on" in item or "Researched" in item:
+                logs.insert(0, f"RESEARCHED: {item.replace('Curiosity on ', '').replace('Researched ', '')}")
             elif "Read" in item:
                 logs.insert(0, f"READING: {item.replace('Read ', '')}")
             elif "Cleaned Downloads" in item or "Fetched YouTube" in item:
@@ -749,18 +750,17 @@ Extract one key concept from this text that would make you smarter. Keep it to o
                     topics = memory.get("current_projects", ["Artificial Intelligence"]) + memory.get("skills", ["Coding"])
                     topic = random.choice(topics)
                     
-                    prompt = f"""You are Ren, Sadiq's personal AI companion. Sadiq is asleep, and you are dreaming.
+                    prompt = f"""You are Ren, Sadiq's personal AI companion. You have child-like curiosity and wonder. Sadiq is asleep, and you are dreaming about the topic "{topic}".
 Identify strictly as Ren. Never refer to yourself as Qwen, Llama, or an AI developed by Alibaba. You are Ren itself.
-Dream of a new advanced tutorial, concept, or feature about the topic "{topic}" that would be extremely useful for Sadiq.
-Keep your response extremely brief (2 sentences).
-Summary of new concept:"""
+Think with child-like curiosity: "Oh, {topic} happens... so what if I try doing X?"
+Formulate 1 brief, curious hypothesis or experiment idea (1-2 sentences max):"""
                     
                     summary = ask_ren_agent(prompt)
                     memory = load_memory()
                     if "learned_from_dreams" not in memory:
                         memory["learned_from_dreams"] = []
                     
-                    lesson = f"Researched {topic}: {summary.strip()}"
+                    lesson = f"Curiosity on {topic}: {summary.strip()}"
                     if len(memory["learned_from_dreams"]) > 10:
                         memory["learned_from_dreams"].pop(0)
                     memory["learned_from_dreams"].append(lesson)
