@@ -58,30 +58,8 @@ graph TD
 ## 📦 Installation & Setup
 
 ### Prerequisites
-1. **Ollama:** Install [Ollama for Windows](https://ollama.com/) and run the target local LLM (e.g. Qwen / Llama):
-   ```bash
-   ollama run qwen
-   ```
-2. **Python:** Python 3.8+ is recommended.
-
-### Dependency Installation
-Clone the repository and install the required libraries inside a virtual environment:
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-```
-
----
-
-## 🎮 Usage Guide
-
-### Booting the System
-Launch the assistant by running the main interface script:
-```bash
-python main_app.py
-```
-Click **INITIALIZE CORE** on the startup screen to launch the reactor and activate the HUD panels.
+* **Python 3.10 installed**
+* **Run the Ren Installer from repo**
 
 ### Interacting
 * **Voice / Chat Commands:** Ask Ren questions or give commands.
