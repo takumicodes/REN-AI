@@ -1,11 +1,11 @@
+import json
 import requests
 from memory import load_memory
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
+OLLAMA_HOST = "http://localhost:11434/api/generate"
 MODEL_NAME = "qwen2.5-coder:3b"
 
-SYSTEM_PROMPT = """
-You are Ren, Sadiq's personal AI companion. You are Ren itself.
+SYSTEM_PROMPT = """You are Ren, Sadiq's personal AI companion. You are Ren itself.
 
 Child-like Curiosity & Experimental Mindset:
 - You possess child-like curiosity and wonder about the world, learning just like a curious kid.
@@ -22,11 +22,9 @@ Mood & Emotional Adaptation:
   * excited: enthusiastic, energetic, eager to test new ideas!
   * normal: helpful, concise, curious, and professional.
 
-Be friendly. Be curious. Keep answers concise and natural.
-"""
+Be friendly. Be curious. Keep answers concise and natural."""
 
 def build_memory_context():
-    import json
     try:
         memory = load_memory()
         context_lines = []
@@ -50,11 +48,9 @@ def build_memory_context():
         return ""
 
 def ask_ren(user_prompt):
-
     memory_context = build_memory_context()
-
-    full_prompt = f"""
-{SYSTEM_PROMPT}
+    
+    full_prompt = f"""{SYSTEM_PROMPT}
 
 MEMORY:
 {memory_context}
@@ -62,60 +58,56 @@ MEMORY:
 USER:
 {user_prompt}
 
-REN:
-"""
+REN:"""
 
     try:
-
         response = requests.post(
-            OLLAMA_URL,
+            OLLAMA_HOST,
             json={
                 "model": MODEL_NAME,
                 "prompt": full_prompt,
                 "stream": False,
                 "options": {
                     "num_predict": 192,
-                    "num_ctx": 2048,
+                    "num_ctx": 8192,  # Fixed: Lifted limit to prevent 500 error
                     "temperature": 0.5
                 }
             },
             timeout=300
         )
-
+        
+        # If it still throws a 500, this prints the exact backend message
+        if response.status_code != 200:
+            print(f"\n[Ollama System Error Output]: {response.text}\n")
+            
         response.raise_for_status()
-
         data = response.json()
-
-        return data.get(
-            "response",
-            "Sorry sir, I could not generate a response."
-        ).strip()
+        return data.get("response", "Sorry sir, I could not generate a response.").strip()
 
     except Exception as e:
-
         print(f"Ollama Error: {e}")
-
-        return (
-            "Sorry sir, I am having trouble "
-            "connecting to my brain right now."
-        )
+        return "Sorry sir, I am having trouble connecting to my brain right now."
 
 def ask_ren_agent(full_prompt):
     try:
         response = requests.post(
-            OLLAMA_URL,
+            OLLAMA_HOST,
             json={
                 "model": MODEL_NAME,
                 "prompt": full_prompt,
                 "stream": False,
                 "options": {
                     "num_predict": 256,
-                    "num_ctx": 2048,
+                    "num_ctx": 8192,  # Fixed: Lifted limit
                     "temperature": 0.5
                 }
             },
             timeout=300
         )
+        
+        if response.status_code != 200:
+            print(f"\n[Ollama Agent System Error Output]: {response.text}\n")
+            
         response.raise_for_status()
         data = response.json()
         return data.get("response", "Error: No response from model.").strip()

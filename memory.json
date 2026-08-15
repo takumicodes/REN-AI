@@ -3,17 +3,13 @@
     "creator_nickname": "Cyan Code",
     "assistant_name": "Ren",
     "mood": "normal",
-
     "favorite_language": "Python",
-
     "youtube_channel": "Cyan Code",
-
     "current_projects": [
         "Ren AI",
         "Cyanox",
         "Cyan Code YouTube Channel"
     ],
-
     "skills": [
         "Python",
         "ANN",
@@ -22,10 +18,41 @@
         "Humanoid Robot learning",
         "hardware engineer"
     ],
-
     "computer": {
         "ram": "8GB",
         "os": "Windows 10 / Kali Linux",
         "storage": "HDD"
-    }
+    },
+    "youtube_videos": [
+        {
+            "title": "I made Ren AI installer \ud83d\udd25. #shorts #coding #python #ai #neuralnetwork #shortsfeed",
+            "url": "https://www.youtube.com/shorts/7m4AOelOQDM",
+            "published": "2026-08-13T10:38:48+00:00"
+        },
+        {
+            "title": "Windows vs Linux \u2620\ufe0f. # #coding #programming #os #linux #windows #memes #roast #shorts",
+            "url": "https://www.youtube.com/shorts/GOgG9gafZxk",
+            "published": "2026-08-12T09:02:41+00:00"
+        },
+        {
+            "title": "You're Learning Coding WRONG in 2026",
+            "url": "https://www.youtube.com/watch?v=5TmJiHQjTP8",
+            "published": "2026-08-09T14:34:49+00:00"
+        },
+        {
+            "title": "Get Started to Coding in 2026 \ud83d\udd25. #shorts #coding #programming #computerscience",
+            "url": "https://www.youtube.com/shorts/tw5CZKCeF7Y",
+            "published": "2026-08-09T08:23:34+00:00"
+        },
+        {
+            "title": "Making robotics arm for Ren AI \ud83d\udd25 #python  #coding #programming #ai #reinforcement #machinelearning",
+            "url": "https://www.youtube.com/shorts/eqO8YUa6IEg",
+            "published": "2026-08-07T09:05:38+00:00"
+        }
+    ],
+    "learned_from_dreams": [
+        "Fetched YouTube: Stored latest uploads from @cyan_code channel.",
+        "Curiosity on Cyanox: Error: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate",
+        "Cleaned Downloads: Organized 156 files into categories."
+    ]
 }
