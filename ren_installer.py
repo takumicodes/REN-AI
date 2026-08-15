@@ -1,186 +1,1268 @@
-# This file installs all necessary components for Ren AI. Enjoy it
+# ============================================================
+# REN AI INSTALLER
+# Automatically installs:
+#   1. Git
+#   2. Python 3.10
+#   3. Ollama
+#   4. Qwen2.5-Coder 3B
+#   5. REN-AI
+#   6. Python dependencies
+#   7. Ren configuration
+#   8. Launches Ren
+# ============================================================
+
 import os
+import shutil
 import subprocess
 import sys
-import threading
 import time
+import urllib.request
 from tkinter import Tk, filedialog
 
+
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+REPO_URL = "https://github.com/takumicodes/REN-AI.git"
+
+PYTHON_310_URL = (
+    "https://www.python.org/ftp/python/3.10.11/"
+    "python-3.10.11-amd64.exe"
+)
+
+OLLAMA_API_TAGS = "http://127.0.0.1:11434/api/tags"
+
+OLLAMA_MODEL = "qwen2.5-coder:3b"
+
+target_project_path = None
+
+
+# ============================================================
+# ENVIRONMENT / PATH
+# ============================================================
+
 def refresh_environment():
-    """Forces Python to refresh its Environment PATH variable in case winget just installed Git or Ollama."""
-    if sys.platform == "win32":
+    """
+    Refresh PATH from Windows registry and add common
+    Windows executable locations.
+    """
+
+    if sys.platform != "win32":
+        return
+
+    try:
         import winreg
+
+        machine_path = ""
+        user_path = ""
+
+        # Machine PATH
         try:
-            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment") as key:
-                path, _ = winreg.QueryValueEx(key, "Path")
-                os.environ["PATH"] = path
+            with winreg.OpenKey(
+                winreg.HKEY_LOCAL_MACHINE,
+                r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
+            ) as key:
+                machine_path, _ = winreg.QueryValueEx(
+                    key,
+                    "Path"
+                )
         except Exception:
             pass
 
-def render_progress_bar(stop_event, message, mock_duration=30):
-    """
-    Renders a standard, high-visibility developer text progress bar [████░░░░]
-    Increments steadily towards 95% over the mock_duration, then waits for the finish flag.
-    """
-    bar_width = 30
-    start_time = time.time()
-    
-    while not stop_event.is_set():
-        elapsed = time.time() - start_time
-        # Progress scales slowly up to 95% to maintain continuous visual movement
-        percent = min(95, int((elapsed / mock_duration) * 95))
-        
-        filled_amount = int((percent / 100) * bar_width)
-        empty_amount = bar_width - filled_amount
-        bar = "█" * filled_amount + "░" * empty_amount
-        
-        # Overwrite the current terminal line dynamically (\r)
-        sys.stdout.write(f"\r    {message}: [{bar}] {percent}% ({int(elapsed)}s)")
-        sys.stdout.flush()
-        time.sleep(0.2)
-        
-    # Jump to 100% instantly when the background task signals it's finished
-    total_elapsed = int(time.time() - start_time)
-    full_bar = "█" * bar_width
-    sys.stdout.write(f"\r    {message}: [{full_bar}] 100% Complete! ({total_elapsed}s)\n")
-    sys.stdout.flush()
-
-def install_git_if_missing():
-    print("\n[1/4] Checking Git Dependency...")
-    try:
-        subprocess.run("git --version", shell=True, check=True, capture_output=True)
-        print(" -> Git is already installed.")
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print(" -> Git not found. Deploying installation pipeline...")
-        
-        command = "winget install --id Git.Git --accept-source-agreements --accept-package-agreements"
-        stop_flag = threading.Event()
-        
-        # Git setup visual baseline tracking thread
-        progress_thread = threading.Thread(target=render_progress_bar, args=(stop_flag, "Downloading Git Engine", 15))
-        progress_thread.start()
-        
+        # User PATH
         try:
-            subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
-            stop_flag.set()  
-            progress_thread.join()
-            refresh_environment()
-        except subprocess.CalledProcessError as e:
-            stop_flag.set()
-            progress_thread.join()
-            print(f" -> ❌ Git automated installation failed with exit code {e.returncode}", file=sys.stderr)
+            with winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER,
+                r"Environment"
+            ) as key:
+                user_path, _ = winreg.QueryValueEx(
+                    key,
+                    "Path"
+                )
+        except Exception:
+            pass
 
-def install_ollama_winget():
-    print("\n[2/4] Checking Ollama Dependency...")
-    try:
-        subprocess.run("ollama --version", shell=True, check=True, capture_output=True)
-        print(" -> Ollama is already installed.")
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print(" -> Ollama not found. Deploying installation pipeline...")
-        
-        command = "winget install --id Ollama.Ollama --accept-source-agreements --accept-package-agreements"
-        stop_flag = threading.Event()
-        
-        # Ollama configuration visual baseline tracking thread
-        progress_thread = threading.Thread(target=render_progress_bar, args=(stop_flag, "Downloading Ollama Base", 220))
-        progress_thread.start()
-        
-        try:
-            subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
-            stop_flag.set()
-            progress_thread.join()
-            refresh_environment()
-            
-            # Post-install buffer window to allow engine architecture setup sequences
-            print(" -> Waiting for Ollama background engine service to wake up...")
-            time.sleep(15)
-        except subprocess.CalledProcessError as e:
-            stop_flag.set()
-            progress_thread.join()
-            print(f" -> ❌ Ollama installation failed with exit code {e.returncode}", file=sys.stderr)
+        combined_path = (
+            machine_path
+            + os.pathsep
+            + user_path
+        )
 
-def download_qwen_coder():
-    print("\n[3/4] Pulling Local LLM Weights (Qwen Coder 3B)...")
-    command = "ollama pull qwen2.5-coder:3b"
+        os.environ["PATH"] = combined_path
+
+        # WindowsApps contains winget.exe
+        local_app_data = os.environ.get(
+            "LOCALAPPDATA",
+            ""
+        )
+
+        windows_apps = os.path.join(
+            local_app_data,
+            "Microsoft",
+            "WindowsApps"
+        )
+
+        if os.path.isdir(windows_apps):
+            if windows_apps not in os.environ["PATH"]:
+                os.environ["PATH"] += (
+                    os.pathsep + windows_apps
+                )
+
+        # Common Git location
+        git_cmd = r"C:\Program Files\Git\cmd"
+
+        if os.path.isdir(git_cmd):
+            if git_cmd not in os.environ["PATH"]:
+                os.environ["PATH"] += (
+                    os.pathsep + git_cmd
+                )
+
+        # Common Ollama location
+        ollama_path = os.path.join(
+            local_app_data,
+            "Programs",
+            "Ollama"
+        )
+
+        if os.path.isdir(ollama_path):
+            if ollama_path not in os.environ["PATH"]:
+                os.environ["PATH"] += (
+                    os.pathsep + ollama_path
+                )
+
+    except Exception:
+        pass
+
+
+# ============================================================
+# COMMAND DETECTION
+# ============================================================
+
+def find_command(command):
+    """
+    Find an executable after refreshing PATH.
+    """
+
+    refresh_environment()
+
+    result = shutil.which(command)
+
+    if result:
+        return result
+
+    # Explicit winget fallback
+    if command.lower() == "winget":
+        possible_paths = [
+            os.path.join(
+                os.environ.get("LOCALAPPDATA", ""),
+                "Microsoft",
+                "WindowsApps",
+                "winget.exe"
+            ),
+            r"C:\Windows\System32\winget.exe"
+        ]
+
+        for path in possible_paths:
+            if os.path.isfile(path):
+                return path
+
+    return None
+
+
+def command_exists(command):
+    return find_command(command) is not None
+
+
+# ============================================================
+# LIVE COMMAND EXECUTION
+# ============================================================
+
+def run_live_command(command, error_message):
+    """
+    Runs a command and prints output live.
+    """
+
     try:
-        # Added encoding="utf-8" and errors="ignore" to prevent translation crashes
+        refresh_environment()
+
+        print()
+
+        if isinstance(command, list):
+            printable = " ".join(
+                f'"{x}"' if " " in str(x) else str(x)
+                for x in command
+            )
+        else:
+            printable = command
+
+        print(f" -> Running: {printable}")
+
         process = subprocess.Popen(
-            command, 
-            shell=True, 
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.STDOUT, 
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
             text=True,
             encoding="utf-8",
-            errors="ignore"
+            errors="ignore",
+            shell=False
         )
-        # Directly pipe live streaming engine download metrics
-        while True:
-            output = process.stdout.readline()
-            if output == '' and process.poll() is not None:
-                break
-            if output:
-                print(f"    {output.strip()}", flush=True)
-        
-        if process.poll() == 0:
-            print(" -> 🎉 Qwen Coder 3B successfully installed!")
-        else:
-            print(f" -> ❌ Model download exited with code: {process.poll()}")
-    except FileNotFoundError:
-        print(" -> ⚠️ Could not call Ollama. Restart your terminal context.", file=sys.stderr)
+
+        if process.stdout:
+            for line in process.stdout:
+                line = line.rstrip()
+
+                if line:
+                    print(
+                        f"    {line}",
+                        flush=True
+                    )
+
+        return_code = process.wait()
+
+        if return_code == 0:
+            return True
+
+        print(
+            f" -> ❌ Command failed with "
+            f"exit code {return_code}",
+            file=sys.stderr
+        )
+
+        return False
+
+    except Exception as e:
+
+        print(
+            f" -> {error_message}: {e}",
+            file=sys.stderr
+        )
+
+        return False
 
 
-def clone_repo_and_install_deps():
-    print("\n[4/4] Setting up Project Repository...")
-    root = Tk()
-    root.withdraw()
-    root.attributes('-topmost', True)
-    
-    destination_dir = filedialog.askdirectory(title="Select Folder to Clone Ren AI Into")
-    if not destination_dir:
-        print(" -> Operation cancelled: No destination folder selected.")
-        return
+# ============================================================
+# WINDOWS / WINGET
+# ============================================================
 
-    repo_url = "https://github.com/takumicodes/REN-AI.git"
-    repo_name = "REN-AI"
-    target_project_path = os.path.join(destination_dir, repo_name)
+def check_windows():
+    print("\n[1/11] Checking Windows compatibility...")
 
-    print(f" -> Cloning {repo_url} into {destination_dir}...")
+    if sys.platform != "win32":
+
+        print(
+            " -> ❌ This installer only supports Windows."
+        )
+
+        sys.exit(1)
+
+    refresh_environment()
+
+    winget_path = find_command("winget")
+
+    if not winget_path:
+
+        print()
+        print(
+            " -> ❌ winget was not found."
+        )
+        print()
+        print(
+            " -> Windows App Installer / winget "
+            "is required for Git and Ollama installation."
+        )
+        print()
+
+        sys.exit(1)
+
+    print(
+        f" -> ✅ winget detected:"
+        f"\n    {winget_path}"
+    )
+
     try:
-        subprocess.run(
-            f'git clone {repo_url}', shell=True, cwd=destination_dir, capture_output=True, text=True, check=True
+
+        result = subprocess.run(
+            [winget_path, "--version"],
+            capture_output=True,
+            text=True
         )
-        print(" -> 🎉 Repository successfully cloned!")
-    except subprocess.CalledProcessError as e:
-        print(f" -> ❌ Git clone failed:\n{e.stderr}", file=sys.stderr)
+
+        version = (
+            result.stdout.strip()
+            or result.stderr.strip()
+        )
+
+        print(
+            f" -> ✅ winget version: {version}"
+        )
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Could not execute winget: {e}"
+        )
+
+        sys.exit(1)
+
+
+# ============================================================
+# GIT
+# ============================================================
+
+def install_git():
+
+    print("\n[2/11] Checking Git...")
+
+    if command_exists("git"):
+
+        git_path = find_command("git")
+
+        print(
+            " -> ✅ Git is already installed."
+        )
+        print(
+            f"    {git_path}"
+        )
+
         return
 
-    requirements_path = os.path.join(target_project_path, "requirements.txt")
-    if os.path.exists(requirements_path):
-        print(" -> Found 'requirements.txt'. Installing dependencies...")
-        pip_command = f'"{sys.executable}" -m pip install -r requirements.txt'
-        try:
-            subprocess.run(pip_command, shell=True, cwd=target_project_path, check=True)
-            print(" -> ✅ All dependencies installed successfully!")
-        except subprocess.CalledProcessError:
-            print(f" -> ❌ Failed to install dependencies.", file=sys.stderr)
+    print(
+        " -> Git not found."
+    )
+
+    print(
+        " -> Installing Git through winget..."
+    )
+
+    winget = find_command("winget")
+
+    command = [
+        winget,
+        "install",
+        "--id",
+        "Git.Git",
+        "--exact",
+        "--silent",
+        "--accept-source-agreements",
+        "--accept-package-agreements"
+    ]
+
+    success = run_live_command(
+        command,
+        "❌ Git installation failed"
+    )
+
+    if not success:
+        sys.exit(1)
+
+    refresh_environment()
+
+    if not command_exists("git"):
+
+        print(
+            " -> ❌ Git installer finished, "
+            "but Git could not be detected."
+        )
+
+        sys.exit(1)
+
+    print(
+        " -> ✅ Git installed successfully."
+    )
+
+
+# ============================================================
+# PYTHON 3.10
+# ============================================================
+
+def python_310_exists():
+
+    try:
+
+        result = subprocess.run(
+            [
+                "py",
+                "-3.10",
+                "--version"
+            ],
+            capture_output=True,
+            text=True
+        )
+
+        version = (
+            result.stdout.strip()
+            or result.stderr.strip()
+        )
+
+        return (
+            result.returncode == 0
+            and version.startswith("Python 3.10")
+        )
+
+    except Exception:
+        return False
+
+
+def download_python(destination):
+
+    print(
+        " -> Downloading Python 3.10.11..."
+    )
+
+    try:
+
+        with urllib.request.urlopen(
+            PYTHON_310_URL,
+            timeout=30
+        ) as response:
+
+            total_size = response.headers.get(
+                "Content-Length"
+            )
+
+            if total_size:
+                total_size = int(total_size)
+
+            downloaded = 0
+
+            block_size = 256 * 1024
+
+            with open(
+                destination,
+                "wb"
+            ) as output:
+
+                while True:
+
+                    data = response.read(
+                        block_size
+                    )
+
+                    if not data:
+                        break
+
+                    output.write(data)
+
+                    downloaded += len(data)
+
+                    if total_size:
+
+                        percent = int(
+                            downloaded
+                            * 100
+                            / total_size
+                        )
+
+                        mb_done = (
+                            downloaded
+                            / 1024
+                            / 1024
+                        )
+
+                        mb_total = (
+                            total_size
+                            / 1024
+                            / 1024
+                        )
+
+                        sys.stdout.write(
+                            "\r    Python download: "
+                            f"{percent}% "
+                            f"({mb_done:.1f}/"
+                            f"{mb_total:.1f} MB)"
+                        )
+
+                        sys.stdout.flush()
+
+        print()
+
+    except Exception:
+
+        if os.path.exists(destination):
+            os.remove(destination)
+
+        raise
+
+
+def install_python_310():
+
+    print(
+        "\n[3/11] Checking Python 3.10..."
+    )
+
+    if python_310_exists():
+
+        result = subprocess.run(
+            [
+                "py",
+                "-3.10",
+                "--version"
+            ],
+            capture_output=True,
+            text=True
+        )
+
+        version = (
+            result.stdout.strip()
+            or result.stderr.strip()
+        )
+
+        print(
+            f" -> ✅ {version}"
+        )
+
+        return
+
+    print(
+        " -> Python 3.10 was not found."
+    )
+
+    temp_dir = os.environ.get(
+        "TEMP",
+        "."
+    )
+
+    installer_path = os.path.join(
+        temp_dir,
+        "python-3.10.11-amd64.exe"
+    )
+
+    try:
+
+        download_python(
+            installer_path
+        )
+
+        print(
+            " -> Installing Python silently..."
+        )
+
+        command = [
+            installer_path,
+            "/quiet",
+            "InstallAllUsers=1",
+            "PrependPath=1",
+            "Include_pip=1"
+        ]
+
+        result = subprocess.run(
+            command,
+            check=False
+        )
+
+        if result.returncode != 0:
+
+            print(
+                " -> ❌ Python installer "
+                f"returned {result.returncode}"
+            )
+
+            sys.exit(1)
+
+        refresh_environment()
+
+        if not python_310_exists():
+
+            print(
+                " -> ❌ Python installation "
+                "could not be verified."
+            )
+
+            sys.exit(1)
+
+        print(
+            " -> ✅ Python 3.10 installed."
+        )
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Python installation failed: {e}"
+        )
+
+        sys.exit(1)
+
+
+# ============================================================
+# OLLAMA INSTALLATION
+# ============================================================
+
+def install_ollama():
+
+    print(
+        "\n[4/11] Checking Ollama..."
+    )
+
+    if command_exists("ollama"):
+
+        print(
+            " -> ✅ Ollama is already installed."
+        )
+
+        return
+
+    print(
+        " -> Ollama not found."
+    )
+
+    print(
+        " -> Installing Ollama through winget..."
+    )
+
+    winget = find_command("winget")
+
+    command = [
+        winget,
+        "install",
+        "--id",
+        "Ollama.Ollama",
+        "--exact",
+        "--silent",
+        "--accept-source-agreements",
+        "--accept-package-agreements"
+    ]
+
+    success = run_live_command(
+        command,
+        "❌ Ollama installation failed"
+    )
+
+    if not success:
+        sys.exit(1)
+
+    refresh_environment()
+
+    if not command_exists("ollama"):
+
+        print(
+            " -> ❌ Ollama installer finished, "
+            "but Ollama could not be detected."
+        )
+
+        sys.exit(1)
+
+    print(
+        " -> ✅ Ollama installed successfully."
+    )
+
+
+# ============================================================
+# OLLAMA API
+# ============================================================
+
+def ollama_api_ready():
+
+    try:
+
+        with urllib.request.urlopen(
+            OLLAMA_API_TAGS,
+            timeout=2
+        ) as response:
+
+            return response.status == 200
+
+    except Exception:
+        return False
+
+
+def wait_for_ollama(timeout=45):
+
+    print(
+        "\n[5/11] Starting Ollama service..."
+    )
+
+    if ollama_api_ready():
+
+        print(
+            " -> ✅ Ollama API is already running."
+        )
+
+        return True
+
+    print(
+        " -> Ollama API is offline."
+    )
+
+    print(
+        " -> Starting Ollama server..."
+    )
+
+    ollama = find_command("ollama")
+
+    if not ollama:
+
+        print(
+            " -> ❌ Ollama executable not found."
+        )
+
+        return False
+
+    try:
+
+        subprocess.Popen(
+            [
+                ollama,
+                "serve"
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=subprocess.CREATE_NO_WINDOW
+        )
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Failed to start Ollama: {e}"
+        )
+
+        return False
+
+    start_time = time.time()
+
+    while (
+        time.time() - start_time
+        < timeout
+    ):
+
+        if ollama_api_ready():
+
+            print(
+                "\n -> ✅ Ollama API is online."
+            )
+
+            return True
+
+        sys.stdout.write(".")
+        sys.stdout.flush()
+
+        time.sleep(1)
+
+    print()
+
+    print(
+        " -> ❌ Ollama did not respond "
+        f"within {timeout} seconds."
+    )
+
+    return False
+
+
+# ============================================================
+# QWEN MODEL
+# ============================================================
+
+def install_qwen():
+
+    print(
+        "\n[6/11] Installing "
+        "Qwen2.5-Coder 3B..."
+    )
+
+    ollama = find_command("ollama")
+
+    if not ollama:
+
+        print(
+            " -> ❌ Ollama executable "
+            "was not found."
+        )
+
+        sys.exit(1)
+
+    command = [
+        ollama,
+        "pull",
+        OLLAMA_MODEL
+    ]
+
+    success = run_live_command(
+        command,
+        "❌ Qwen model installation failed"
+    )
+
+    if not success:
+        sys.exit(1)
+
+    # Verify through API
+
+    try:
+
+        with urllib.request.urlopen(
+            OLLAMA_API_TAGS,
+            timeout=5
+        ) as response:
+
+            data = response.read().decode(
+                "utf-8",
+                errors="ignore"
+            )
+
+        if OLLAMA_MODEL in data:
+
+            print(
+                f" -> ✅ {OLLAMA_MODEL} verified."
+            )
+
+        else:
+
+            print(
+                " -> ❌ Model was not found "
+                "after download."
+            )
+
+            sys.exit(1)
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Model verification failed: {e}"
+        )
+
+        sys.exit(1)
+
+
+# ============================================================
+# SELECT REN DIRECTORY
+# ============================================================
+
+def choose_install_directory():
+
+    print(
+        "\n[7/11] Selecting Ren AI location..."
+    )
+
+    root = Tk()
+
+    root.withdraw()
+
+    root.attributes(
+        "-topmost",
+        True
+    )
+
+    destination = filedialog.askdirectory(
+        title="Select folder for Ren AI"
+    )
+
+    root.destroy()
+
+    if destination:
+
+        return destination
+
+    # Automatic fallback
+
+    user_profile = os.environ.get(
+        "USERPROFILE",
+        os.path.expanduser("~")
+    )
+
+    fallback = os.path.join(
+        user_profile,
+        "RenAI"
+    )
+
+    os.makedirs(
+        fallback,
+        exist_ok=True
+    )
+
+    print(
+        " -> No folder selected."
+    )
+
+    print(
+        f" -> Using: {fallback}"
+    )
+
+    return fallback
+
+
+# ============================================================
+# CLONE REN
+# ============================================================
+
+def clone_ren():
+
+    global target_project_path
+
+    destination_dir = (
+        choose_install_directory()
+    )
+
+    target_project_path = os.path.join(
+        destination_dir,
+        "REN-AI"
+    )
+
+    if os.path.exists(
+        target_project_path
+    ):
+
+        print(
+            " -> REN-AI directory already exists."
+        )
+
+        return
+
+    git = find_command("git")
+
+    if not git:
+
+        print(
+            " -> ❌ Git executable "
+            "was not found."
+        )
+
+        sys.exit(1)
+
+    print(
+        " -> Downloading Ren AI repository..."
+    )
+
+    command = [
+        git,
+        "clone",
+        REPO_URL,
+        target_project_path
+    ]
+
+    success = run_live_command(
+        command,
+        "❌ Ren repository download failed"
+    )
+
+    if not success:
+        sys.exit(1)
+
+    print(
+        " -> ✅ Ren repository downloaded."
+    )
+
+
+# ============================================================
+# PYTHON DEPENDENCIES
+# ============================================================
+
+def install_dependencies():
+
+    print(
+        "\n[8/11] Installing Ren dependencies..."
+    )
+
+    requirements = os.path.join(
+        target_project_path,
+        "requirements.txt"
+    )
+
+    if not os.path.isfile(
+        requirements
+    ):
+
+        print(
+            " -> ⚠️ requirements.txt "
+            "was not found."
+        )
+
+        return
+
+    print(
+        " -> Upgrading pip..."
+    )
+
+    run_live_command(
+        [
+            "py",
+            "-3.10",
+            "-m",
+            "pip",
+            "install",
+            "--upgrade",
+            "pip"
+        ],
+        "⚠️ pip upgrade failed"
+    )
+
+    print(
+        " -> Installing requirements..."
+    )
+
+    success = run_live_command(
+        [
+            "py",
+            "-3.10",
+            "-m",
+            "pip",
+            "install",
+            "-r",
+            requirements
+        ],
+        "❌ Dependency installation failed"
+    )
+
+    if not success:
+        sys.exit(1)
+
+    print(
+        " -> ✅ Ren dependencies installed."
+    )
+
+
+# ============================================================
+# REN CONFIGURATION
+# ============================================================
+
+def configure_ren():
+
+    print(
+        "\n[9/11] Configuring Ren → Ollama..."
+    )
+
+    env_file = os.path.join(
+        target_project_path,
+        ".env"
+    )
+
+    try:
+
+        with open(
+            env_file,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            file.write(
+                "OLLAMA_API_BASE="
+                "http://127.0.0.1:11434\n"
+            )
+
+            file.write(
+                f"MODEL_NAME={OLLAMA_MODEL}\n"
+            )
+
+        print(
+            " -> ✅ .env configuration created."
+        )
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Could not create .env: {e}"
+        )
+
+        sys.exit(1)
+
+
+# ============================================================
+# FINAL VERIFICATION
+# ============================================================
+
+def verify_installation():
+
+    print(
+        "\n[10/11] Verifying installation..."
+    )
+
+    problems = []
+
+    refresh_environment()
+
+    if not command_exists("git"):
+        problems.append("Git")
+
+    if not python_310_exists():
+        problems.append("Python 3.10")
+
+    if not command_exists("ollama"):
+        problems.append("Ollama")
+
+    if not ollama_api_ready():
+        problems.append("Ollama API")
+
+    if not target_project_path:
+        problems.append("Ren directory")
+
     else:
-        print(" -> ⚠️ Warning: No 'requirements.txt' file found inside the repository.")
+
+        gui_file = os.path.join(
+            target_project_path,
+            "gui.py"
+        )
+
+        if not os.path.isfile(gui_file):
+            problems.append("gui.py")
+
+    if problems:
+
+        print()
+        print(
+            " -> ❌ Installation verification failed:"
+        )
+
+        for problem in problems:
+
+            print(
+                f"    • {problem}"
+            )
+
+        sys.exit(1)
+
+    print(
+        " -> ✅ All major components verified."
+    )
+
+
+# ============================================================
+# LAUNCH REN
+# ============================================================
+
+def launch_ren():
+
+    print(
+        "\n[11/11] Launching Ren AI..."
+    )
+
+    gui_path = os.path.join(
+        target_project_path,
+        "gui.py"
+    )
+
+    if not os.path.isfile(
+        gui_path
+    ):
+
+        print(
+            " -> ❌ gui.py was not found."
+        )
+
+        sys.exit(1)
+
+    try:
+
+        subprocess.Popen(
+            [
+                "py",
+                "-3.10",
+                gui_path
+            ],
+            cwd=target_project_path
+        )
+
+        print()
+        print(
+            "=============================================="
+        )
+        print(
+            "          🚀 REN AI IS STARTING              "
+        )
+        print(
+            "=============================================="
+        )
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Could not launch Ren: {e}"
+        )
+
+        sys.exit(1)
+
+
+# ============================================================
+# MAIN
+# ============================================================
 
 def main():
-    print("==============================================")
-    print("        WELCOME TO THE REN AI INSTALLER       ")
-    print("==============================================")
-    print("This setup manager will configure your environment and fetch core components.")
-    time.sleep(1.5)
 
-    install_git_if_missing()
-    install_ollama_winget()
-    download_qwen_coder()
-    clone_repo_and_install_deps()
+    print()
 
-    print("\n==============================================")
-    print("        SETUP PROCESS COMPLETE! Enjoy REN AI  ")
-    print("==============================================")
+    print(
+        "=============================================="
+    )
+    print(
+        "        WELCOME TO THE REN AI INSTALLER       "
+    )
+    print(
+        "=============================================="
+    )
+
+    print()
+
+    print(
+        "This installer will configure:"
+    )
+
+    print(
+        "  • Git"
+    )
+    print(
+        "  • Python 3.10"
+    )
+    print(
+        "  • Ollama"
+    )
+    print(
+        "  • Qwen2.5-Coder 3B"
+    )
+    print(
+        "  • Ren AI"
+    )
+
+    print()
+
+    time.sleep(1)
+
+    # 1
+    check_windows()
+
+    # 2
+    install_git()
+
+    # 3
+    install_python_310()
+
+    # 4
+    install_ollama()
+
+    # 5
+    if not wait_for_ollama():
+        sys.exit(1)
+
+    # 6
+    install_qwen()
+
+    # 7
+    clone_ren()
+
+    # 8
+    install_dependencies()
+
+    # 9
+    configure_ren()
+
+    # 10
+    verify_installation()
+
+    # 11
+    launch_ren()
+
+    print()
+
+    print(
+        "=============================================="
+    )
+    print(
+        "       🚀 REN AI INSTALLATION COMPLETE       "
+    )
+    print(
+        "=============================================="
+    )
+
+
+# ============================================================
+# ENTRY POINT
+# ============================================================
 
 if __name__ == "__main__":
     main()
