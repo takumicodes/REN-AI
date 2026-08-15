@@ -20,9 +20,7 @@ REN-AI is a next-generation, local AI assistant designed to adapt, learn, and ma
   * **Web Book Downloader:** Periodically connects to Project Gutenberg to download and catalog text books.
   * **Self-Education:** Summarizes book passages and technical topics relevant to User skills and youtube channel, saving the knowledge to `memory.json`.
   * **System Organizer:** Scans the Windows `Downloads/` directory and categorizes files (Documents, Images, Archives, Installers) into tidy subfolders.
-* 
 
----
 
 
 ---
