@@ -1,17 +1,15 @@
-# Ren AI Installer
-# Installs all required components for Ren AI and launches Ren.
-#
-# Requirements:
-# - Windows 10/11
-# - Internet connection
-#
-# Components:
-# Git
-# Python 3.10
-# Ollama
-# Qwen2.5-Coder 3B
-# REN-AI repository
-# Python dependencies
+# ============================================================
+# REN AI INSTALLER
+# Automatically installs:
+#   1. Git
+#   2. Python 3.10
+#   3. Ollama
+#   4. Qwen2.5-Coder 3B
+#   5. REN-AI
+#   6. Python dependencies
+#   7. Ren configuration
+#   8. Launches Ren
+# ============================================================
 
 import os
 import shutil
@@ -41,13 +39,13 @@ target_project_path = None
 
 
 # ============================================================
-# UTILITY FUNCTIONS
+# ENVIRONMENT / PATH
 # ============================================================
 
 def refresh_environment():
     """
-    Refresh the current Python process PATH from Windows'
-    machine + user environment variables.
+    Refresh PATH from Windows registry and add common
+    Windows executable locations.
     """
 
     if sys.platform != "win32":
@@ -59,42 +57,146 @@ def refresh_environment():
         machine_path = ""
         user_path = ""
 
+        # Machine PATH
         try:
             with winreg.OpenKey(
                 winreg.HKEY_LOCAL_MACHINE,
                 r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
             ) as key:
-                machine_path, _ = winreg.QueryValueEx(key, "Path")
+                machine_path, _ = winreg.QueryValueEx(
+                    key,
+                    "Path"
+                )
         except Exception:
             pass
 
+        # User PATH
         try:
             with winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER,
                 r"Environment"
             ) as key:
-                user_path, _ = winreg.QueryValueEx(key, "Path")
+                user_path, _ = winreg.QueryValueEx(
+                    key,
+                    "Path"
+                )
         except Exception:
             pass
 
-        os.environ["PATH"] = (
+        combined_path = (
             machine_path
             + os.pathsep
             + user_path
         )
 
+        os.environ["PATH"] = combined_path
+
+        # WindowsApps contains winget.exe
+        local_app_data = os.environ.get(
+            "LOCALAPPDATA",
+            ""
+        )
+
+        windows_apps = os.path.join(
+            local_app_data,
+            "Microsoft",
+            "WindowsApps"
+        )
+
+        if os.path.isdir(windows_apps):
+            if windows_apps not in os.environ["PATH"]:
+                os.environ["PATH"] += (
+                    os.pathsep + windows_apps
+                )
+
+        # Common Git location
+        git_cmd = r"C:\Program Files\Git\cmd"
+
+        if os.path.isdir(git_cmd):
+            if git_cmd not in os.environ["PATH"]:
+                os.environ["PATH"] += (
+                    os.pathsep + git_cmd
+                )
+
+        # Common Ollama location
+        ollama_path = os.path.join(
+            local_app_data,
+            "Programs",
+            "Ollama"
+        )
+
+        if os.path.isdir(ollama_path):
+            if ollama_path not in os.environ["PATH"]:
+                os.environ["PATH"] += (
+                    os.pathsep + ollama_path
+                )
+
     except Exception:
         pass
 
 
+# ============================================================
+# COMMAND DETECTION
+# ============================================================
+
+def find_command(command):
+    """
+    Find an executable after refreshing PATH.
+    """
+
+    refresh_environment()
+
+    result = shutil.which(command)
+
+    if result:
+        return result
+
+    # Explicit winget fallback
+    if command.lower() == "winget":
+        possible_paths = [
+            os.path.join(
+                os.environ.get("LOCALAPPDATA", ""),
+                "Microsoft",
+                "WindowsApps",
+                "winget.exe"
+            ),
+            r"C:\Windows\System32\winget.exe"
+        ]
+
+        for path in possible_paths:
+            if os.path.isfile(path):
+                return path
+
+    return None
+
+
+def command_exists(command):
+    return find_command(command) is not None
+
+
+# ============================================================
+# LIVE COMMAND EXECUTION
+# ============================================================
+
 def run_live_command(command, error_message):
     """
-    Run a command while displaying its output live.
-    Returns True when the command exits successfully.
+    Runs a command and prints output live.
     """
 
     try:
-        print(f" -> Running: {' '.join(command) if isinstance(command, list) else command}")
+        refresh_environment()
+
+        print()
+
+        if isinstance(command, list):
+            printable = " ".join(
+                f'"{x}"' if " " in str(x) else str(x)
+                for x in command
+            )
+        else:
+            printable = command
+
+        print(f" -> Running: {printable}")
 
         process = subprocess.Popen(
             command,
@@ -108,10 +210,13 @@ def run_live_command(command, error_message):
 
         if process.stdout:
             for line in process.stdout:
-                line = line.strip()
+                line = line.rstrip()
 
                 if line:
-                    print(f"    {line}", flush=True)
+                    print(
+                        f"    {line}",
+                        flush=True
+                    )
 
         return_code = process.wait()
 
@@ -119,42 +224,86 @@ def run_live_command(command, error_message):
             return True
 
         print(
-            f" -> ❌ Command failed with exit code {return_code}",
+            f" -> ❌ Command failed with "
+            f"exit code {return_code}",
             file=sys.stderr
         )
+
         return False
 
     except Exception as e:
-        print(f" -> {error_message}: {e}", file=sys.stderr)
+
+        print(
+            f" -> {error_message}: {e}",
+            file=sys.stderr
+        )
+
         return False
 
 
-def command_exists(command):
-    """Check whether a command exists in PATH."""
-
-    refresh_environment()
-    return shutil.which(command) is not None
-
-
 # ============================================================
-# WINDOWS CHECK
+# WINDOWS / WINGET
 # ============================================================
 
 def check_windows():
     print("\n[1/11] Checking Windows compatibility...")
 
     if sys.platform != "win32":
-        print(" -> ❌ Ren Installer only supports Windows.")
-        sys.exit(1)
 
-    if not command_exists("winget"):
         print(
-            " -> ❌ winget was not found.\n"
-            " -> Please install/update App Installer from Microsoft."
+            " -> ❌ This installer only supports Windows."
         )
+
         sys.exit(1)
 
-    print(" -> ✅ Windows and winget detected.")
+    refresh_environment()
+
+    winget_path = find_command("winget")
+
+    if not winget_path:
+
+        print()
+        print(
+            " -> ❌ winget was not found."
+        )
+        print()
+        print(
+            " -> Windows App Installer / winget "
+            "is required for Git and Ollama installation."
+        )
+        print()
+
+        sys.exit(1)
+
+    print(
+        f" -> ✅ winget detected:"
+        f"\n    {winget_path}"
+    )
+
+    try:
+
+        result = subprocess.run(
+            [winget_path, "--version"],
+            capture_output=True,
+            text=True
+        )
+
+        version = (
+            result.stdout.strip()
+            or result.stderr.strip()
+        )
+
+        print(
+            f" -> ✅ winget version: {version}"
+        )
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Could not execute winget: {e}"
+        )
+
+        sys.exit(1)
 
 
 # ============================================================
@@ -162,17 +311,34 @@ def check_windows():
 # ============================================================
 
 def install_git():
+
     print("\n[2/11] Checking Git...")
 
     if command_exists("git"):
-        print(" -> ✅ Git is already installed.")
+
+        git_path = find_command("git")
+
+        print(
+            " -> ✅ Git is already installed."
+        )
+        print(
+            f"    {git_path}"
+        )
+
         return
 
-    print(" -> Git not found.")
-    print(" -> Installing Git through winget...")
+    print(
+        " -> Git not found."
+    )
+
+    print(
+        " -> Installing Git through winget..."
+    )
+
+    winget = find_command("winget")
 
     command = [
-        "winget",
+        winget,
         "install",
         "--id",
         "Git.Git",
@@ -182,19 +348,28 @@ def install_git():
         "--accept-package-agreements"
     ]
 
-    if not run_live_command(
+    success = run_live_command(
         command,
         "❌ Git installation failed"
-    ):
+    )
+
+    if not success:
         sys.exit(1)
 
     refresh_environment()
 
     if not command_exists("git"):
-        print(" -> ❌ Git installation completed but Git was not found.")
+
+        print(
+            " -> ❌ Git installer finished, "
+            "but Git could not be detected."
+        )
+
         sys.exit(1)
 
-    print(" -> ✅ Git installed successfully.")
+    print(
+        " -> ✅ Git installed successfully."
+    )
 
 
 # ============================================================
@@ -202,16 +377,23 @@ def install_git():
 # ============================================================
 
 def python_310_exists():
-    """Check whether Python 3.10 is available through the launcher."""
 
     try:
+
         result = subprocess.run(
-            ["py", "-3.10", "--version"],
+            [
+                "py",
+                "-3.10",
+                "--version"
+            ],
             capture_output=True,
             text=True
         )
 
-        version = result.stdout.strip() or result.stderr.strip()
+        version = (
+            result.stdout.strip()
+            or result.stderr.strip()
+        )
 
         return (
             result.returncode == 0
@@ -222,33 +404,139 @@ def python_310_exists():
         return False
 
 
+def download_python(destination):
+
+    print(
+        " -> Downloading Python 3.10.11..."
+    )
+
+    try:
+
+        with urllib.request.urlopen(
+            PYTHON_310_URL,
+            timeout=30
+        ) as response:
+
+            total_size = response.headers.get(
+                "Content-Length"
+            )
+
+            if total_size:
+                total_size = int(total_size)
+
+            downloaded = 0
+
+            block_size = 256 * 1024
+
+            with open(
+                destination,
+                "wb"
+            ) as output:
+
+                while True:
+
+                    data = response.read(
+                        block_size
+                    )
+
+                    if not data:
+                        break
+
+                    output.write(data)
+
+                    downloaded += len(data)
+
+                    if total_size:
+
+                        percent = int(
+                            downloaded
+                            * 100
+                            / total_size
+                        )
+
+                        mb_done = (
+                            downloaded
+                            / 1024
+                            / 1024
+                        )
+
+                        mb_total = (
+                            total_size
+                            / 1024
+                            / 1024
+                        )
+
+                        sys.stdout.write(
+                            "\r    Python download: "
+                            f"{percent}% "
+                            f"({mb_done:.1f}/"
+                            f"{mb_total:.1f} MB)"
+                        )
+
+                        sys.stdout.flush()
+
+        print()
+
+    except Exception:
+
+        if os.path.exists(destination):
+            os.remove(destination)
+
+        raise
+
+
 def install_python_310():
-    print("\n[3/11] Checking Python 3.10...")
+
+    print(
+        "\n[3/11] Checking Python 3.10..."
+    )
 
     if python_310_exists():
+
         result = subprocess.run(
-            ["py", "-3.10", "--version"],
+            [
+                "py",
+                "-3.10",
+                "--version"
+            ],
             capture_output=True,
             text=True
         )
 
-        print(f" -> ✅ {result.stdout.strip()}")
+        version = (
+            result.stdout.strip()
+            or result.stderr.strip()
+        )
+
+        print(
+            f" -> ✅ {version}"
+        )
+
         return
 
-    print(" -> Python 3.10 not found.")
-    print(" -> Downloading official Python 3.10.11 installer...")
+    print(
+        " -> Python 3.10 was not found."
+    )
 
-    temp_dir = os.environ.get("TEMP", os.environ.get("TMP", "."))
+    temp_dir = os.environ.get(
+        "TEMP",
+        "."
+    )
+
     installer_path = os.path.join(
         temp_dir,
         "python-3.10.11-amd64.exe"
     )
 
     try:
-        download_python(installer_path)
 
-        print("\n -> Installing Python 3.10...")
-        print(" -> This may take a moment.")
+        download_python(
+            installer_path
+        )
+
+        print(
+            " -> Installing Python silently..."
+        )
 
         command = [
             installer_path,
@@ -264,100 +552,68 @@ def install_python_310():
         )
 
         if result.returncode != 0:
+
             print(
-                f" -> ❌ Python installer returned "
-                f"exit code {result.returncode}"
+                " -> ❌ Python installer "
+                f"returned {result.returncode}"
             )
+
             sys.exit(1)
 
         refresh_environment()
 
         if not python_310_exists():
+
             print(
-                " -> ❌ Python installation finished, "
-                "but Python 3.10 could not be detected."
+                " -> ❌ Python installation "
+                "could not be verified."
             )
+
             sys.exit(1)
 
-        print(" -> ✅ Python 3.10 installed successfully.")
+        print(
+            " -> ✅ Python 3.10 installed."
+        )
 
     except Exception as e:
+
         print(
-            f" -> ❌ Python installation failed: {e}",
-            file=sys.stderr
+            f" -> ❌ Python installation failed: {e}"
         )
+
         sys.exit(1)
 
 
-def download_python(destination):
-    """Download Python with a simple progress display."""
-
-    try:
-        with urllib.request.urlopen(
-            PYTHON_310_URL,
-            timeout=30
-        ) as response:
-
-            total_size = response.headers.get("Content-Length")
-
-            if total_size:
-                total_size = int(total_size)
-
-            downloaded = 0
-            block_size = 256 * 1024
-
-            with open(destination, "wb") as output:
-
-                while True:
-                    data = response.read(block_size)
-
-                    if not data:
-                        break
-
-                    output.write(data)
-                    downloaded += len(data)
-
-                    if total_size:
-                        percent = int(
-                            downloaded * 100 / total_size
-                        )
-
-                        mb_done = downloaded / (1024 * 1024)
-                        mb_total = total_size / (1024 * 1024)
-
-                        sys.stdout.write(
-                            f"\r    Downloading Python: "
-                            f"{percent}% "
-                            f"({mb_done:.1f}/{mb_total:.1f} MB)"
-                        )
-
-                        sys.stdout.flush()
-
-        print()
-
-    except Exception:
-        if os.path.exists(destination):
-            os.remove(destination)
-
-        raise
-
-
 # ============================================================
-# OLLAMA
+# OLLAMA INSTALLATION
 # ============================================================
 
 def install_ollama():
-    print("\n[4/11] Checking Ollama...")
+
+    print(
+        "\n[4/11] Checking Ollama..."
+    )
 
     if command_exists("ollama"):
-        print(" -> ✅ Ollama is already installed.")
+
+        print(
+            " -> ✅ Ollama is already installed."
+        )
+
         return
 
-    print(" -> Ollama not found.")
-    print(" -> Installing Ollama through winget...")
+    print(
+        " -> Ollama not found."
+    )
+
+    print(
+        " -> Installing Ollama through winget..."
+    )
+
+    winget = find_command("winget")
 
     command = [
-        "winget",
+        winget,
         "install",
         "--id",
         "Ollama.Ollama",
@@ -367,32 +623,38 @@ def install_ollama():
         "--accept-package-agreements"
     ]
 
-    if not run_live_command(
+    success = run_live_command(
         command,
         "❌ Ollama installation failed"
-    ):
+    )
+
+    if not success:
         sys.exit(1)
 
     refresh_environment()
 
     if not command_exists("ollama"):
+
         print(
-            " -> ❌ Ollama installation completed "
-            "but executable was not found."
+            " -> ❌ Ollama installer finished, "
+            "but Ollama could not be detected."
         )
+
         sys.exit(1)
 
-    print(" -> ✅ Ollama installed successfully.")
+    print(
+        " -> ✅ Ollama installed successfully."
+    )
 
 
 # ============================================================
-# OLLAMA SERVER
+# OLLAMA API
 # ============================================================
 
 def ollama_api_ready():
-    """Check whether Ollama's local API is responding."""
 
     try:
+
         with urllib.request.urlopen(
             OLLAMA_API_TAGS,
             timeout=2
@@ -405,32 +667,70 @@ def ollama_api_ready():
 
 
 def wait_for_ollama(timeout=45):
-    print("\n[5/11] Starting Ollama service...")
+
+    print(
+        "\n[5/11] Starting Ollama service..."
+    )
 
     if ollama_api_ready():
-        print(" -> ✅ Ollama API is already running.")
+
+        print(
+            " -> ✅ Ollama API is already running."
+        )
+
         return True
 
-    print(" -> Ollama API is not running.")
-    print(" -> Starting Ollama...")
+    print(
+        " -> Ollama API is offline."
+    )
+
+    print(
+        " -> Starting Ollama server..."
+    )
+
+    ollama = find_command("ollama")
+
+    if not ollama:
+
+        print(
+            " -> ❌ Ollama executable not found."
+        )
+
+        return False
 
     try:
+
         subprocess.Popen(
-            ["ollama", "serve"],
+            [
+                ollama,
+                "serve"
+            ],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             creationflags=subprocess.CREATE_NO_WINDOW
         )
+
     except Exception as e:
-        print(f" -> ❌ Could not start Ollama: {e}")
+
+        print(
+            f" -> ❌ Failed to start Ollama: {e}"
+        )
+
         return False
 
     start_time = time.time()
 
-    while time.time() - start_time < timeout:
+    while (
+        time.time() - start_time
+        < timeout
+    ):
 
         if ollama_api_ready():
-            print("\n -> ✅ Ollama API is online.")
+
+            print(
+                "\n -> ✅ Ollama API is online."
+            )
+
             return True
 
         sys.stdout.write(".")
@@ -439,9 +739,10 @@ def wait_for_ollama(timeout=45):
         time.sleep(1)
 
     print()
+
     print(
-        " -> ❌ Ollama did not respond within "
-        f"{timeout} seconds."
+        " -> ❌ Ollama did not respond "
+        f"within {timeout} seconds."
     )
 
     return False
@@ -452,29 +753,41 @@ def wait_for_ollama(timeout=45):
 # ============================================================
 
 def install_qwen():
+
     print(
         "\n[6/11] Installing "
         "Qwen2.5-Coder 3B..."
     )
 
-    if not command_exists("ollama"):
-        print(" -> ❌ Ollama command not found.")
+    ollama = find_command("ollama")
+
+    if not ollama:
+
+        print(
+            " -> ❌ Ollama executable "
+            "was not found."
+        )
+
         sys.exit(1)
 
     command = [
-        "ollama",
+        ollama,
         "pull",
         OLLAMA_MODEL
     ]
 
-    if not run_live_command(
+    success = run_live_command(
         command,
         "❌ Qwen model installation failed"
-    ):
+    )
+
+    if not success:
         sys.exit(1)
 
-    # Verify model through API
+    # Verify through API
+
     try:
+
         with urllib.request.urlopen(
             OLLAMA_API_TAGS,
             timeout=5
@@ -486,33 +799,47 @@ def install_qwen():
             )
 
         if OLLAMA_MODEL in data:
+
             print(
                 f" -> ✅ {OLLAMA_MODEL} verified."
             )
+
         else:
+
             print(
-                " -> ❌ Model pull finished, "
-                "but the model was not found."
+                " -> ❌ Model was not found "
+                "after download."
             )
+
             sys.exit(1)
 
     except Exception as e:
+
         print(
-            f" -> ❌ Could not verify model: {e}"
+            f" -> ❌ Model verification failed: {e}"
         )
+
         sys.exit(1)
 
 
 # ============================================================
-# CLONE REN
+# SELECT REN DIRECTORY
 # ============================================================
 
 def choose_install_directory():
-    print("\n[7/11] Selecting Ren installation directory...")
+
+    print(
+        "\n[7/11] Selecting Ren AI location..."
+    )
 
     root = Tk()
+
     root.withdraw()
-    root.attributes("-topmost", True)
+
+    root.attributes(
+        "-topmost",
+        True
+    )
 
     destination = filedialog.askdirectory(
         title="Select folder for Ren AI"
@@ -521,9 +848,11 @@ def choose_install_directory():
     root.destroy()
 
     if destination:
+
         return destination
 
     # Automatic fallback
+
     user_profile = os.environ.get(
         "USERPROFILE",
         os.path.expanduser("~")
@@ -540,47 +869,76 @@ def choose_install_directory():
     )
 
     print(
-        f" -> No folder selected.\n"
+        " -> No folder selected."
+    )
+
+    print(
         f" -> Using: {fallback}"
     )
 
     return fallback
 
 
+# ============================================================
+# CLONE REN
+# ============================================================
+
 def clone_ren():
+
     global target_project_path
 
-    destination_dir = choose_install_directory()
+    destination_dir = (
+        choose_install_directory()
+    )
 
     target_project_path = os.path.join(
         destination_dir,
         "REN-AI"
     )
 
-    if os.path.exists(target_project_path):
+    if os.path.exists(
+        target_project_path
+    ):
+
         print(
-            f" -> Ren directory already exists:\n"
-            f"    {target_project_path}"
+            " -> REN-AI directory already exists."
         )
+
         return
 
-    print()
-    print(" -> Downloading Ren AI from GitHub...")
+    git = find_command("git")
+
+    if not git:
+
+        print(
+            " -> ❌ Git executable "
+            "was not found."
+        )
+
+        sys.exit(1)
+
+    print(
+        " -> Downloading Ren AI repository..."
+    )
 
     command = [
-        "git",
+        git,
         "clone",
         REPO_URL,
         target_project_path
     ]
 
-    if not run_live_command(
+    success = run_live_command(
         command,
         "❌ Ren repository download failed"
-    ):
+    )
+
+    if not success:
         sys.exit(1)
 
-    print(" -> ✅ Ren repository downloaded.")
+    print(
+        " -> ✅ Ren repository downloaded."
+    )
 
 
 # ============================================================
@@ -588,20 +946,30 @@ def clone_ren():
 # ============================================================
 
 def install_dependencies():
-    print("\n[8/11] Installing Ren Python dependencies...")
+
+    print(
+        "\n[8/11] Installing Ren dependencies..."
+    )
 
     requirements = os.path.join(
         target_project_path,
         "requirements.txt"
     )
 
-    if not os.path.isfile(requirements):
+    if not os.path.isfile(
+        requirements
+    ):
+
         print(
-            " -> ⚠️ requirements.txt was not found."
+            " -> ⚠️ requirements.txt "
+            "was not found."
         )
+
         return
 
-    print(" -> Upgrading pip...")
+    print(
+        " -> Upgrading pip..."
+    )
 
     run_live_command(
         [
@@ -616,25 +984,29 @@ def install_dependencies():
         "⚠️ pip upgrade failed"
     )
 
-    print(" -> Installing requirements...")
+    print(
+        " -> Installing requirements..."
+    )
 
-    command = [
-        "py",
-        "-3.10",
-        "-m",
-        "pip",
-        "install",
-        "-r",
-        requirements
-    ]
-
-    if not run_live_command(
-        command,
+    success = run_live_command(
+        [
+            "py",
+            "-3.10",
+            "-m",
+            "pip",
+            "install",
+            "-r",
+            requirements
+        ],
         "❌ Dependency installation failed"
-    ):
+    )
+
+    if not success:
         sys.exit(1)
 
-    print(" -> ✅ Ren dependencies installed.")
+    print(
+        " -> ✅ Ren dependencies installed."
+    )
 
 
 # ============================================================
@@ -642,7 +1014,10 @@ def install_dependencies():
 # ============================================================
 
 def configure_ren():
-    print("\n[9/11] Configuring Ren → Ollama...")
+
+    print(
+        "\n[9/11] Configuring Ren → Ollama..."
+    )
 
     env_file = os.path.join(
         target_project_path,
@@ -650,6 +1025,7 @@ def configure_ren():
     )
 
     try:
+
         with open(
             env_file,
             "w",
@@ -662,159 +1038,3 @@ def configure_ren():
             )
 
             file.write(
-                f"MODEL_NAME={OLLAMA_MODEL}\n"
-            )
-
-        print(" -> ✅ Ren configuration created.")
-
-    except Exception as e:
-        print(
-            f" -> ❌ Could not create .env: {e}"
-        )
-        sys.exit(1)
-
-
-# ============================================================
-# FINAL VERIFICATION
-# ============================================================
-
-def verify_installation():
-    print("\n[10/11] Verifying installation...")
-
-    problems = []
-
-    refresh_environment()
-
-    if not command_exists("git"):
-        problems.append("Git")
-
-    if not python_310_exists():
-        problems.append("Python 3.10")
-
-    if not command_exists("ollama"):
-        problems.append("Ollama")
-
-    if not ollama_api_ready():
-        problems.append("Ollama API")
-
-    requirements = os.path.join(
-        target_project_path,
-        "requirements.txt"
-    )
-
-    if not os.path.isfile(requirements):
-        problems.append("requirements.txt")
-
-    gui_file = os.path.join(
-        target_project_path,
-        "gui.py"
-    )
-
-    if not os.path.isfile(gui_file):
-        problems.append("gui.py")
-
-    if problems:
-        print()
-        print(" -> ❌ Verification failed.")
-
-        for problem in problems:
-            print(f"    - {problem}")
-
-        sys.exit(1)
-
-    print(" -> ✅ All major components verified.")
-
-
-# ============================================================
-# LAUNCH REN
-# ============================================================
-
-def launch_ren():
-    print("\n[11/11] Launching Ren AI...")
-
-    gui_path = os.path.join(
-        target_project_path,
-        "gui.py"
-    )
-
-    if not os.path.isfile(gui_path):
-        print(
-            " -> ❌ gui.py was not found."
-        )
-        sys.exit(1)
-
-    try:
-        subprocess.Popen(
-            [
-                "py",
-                "-3.10",
-                gui_path
-            ],
-            cwd=target_project_path
-        )
-
-        print()
-        print("==============================================")
-        print("          🚀 REN AI IS STARTING              ")
-        print("==============================================")
-
-    except Exception as e:
-        print(
-            f" -> ❌ Could not launch Ren: {e}",
-            file=sys.stderr
-        )
-        sys.exit(1)
-
-
-# ============================================================
-# MAIN
-# ============================================================
-
-def main():
-
-    print()
-    print("==============================================")
-    print("        WELCOME TO THE REN AI INSTALLER       ")
-    print("==============================================")
-    print()
-    print("This installer will configure:")
-    print("  • Git")
-    print("  • Python 3.10")
-    print("  • Ollama")
-    print("  • Qwen2.5-Coder 3B")
-    print("  • Ren AI")
-    print()
-
-    time.sleep(1)
-
-    check_windows()
-
-    install_git()
-
-    install_python_310()
-
-    install_ollama()
-
-    if not wait_for_ollama():
-        sys.exit(1)
-
-    install_qwen()
-
-    clone_ren()
-
-    install_dependencies()
-
-    configure_ren()
-
-    verify_installation()
-
-    launch_ren()
-
-    print()
-    print("==============================================")
-    print("       REN AI INSTALLATION COMPLETE 🚀       ")
-    print("==============================================")
-
-
-if __name__ == "__main__":
-    main()
