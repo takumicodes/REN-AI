@@ -1038,3 +1038,231 @@ def configure_ren():
             )
 
             file.write(
+                f"MODEL_NAME={OLLAMA_MODEL}\n"
+            )
+
+        print(
+            " -> ✅ .env configuration created."
+        )
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Could not create .env: {e}"
+        )
+
+        sys.exit(1)
+
+
+# ============================================================
+# FINAL VERIFICATION
+# ============================================================
+
+def verify_installation():
+
+    print(
+        "\n[10/11] Verifying installation..."
+    )
+
+    problems = []
+
+    refresh_environment()
+
+    if not command_exists("git"):
+        problems.append("Git")
+
+    if not python_310_exists():
+        problems.append("Python 3.10")
+
+    if not command_exists("ollama"):
+        problems.append("Ollama")
+
+    if not ollama_api_ready():
+        problems.append("Ollama API")
+
+    if not target_project_path:
+        problems.append("Ren directory")
+
+    else:
+
+        gui_file = os.path.join(
+            target_project_path,
+            "gui.py"
+        )
+
+        if not os.path.isfile(gui_file):
+            problems.append("gui.py")
+
+    if problems:
+
+        print()
+        print(
+            " -> ❌ Installation verification failed:"
+        )
+
+        for problem in problems:
+
+            print(
+                f"    • {problem}"
+            )
+
+        sys.exit(1)
+
+    print(
+        " -> ✅ All major components verified."
+    )
+
+
+# ============================================================
+# LAUNCH REN
+# ============================================================
+
+def launch_ren():
+
+    print(
+        "\n[11/11] Launching Ren AI..."
+    )
+
+    gui_path = os.path.join(
+        target_project_path,
+        "gui.py"
+    )
+
+    if not os.path.isfile(
+        gui_path
+    ):
+
+        print(
+            " -> ❌ gui.py was not found."
+        )
+
+        sys.exit(1)
+
+    try:
+
+        subprocess.Popen(
+            [
+                "py",
+                "-3.10",
+                gui_path
+            ],
+            cwd=target_project_path
+        )
+
+        print()
+        print(
+            "=============================================="
+        )
+        print(
+            "          🚀 REN AI IS STARTING              "
+        )
+        print(
+            "=============================================="
+        )
+
+    except Exception as e:
+
+        print(
+            f" -> ❌ Could not launch Ren: {e}"
+        )
+
+        sys.exit(1)
+
+
+# ============================================================
+# MAIN
+# ============================================================
+
+def main():
+
+    print()
+
+    print(
+        "=============================================="
+    )
+    print(
+        "        WELCOME TO THE REN AI INSTALLER       "
+    )
+    print(
+        "=============================================="
+    )
+
+    print()
+
+    print(
+        "This installer will configure:"
+    )
+
+    print(
+        "  • Git"
+    )
+    print(
+        "  • Python 3.10"
+    )
+    print(
+        "  • Ollama"
+    )
+    print(
+        "  • Qwen2.5-Coder 3B"
+    )
+    print(
+        "  • Ren AI"
+    )
+
+    print()
+
+    time.sleep(1)
+
+    # 1
+    check_windows()
+
+    # 2
+    install_git()
+
+    # 3
+    install_python_310()
+
+    # 4
+    install_ollama()
+
+    # 5
+    if not wait_for_ollama():
+        sys.exit(1)
+
+    # 6
+    install_qwen()
+
+    # 7
+    clone_ren()
+
+    # 8
+    install_dependencies()
+
+    # 9
+    configure_ren()
+
+    # 10
+    verify_installation()
+
+    # 11
+    launch_ren()
+
+    print()
+
+    print(
+        "=============================================="
+    )
+    print(
+        "       🚀 REN AI INSTALLATION COMPLETE       "
+    )
+    print(
+        "=============================================="
+    )
+
+
+# ============================================================
+# ENTRY POINT
+# ============================================================
+
+if __name__ == "__main__":
+    main()
