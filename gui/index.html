@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REN-AI Jarvis Core</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Cosmic / Tech Grid Background -->
+    <div class="tech-grid"></div>
+    <div class="glow-bg"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header HUD -->
+        <header class="hud-header">
+            <div class="hud-item core-status">
+                <span class="status-indicator offline"></span>
+                <span class="hud-label">SYSTEM:</span>
+                <span class="hud-value" id="system-status-val">OFFLINE</span>
+            </div>
+            <div class="hud-title">
+                <h1>REN-AI // CORE V2.5</h1>
+            </div>
+            <div class="hud-item core-time">
+                <span class="hud-label">TIME:</span>
+                <span class="hud-value" id="current-time">00:00:00</span>
+            </div>
+        </header>
+
+        <!-- Sidebar HUD (System Stats) -->
+        <div class="hud-sidebar left-sidebar">
+            <div class="hud-panel">
+                <div class="panel-header">DIAGNOSTICS</div>
+                <div class="panel-body">
+                    <div class="stat-group">
+                        <div class="stat-label">CPU USAGE</div>
+                        <div class="stat-bar"><div class="stat-fill" id="cpu-fill" style="width: 0%"></div></div>
+                        <div class="stat-value" id="cpu-val">0%</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">RAM USAGE</div>
+                        <div class="stat-bar"><div class="stat-fill" id="ram-fill" style="width: 0%"></div></div>
+                        <div class="stat-value" id="ram-val">0%</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">DISK SPACE</div>
+                        <div class="stat-bar"><div class="stat-fill" id="disk-fill" style="width: 0%"></div></div>
+                        <div class="stat-value" id="disk-val">0%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-panel">
+                <div class="panel-header">MODULES</div>
+                <div class="panel-body font-mono">
+                    <div class="module-item"><span class="mod-dot active"></span> SPEECH ENGINE: <span class="mod-status text-cyan">ONLINE</span></div>
+                    <div class="module-item"><span class="mod-dot active"></span> LOCAL BRAIN: <span class="mod-status text-cyan">QWEN2.5</span></div>
+                    <div class="module-item"><span class="mod-dot" id="mod-gesture"></span> GESTURE CTRL: <span class="mod-status" id="mod-gesture-status">STDBY</span></div>
+                    <div class="module-item"><span class="mod-dot" id="mod-nn"></span> NEURAL NET: <span class="mod-status" id="mod-nn-status">STDBY</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud-sidebar right-sidebar">
+            <div class="hud-panel">
+                <div class="panel-header">IDENTITY CACHE</div>
+                <div class="panel-body font-mono font-small">
+                    <div>NAME: <span class="text-cyan">Ren</span></div>
+                    <div>CREATOR: <span class="text-cyan">Sadiq</span></div>
+                    <div>HOST_OS: <span class="text-cyan" id="host-os">WINDOWS</span></div>
+                    <div>FAV_LANG: <span class="text-cyan">PYTHON</span></div>
+                </div>
+            </div>
+            <div class="hud-panel">
+                <div class="panel-header">SKILLS UNLOCKED</div>
+                <div class="panel-body font-mono font-small" id="skills-list">
+                    <div class="skill-item" style="color: rgba(226, 232, 240, 0.5);">No skills unlocked yet.</div>
+                </div>
+            </div>
+            <div class="hud-panel console-panel">
+                <div class="panel-header">ACTIVITY LOG</div>
+                <div class="panel-body console-output" id="console-logs">
+                    <div class="log-entry system-log">Initializing Ren AI interface...</div>
+                    <div class="log-entry system-log">Waiting for manual core authorization...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Stage: The Dynosphere and Subtitles -->
+        <main class="center-stage">
+            <!-- Startup Screen Overlay -->
+            <div class="startup-overlay" id="startup-screen">
+                <div class="startup-content">
+                    <h2 class="glitch-text">REN-AI COGNITIVE SYSTEM</h2>
+                    <p class="startup-desc">Voice Integration & Realtime Gesture Recognition Interface</p>
+                    <button class="btn-start" id="btn-initialize">
+                        <span class="btn-glow"></span>
+                        <span class="btn-text">INITIALIZE CORE</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cognitive Pipeline Stages -->
+            <div class="cognitive-pipeline" id="cognitive-pipeline">
+                <div class="pipeline-step" id="step-prompt">
+                    <div class="step-label">User Prompt</div>
+                </div>
+                <div class="pipeline-arrow">➔</div>
+                <div class="pipeline-step" id="step-intent">
+                    <div class="step-label">Intent Detection</div>
+                </div>
+                <div class="pipeline-arrow">➔</div>
+                <div class="pipeline-step" id="step-plan">
+                    <div class="step-label">Task Planning</div>
+                </div>
+                <div class="pipeline-arrow">➔</div>
+                <div class="pipeline-step" id="step-tools">
+                    <div class="step-label">Tool Selection</div>
+                </div>
+                <div class="pipeline-arrow">➔</div>
+                <div class="pipeline-step" id="step-exec">
+                    <div class="step-label">Execution</div>
+                </div>
+                <div class="pipeline-arrow">➔</div>
+                <div class="pipeline-step" id="step-verify">
+                    <div class="step-label">Verification</div>
+                </div>
+            </div>
+
+            <!-- Dynosphere Canvas -->
+            <div class="dynosphere-container" id="dynosphere-box">
+                <canvas id="dynosphere-canvas"></canvas>
+                <div class="sphere-core"></div>
+                <div class="sphere-ring ring-1"></div>
+                <div class="sphere-ring ring-2"></div>
+            </div>
+
+            <!-- Speech Subtitles Box -->
+            <div class="dialogue-container" id="dialogue-box">
+                <div class="dialogue-row user-row hidden" id="user-speech-row">
+                    <span class="dialogue-label">SADIQ:</span>
+                    <span class="dialogue-text" id="user-speech-text">...</span>
+                </div>
+                <div class="dialogue-row assistant-row hidden" id="assistant-speech-row">
+                    <span class="dialogue-label">REN:</span>
+                    <span class="dialogue-text" id="assistant-speech-text">Ready for instructions, Sir.</span>
+                </div>
+            </div>
+
+            <!-- Reflect/Dream Mode Overlay Panel -->
+            <div class="reflect-panel hidden" id="reflect-panel">
+                <div class="reflect-header">COGNITIVE REFLECTION PROTOCOL (DREAM MODE)</div>
+                <div class="reflect-body font-mono">
+                    <div class="dream-intro">Analyzing cognitive trajectory and resolving recent exceptions...</div>
+                    <div class="dream-logs" id="dream-logs"></div>
+                    <div class="dream-metrics">
+                        <div>SYNAPSES: <span class="text-cyan animate-pulse">REFLECTING</span></div>
+                        <div>ERROR ENTROPY: <span class="text-cyan" id="dream-entropy">0.00%</span></div>
+                    </div>
+                    <button id="btn-wake-up" style="margin-top: 15px; padding: 10px; background: rgba(0, 240, 255, 0.1); border: 1px solid var(--neon-blue); border-radius: 4px; color: var(--neon-blue); cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 600; width: 100%; letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s ease;">WAKE UP REN</button>
+                </div>
+            </div>
+
+            <!-- Prompt Input Box -->
+            <div class="input-container">
+                <input type="text" id="prompt-input" placeholder="Type a command for Ren here..." autocomplete="off">
+                <button id="btn-submit-prompt">SEND</button>
+                <button id="btn-stop-ops">STOP</button>
+            </div>
+        </main>
+
+        <!-- Footer HUD -->
+        <footer class="hud-footer">
+            <div class="hud-footer-left">SECURE CONNECTION: ESTABLISHED</div>
+            <div class="hud-footer-right">© CYAN CODE INDUSTRIES</div>
+        </footer>
+    </div>
+
+    <!-- Advancement Unlock Popup -->
+    <div id="advancement-popup" class="advancement-popup hidden">
+        <div class="advancement-icon">🏆</div>
+        <div class="advancement-content">
+            <div class="advancement-title">ADVANCEMENT UNLOCKED</div>
+            <div class="advancement-desc" id="advancement-name">Weather Today</div>
+        </div>
+    </div>
+
+    <!-- pywebview communication bridge -->
+    <script src="main.js"></script>
+</body>
+</html>
