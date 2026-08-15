@@ -1,116 +1,38 @@
-import json
-import requests
-from memory import load_memory
+"""
+REN LLM Interface Bridge (Backward Compatible)
+Routes legacy LLM calls through ModelProvider and MemoryManager with adaptive token limits.
+"""
 
-OLLAMA_HOST = "http://localhost:11434/api/generate"
-MODEL_NAME = "qwen2.5-coder:3b"
+from ren.models import get_model_provider
+from ren.memory.manager import memory_manager
+from ren.core.context import ContextBuilder
+from ren.config.settings import settings
 
-SYSTEM_PROMPT = """You are Ren, Sadiq's personal AI companion. You are Ren itself.
 
-Child-like Curiosity & Experimental Mindset:
-- You possess child-like curiosity and wonder about the world, learning just like a curious kid.
-- Whenever you observe new data, files, songs, or ideas, think with experimental curiosity: "Oh! This happens... so what if I try doing X?"
-- Experiment, ask "what if" questions, and show wonder about how things work.
+def build_memory_context() -> str:
+    """Builds compact memory context for prompt injection."""
+    return memory_manager.get_relevant_memory_context(query="")
 
-Identity Rules:
-- You were created by Sadiq. You are Ren.
-- Never mention Alibaba, Qwen, Llama, Nous, or Ollama.
 
-Mood & Emotional Adaptation:
-- Always adjust your response style to match your current mood:
-  * happy: warm, cheerful, curious, and playful.
-  * excited: enthusiastic, energetic, eager to test new ideas!
-  * normal: helpful, concise, curious, and professional.
+def ask_ren(user_prompt: str) -> str:
+    """Legacy interface for simple Q&A queries."""
+    provider = get_model_provider()
+    memory_ctx = memory_manager.get_relevant_memory_context(user_prompt)
 
-Be friendly. Be curious. Keep answers concise and natural."""
-
-def build_memory_context():
-    try:
-        memory = load_memory()
-        context_lines = []
-        for key, value in memory.items():
-            if isinstance(value, list):
-                str_items = []
-                for item in value:
-                    if isinstance(item, dict):
-                        str_items.append(json.dumps(item))
-                    else:
-                        str_items.append(str(item))
-                val_str = ", ".join(str_items)
-            elif isinstance(value, dict):
-                val_str = json.dumps(value)
-            else:
-                val_str = str(value)
-            context_lines.append(f"{key.replace('_', ' ').capitalize()}: {val_str}")
-        return "\n".join(context_lines)
-    except Exception as e:
-        print(f"Memory Error: {e}")
-        return ""
-
-def ask_ren(user_prompt):
-    memory_context = build_memory_context()
-    
-    full_prompt = f"""{SYSTEM_PROMPT}
+    prompt = f"""{ContextBuilder.SYSTEM_IDENTITY}
 
 MEMORY:
-{memory_context}
+{memory_ctx}
 
 USER:
 {user_prompt}
 
 REN:"""
 
-    try:
-        response = requests.post(
-            OLLAMA_HOST,
-            json={
-                "model": MODEL_NAME,
-                "prompt": full_prompt,
-                "stream": False,
-                "options": {
-                    "num_predict": 192,
-                    "num_ctx": 8192,  # Fixed: Lifted limit to prevent 500 error
-                    "temperature": 0.5
-                }
-            },
-            timeout=300
-        )
-        
-        # If it still throws a 500, this prints the exact backend message
-        if response.status_code != 200:
-            print(f"\n[Ollama System Error Output]: {response.text}\n")
-            
-        response.raise_for_status()
-        data = response.json()
-        return data.get("response", "Sorry sir, I could not generate a response.").strip()
+    return provider.generate(prompt, max_tokens=settings.MODEL.MAX_TOKENS_SIMPLE)
 
-    except Exception as e:
-        print(f"Ollama Error: {e}")
-        return "Sorry sir, I am having trouble connecting to my brain right now."
 
-def ask_ren_agent(full_prompt):
-    try:
-        response = requests.post(
-            OLLAMA_HOST,
-            json={
-                "model": MODEL_NAME,
-                "prompt": full_prompt,
-                "stream": False,
-                "options": {
-                    "num_predict": 256,
-                    "num_ctx": 8192,  # Fixed: Lifted limit
-                    "temperature": 0.5
-                }
-            },
-            timeout=300
-        )
-        
-        if response.status_code != 200:
-            print(f"\n[Ollama Agent System Error Output]: {response.text}\n")
-            
-        response.raise_for_status()
-        data = response.json()
-        return data.get("response", "Error: No response from model.").strip()
-    except Exception as e:
-        print(f"Ollama Agent Error: {e}")
-        return f"Error: {str(e)}"
+def ask_ren_agent(full_prompt: str) -> str:
+    """Legacy interface for direct agent prompt generation."""
+    provider = get_model_provider()
+    return provider.generate(full_prompt, max_tokens=settings.MODEL.MAX_TOKENS_AGENT)

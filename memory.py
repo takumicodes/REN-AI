@@ -1,17 +1,17 @@
-import json
+"""
+REN Memory Bridge (Backward Compatible Interface)
+Connects legacy load_memory/save_memory calls to the SQLite-backed MemoryManager.
+"""
 
-def load_memory():
-    try:
-        with open("memory.json", "r") as f:
-            return json.load(f)
-    except Exception:
-        return {}
+from typing import Dict, Any
+from ren.memory.manager import memory_manager
 
-def save_memory(memory_dict):
-    try:
-        with open("memory.json", "w") as f:
-            json.dump(memory_dict, f, indent=4)
-        return True
-    except Exception as e:
-        print(f"Error saving memory: {e}")
-        return False
+
+def load_memory() -> Dict[str, Any]:
+    """Loads memory dictionary from the SQLite MemoryManager."""
+    return memory_manager.load_legacy_memory_dict()
+
+
+def save_memory(memory_dict: Dict[str, Any]) -> bool:
+    """Saves memory dictionary through SQLite MemoryManager and syncs memory.json."""
+    return memory_manager.save_legacy_memory_dict(memory_dict)

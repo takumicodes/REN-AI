@@ -1,0 +1,19 @@
+{
+  "name": "Test Greeter",
+  "description": "Greets user in testing",
+  "version": "1.0.0",
+  "triggers": [
+    "test",
+    "greeter"
+  ],
+  "capabilities": [
+    "test greeter"
+  ],
+  "dependencies": [],
+  "entrypoint": "main",
+  "permissions": [],
+  "enabled": true,
+  "created_at": "2026-08-15T13:54:39.513387",
+  "source_task": "",
+  "tested": true
+}

@@ -1,5 +1,4 @@
 {
-    "creator": "Sadiq",
     "creator_nickname": "Cyan Code",
     "assistant_name": "Ren",
     "mood": "normal",
@@ -54,5 +53,7 @@
         "Fetched YouTube: Stored latest uploads from @cyan_code channel.",
         "Curiosity on Cyanox: Error: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate",
         "Cleaned Downloads: Organized 156 files into categories."
-    ]
+    ],
+    "test_key": "test_value",
+    "creator": "Sadiq"
 }
