@@ -6,3 +6,6 @@ dist/
 build/
 Ren_Installer.spec
 todo_list.json
+chats/
+Ren_AI_Installer.spec
+vosk-model-small-en-us-0.15
