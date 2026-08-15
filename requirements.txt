@@ -1,5 +1,5 @@
 mediapipe==0.10.21
-numpy==2.2.6
+numpy==1.26.4
 opencv_contrib_python==4.9.0.80
 opencv_python==4.9.0.80
 psutil==7.2.2
