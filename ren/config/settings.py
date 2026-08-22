@@ -63,26 +63,26 @@ class ModelSettings:
     PROVIDER: str = os.getenv("REN_MODEL_PROVIDER", "ollama")
     OLLAMA_HOST: str = os.getenv("REN_OLLAMA_HOST", "http://localhost:11434")
     OLLAMA_GENERATE_ENDPOINT: str = os.getenv("REN_OLLAMA_ENDPOINT", "http://localhost:11434/api/generate")
-    MODEL_NAME: str = os.getenv("REN_MODEL_NAME", "qwen2.5-coder:3b")
-    DEFAULT_TEMPERATURE: float = float(os.getenv("REN_TEMPERATURE", "0.5"))
-    MAX_TOKENS_SIMPLE: int = int(os.getenv("REN_MAX_TOKENS_SIMPLE", "128"))
-    MAX_TOKENS_AGENT: int = int(os.getenv("REN_MAX_TOKENS_AGENT", "256"))
-    MAX_TOKENS_PLANNING: int = int(os.getenv("REN_MAX_TOKENS_PLANNING", "192"))
-    NUM_CTX: int = int(os.getenv("REN_NUM_CTX", "2048"))
-    TIMEOUT_SECONDS: int = int(os.getenv("REN_LLM_TIMEOUT", "120"))
+    MODEL_NAME: str = os.getenv("REN_MODEL_NAME", "qwen2.5-coder:1.5b")
+    DEFAULT_TEMPERATURE: float = float(os.getenv("REN_TEMPERATURE", "0.4"))
+    MAX_TOKENS_SIMPLE: int = int(os.getenv("REN_MAX_TOKENS_SIMPLE", "96"))
+    MAX_TOKENS_AGENT: int = int(os.getenv("REN_MAX_TOKENS_AGENT", "192"))
+    MAX_TOKENS_PLANNING: int = int(os.getenv("REN_MAX_TOKENS_PLANNING", "128"))
+    NUM_CTX: int = int(os.getenv("REN_NUM_CTX", "1024"))
+    TIMEOUT_SECONDS: int = int(os.getenv("REN_LLM_TIMEOUT", "60"))
 
 
 @dataclass
 class AgentSettings:
     """Autonomous agent loop and context settings."""
-    MAX_LOOP_ITERATIONS: int = int(os.getenv("REN_MAX_LOOP_STEPS", "8"))
-    STEP_TIMEOUT_SECONDS: int = int(os.getenv("REN_STEP_TIMEOUT", "60"))
+    MAX_LOOP_ITERATIONS: int = int(os.getenv("REN_MAX_LOOP_STEPS", "6"))
+    STEP_TIMEOUT_SECONDS: int = int(os.getenv("REN_STEP_TIMEOUT", "45"))
     MAX_REPEATED_FAILURES: int = 2
     LOOP_DETECTION_WINDOW: int = 3
-    CONTEXT_BUDGET_TOKENS: int = int(os.getenv("REN_CONTEXT_BUDGET", "1500"))
-    MEMORY_BUDGET_TOKENS: int = int(os.getenv("REN_MEMORY_BUDGET", "300"))
-    SKILLS_BUDGET_TOKENS: int = int(os.getenv("REN_SKILLS_BUDGET", "300"))
-    HISTORY_BUDGET_TOKENS: int = int(os.getenv("REN_HISTORY_BUDGET", "600"))
+    CONTEXT_BUDGET_TOKENS: int = int(os.getenv("REN_CONTEXT_BUDGET", "800"))
+    MEMORY_BUDGET_TOKENS: int = int(os.getenv("REN_MEMORY_BUDGET", "200"))
+    SKILLS_BUDGET_TOKENS: int = int(os.getenv("REN_SKILLS_BUDGET", "200"))
+    HISTORY_BUDGET_TOKENS: int = int(os.getenv("REN_HISTORY_BUDGET", "300"))
     ENABLE_SELF_HEALING: bool = True
     ENABLE_DRY_RUN: bool = False
 
@@ -103,6 +103,14 @@ class SecuritySettings:
         ":(){ :|:& };:",
         "mkfs",
         "dd if=/dev/zero",
+        "aircrack-ng",
+        "airodump-ng",
+        "airmon-ng",
+        "wifite",
+        "reaver",
+        "pixiewps",
+        "hydra",
+        "hashcat",
     ])
 
 

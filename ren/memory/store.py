@@ -48,10 +48,11 @@ class MemoryStore:
                 );
                 """)
 
-                # Long-term facts, user preferences, knowledge
+                # Long-term facts, user preferences, knowledge with user_id scoping
                 cursor.execute("""
                 CREATE TABLE IF NOT EXISTS long_term_memories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id TEXT DEFAULT 'default',
                     category TEXT NOT NULL,
                     key TEXT,
                     content TEXT NOT NULL,
@@ -65,10 +66,11 @@ class MemoryStore:
                 cursor.execute("CREATE INDEX IF NOT EXISTS idx_ltm_category ON long_term_memories(category);")
                 cursor.execute("CREATE INDEX IF NOT EXISTS idx_ltm_tags ON long_term_memories(tags);")
 
-                # Episodic memories (tasks attempted, outcomes, errors, solutions)
+                # Episodic memories with user_id scoping
                 cursor.execute("""
                 CREATE TABLE IF NOT EXISTS episodic_memories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id TEXT DEFAULT 'default',
                     task TEXT NOT NULL,
                     outcome TEXT NOT NULL,
                     actions_taken TEXT DEFAULT '',
@@ -95,14 +97,33 @@ class MemoryStore:
                     updated_at TEXT NOT NULL
                 );
                 """)
+                
+                # Check/add user_id column migration if existing database lacked it
+                cursor.execute("PRAGMA table_info(long_term_memories);")
+                ltm_cols = [r[1] if not hasattr(r, 'keys') else r['name'] for r in cursor.fetchall()]
+                if "user_id" not in ltm_cols:
+                    cursor.execute("ALTER TABLE long_term_memories ADD COLUMN user_id TEXT DEFAULT 'default';")
+                cursor.execute("CREATE INDEX IF NOT EXISTS idx_ltm_user ON long_term_memories(user_id);")
+
+                cursor.execute("PRAGMA table_info(episodic_memories);")
+                ep_cols = [r[1] if not hasattr(r, 'keys') else r['name'] for r in cursor.fetchall()]
+                if "user_id" not in ep_cols:
+                    cursor.execute("ALTER TABLE episodic_memories ADD COLUMN user_id TEXT DEFAULT 'default';")
+                cursor.execute("CREATE INDEX IF NOT EXISTS idx_episode_user ON episodic_memories(user_id);")
+
                 conn.commit()
 
             # Check if migration from memory.json is needed
             self._migrate_from_legacy_json_if_needed()
 
-        except sqlite3.DatabaseError as e:
-            error_logger.error(f"Database error during initialization: {e}. Attempting recovery...")
-            self.recover_corrupted_db()
+        except Exception as e:
+            error_logger.error(f"Database error during initialization: {e}")
+            if not getattr(self, "_recovering", False):
+                self._recovering = True
+                try:
+                    self.recover_corrupted_db()
+                finally:
+                    self._recovering = False
 
     def backup_database(self) -> Optional[Path]:
         """Creates a timestamped backup copy of the SQLite database."""
@@ -152,7 +173,6 @@ class MemoryStore:
                     self.db_path.unlink()
                 except Exception:
                     pass
-            self._init_db()
             self._force_migrate_from_legacy_json()
 
     def _migrate_from_legacy_json_if_needed(self):
@@ -278,18 +298,19 @@ class MemoryStore:
         key: Optional[str] = None,
         importance: int = 1,
         tags: str = "",
+        user_id: str = "default",
     ) -> int:
-        """Inserts a new long-term memory entry."""
+        """Inserts a new long-term memory entry with user scoping."""
         now = datetime.utcnow().isoformat()
         try:
             with self._get_connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(
                     """
-                    INSERT INTO long_term_memories (category, key, content, importance, tags, created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO long_term_memories (user_id, category, key, content, importance, tags, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """,
-                    (category, key or "", content, importance, tags, now, now)
+                    (user_id, category, key or "", content, importance, tags, now, now)
                 )
                 conn.commit()
                 return cursor.lastrowid
@@ -297,19 +318,35 @@ class MemoryStore:
             error_logger.error(f"Error adding long term memory: {e}")
             return -1
 
-    def get_all_long_term_memories(self, category: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Retrieves all long-term memories or filters by category."""
+    def get_all_long_term_memories(
+        self,
+        category: Optional[str] = None,
+        user_id: str = "default"
+    ) -> List[Dict[str, Any]]:
+        """Retrieves long-term memories for a specific user and global baseline."""
         try:
             with self._get_connection() as conn:
-                if category:
-                    rows = conn.execute(
-                        "SELECT * FROM long_term_memories WHERE category = ? ORDER BY importance DESC, id DESC",
-                        (category,)
-                    ).fetchall()
+                if user_id == "default":
+                    if category:
+                        rows = conn.execute(
+                            "SELECT * FROM long_term_memories WHERE user_id = 'default' AND category = ? ORDER BY importance DESC, id DESC",
+                            (category,)
+                        ).fetchall()
+                    else:
+                        rows = conn.execute(
+                            "SELECT * FROM long_term_memories WHERE user_id = 'default' ORDER BY importance DESC, id DESC"
+                        ).fetchall()
                 else:
-                    rows = conn.execute(
-                        "SELECT * FROM long_term_memories ORDER BY importance DESC, id DESC"
-                    ).fetchall()
+                    if category:
+                        rows = conn.execute(
+                            "SELECT * FROM long_term_memories WHERE (user_id = ? OR user_id = 'default') AND category = ? ORDER BY importance DESC, id DESC",
+                            (user_id, category)
+                        ).fetchall()
+                    else:
+                        rows = conn.execute(
+                            "SELECT * FROM long_term_memories WHERE (user_id = ? OR user_id = 'default') ORDER BY importance DESC, id DESC",
+                            (user_id,)
+                        ).fetchall()
                 return [dict(r) for r in rows]
         except Exception as e:
             error_logger.error(f"Error fetching long-term memories: {e}")
@@ -322,18 +359,19 @@ class MemoryStore:
         actions_taken: str = "",
         error: str = "",
         solution: str = "",
+        user_id: str = "default",
     ) -> int:
-        """Records an episodic memory of an attempted task and its outcome."""
+        """Records an episodic memory of an attempted task with user scoping."""
         now = datetime.utcnow().isoformat()
         try:
             with self._get_connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(
                     """
-                    INSERT INTO episodic_memories (task, outcome, actions_taken, error, solution, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    INSERT INTO episodic_memories (user_id, task, outcome, actions_taken, error, solution, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
                     """,
-                    (task, outcome, actions_taken, error, solution, now)
+                    (user_id, task, outcome, actions_taken, error, solution, now)
                 )
                 conn.commit()
                 return cursor.lastrowid
@@ -341,14 +379,20 @@ class MemoryStore:
             error_logger.error(f"Error recording episode: {e}")
             return -1
 
-    def get_recent_episodes(self, limit: int = 5) -> List[Dict[str, Any]]:
-        """Returns recent episodic task memories."""
+    def get_recent_episodes(self, limit: int = 5, user_id: str = "default") -> List[Dict[str, Any]]:
+        """Returns recent episodic task memories for user or default."""
         try:
             with self._get_connection() as conn:
-                rows = conn.execute(
-                    "SELECT * FROM episodic_memories ORDER BY id DESC LIMIT ?",
-                    (limit,)
-                ).fetchall()
+                if user_id == "default":
+                    rows = conn.execute(
+                        "SELECT * FROM episodic_memories WHERE user_id = 'default' ORDER BY id DESC LIMIT ?",
+                        (limit,)
+                    ).fetchall()
+                else:
+                    rows = conn.execute(
+                        "SELECT * FROM episodic_memories WHERE (user_id = ? OR user_id = 'default') ORDER BY id DESC LIMIT ?",
+                        (user_id, limit)
+                    ).fetchall()
                 return [dict(r) for r in rows]
         except Exception as e:
             error_logger.error(f"Error fetching episodes: {e}")

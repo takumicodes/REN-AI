@@ -15,6 +15,8 @@ from ren.tools.project import InspectProjectTool
 from ren.tools.git import GitStatusTool, GitDiffTool, GitCommitTool, GitLogTool
 from ren.tools.skills_tool import ListSkillsTool, InspectSkillTool
 from ren.tools.memory_tool import QueryMemoryTool, RememberFactTool
+from ren.tools.web_search import WebSearchTool
+from ren.tools.generate_image import GenerateImageTool
 
 from ren.security.permissions import permission_manager, PermissionRisk
 from ren.security.confirmations import confirmation_manager
@@ -64,6 +66,8 @@ class ToolRegistry:
             InspectSkillTool(),
             QueryMemoryTool(),
             RememberFactTool(),
+            WebSearchTool(),
+            GenerateImageTool(),
         ]
         for t in default_tools:
             self.register_tool(t)

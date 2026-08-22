@@ -1,22 +1,29 @@
+"""
+Skill: Defensive Wi-Fi Security & Encryption Profile Analyzer
+Provides educational and defensive cybersecurity analysis of Wi-Fi encryption protocols (WPA2/WPA3).
+Does NOT perform or provide unauthorized credential cracking.
+"""
+
 import subprocess
+import sys
 
-def get_wifi_password_from_handshake(handshake_file):
+def analyze_wifi_security():
+    summary = (
+        "Wi-Fi Security Analysis:\n"
+        "- WPA3-SAE (Simultaneous Authentication of Equals): Recommended. Resistant to offline dictionary attacks.\n"
+        "- WPA2-Personal (AES-CCMP): Standard. Secure with long, complex passphrases (>16 characters).\n"
+        "- WEP / WPA-TKIP: Deprecated & Insecure. Vulnerable to legacy protocol flaws.\n"
+    )
+    
     try:
-        result = subprocess.run(['aircrack-ng', '-w', 'rockyou.txt', handshake_file], capture_output=True, text=True)
-        if "KEY FOUND!" in result.stdout:
-            return result.stdout.split(":")[2].strip()
-        else:
-            return None
-    except Exception as e:
-        speak(f"An error occurred: {e}")
-        return None
+        if sys.platform == "win32":
+            result = subprocess.run(["netsh", "wlan", "show", "interfaces"], capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                summary += f"\nLocal Interface State:\n{result.stdout[:500]}"
+    except Exception:
+        pass
 
-handshake_file = input("Enter the path to your handshake file (e.g., handshake.cap): ")
-password = get_wifi_password_from_handshake(handshake_file)
+    return summary
 
-if password:
-    speak(f"The WiFi password is: {password}")
-else:
-    speak("Failed to retrieve the password. Please check if the handshake file is correct and try again.")
-
-speak("[DONE]")
+if __name__ == "__main__":
+    print(analyze_wifi_security())

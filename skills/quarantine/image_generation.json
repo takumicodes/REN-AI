@@ -1,0 +1,19 @@
+{
+  "name": "Image Generation",
+  "description": "Skill to Image Generation",
+  "version": "1.0.0",
+  "triggers": [
+    "image",
+    "generation"
+  ],
+  "capabilities": [
+    "image generation"
+  ],
+  "dependencies": [],
+  "entrypoint": "main",
+  "permissions": [],
+  "enabled": true,
+  "created_at": "2026-08-22T08:13:13.976347",
+  "source_task": "Create a skill to generate images",
+  "tested": false
+}

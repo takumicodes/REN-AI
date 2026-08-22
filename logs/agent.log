@@ -160,3 +160,395 @@
 [2026-08-15 07:31:37] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
 [2026-08-15 07:31:37] [INFO] [ren.agent]: Compacting session 8437338a (count: 12)...
 [2026-08-15 07:31:37] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-16 05:25:14] [INFO] [ren.agent]: Processing input (text): hello
+[2026-08-16 05:25:23] [INFO] [ren.agent]: Processing input (text): wht is a motor
+[2026-08-16 05:25:23] [INFO] [ren.agent]: Processing input: 'wht is a motor'
+[2026-08-16 05:25:23] [INFO] [ren.agent]: Starting Agent Loop for request: 'wht is a motor'
+[2026-08-16 05:28:55] [INFO] [ren.agent]: Ollama memory adaptation: Answered using lighter model 'qwen2.5-coder:1.5b'
+[2026-08-18 04:29:13] [INFO] [ren.agent]: Processing input (text): open gesture mode
+[2026-08-20 02:23:54] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:27:04] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:31:25] [INFO] [ren.agent]: Created session 'Test Chat Session' (ID: 4436a7d4)
+[2026-08-20 02:31:25] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:31:25] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:31:25] [INFO] [ren.agent]: Stop operations requested.
+[2026-08-20 02:31:25] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 02:31:43] [INFO] [ren.agent]: Created session 'Test Chat Session' (ID: 73e41d48)
+[2026-08-20 02:31:43] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:31:43] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:31:43] [INFO] [ren.agent]: Stop operations requested.
+[2026-08-20 02:31:43] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 02:31:50] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:33:13] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:33:20] [INFO] [ren.agent]: Created session 'Test Chat Session' (ID: 019e68b8)
+[2026-08-20 02:33:20] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:33:20] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:33:20] [INFO] [ren.agent]: Stop operations requested.
+[2026-08-20 02:33:20] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 02:34:25] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-20 02:35:57] [INFO] [ren.agent]: Processing input: 'Organize my downloads folder'
+[2026-08-20 02:36:17] [INFO] [ren.agent]: Processing input: 'Hello'
+[2026-08-20 02:36:17] [INFO] [ren.agent]: Starting Agent Loop for request: 'Hello'
+[2026-08-20 02:37:18] [INFO] [ren.agent]: Compacting session 8437338a (count: 28)...
+[2026-08-20 02:37:18] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-20 02:37:45] [INFO] [ren.agent]: Processing input: 'How are you'
+[2026-08-20 02:37:45] [INFO] [ren.agent]: Starting Agent Loop for request: 'How are you'
+[2026-08-20 02:39:30] [INFO] [ren.agent]: Processing input: 'What is 10 + 20'
+[2026-08-20 02:39:30] [INFO] [ren.agent]: Starting Agent Loop for request: 'What is 10 + 20'
+[2026-08-20 02:40:05] [INFO] [ren.agent]: Processing input: 'Wrong it's not 20 is 30'
+[2026-08-20 02:40:05] [INFO] [ren.agent]: Starting Agent Loop for request: 'Wrong it's not 20 is 30'
+[2026-08-20 02:41:06] [INFO] [ren.agent]: Processing input: 'Create a skill which gives you feelings'
+[2026-08-20 02:41:06] [INFO] [ren.agent]: Starting Agent Loop for request: 'Create a skill which gives you feelings'
+[2026-08-20 02:41:25] [INFO] [ren.agent]: Compacting session 8437338a (count: 12)...
+[2026-08-20 02:41:25] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-20 02:41:49] [INFO] [ren.agent]: Processing input: 'What is my ram usage'
+[2026-08-20 02:41:49] [INFO] [ren.agent]: Starting Agent Loop for request: 'What is my ram usage'
+[2026-08-20 02:42:24] [INFO] [ren.agent]: Processing input: 'Open gesture mode'
+[2026-08-20 02:42:24] [INFO] [ren.agent]: Starting Agent Loop for request: 'Open gesture mode'
+[2026-08-20 02:53:42] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-20 02:56:47] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:56:47] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:56:52] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:56:58] [INFO] [ren.agent]: Created session 'Test Chat Session' (ID: 40b67c0c)
+[2026-08-20 02:56:58] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:56:58] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:56:58] [INFO] [ren.agent]: Stop operations requested.
+[2026-08-20 02:56:58] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 02:57:08] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:57:08] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:57:38] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:57:40] [INFO] [ren.agent]: Created session 'Test Chat Session' (ID: 59e8de30)
+[2026-08-20 02:57:40] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:57:40] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:57:40] [INFO] [ren.agent]: Stop operations requested.
+[2026-08-20 02:57:40] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 02:57:44] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:57:44] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 02:59:41] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-20 03:00:12] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-20 03:02:41] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 03:02:43] [INFO] [ren.agent]: Created session 'Test Chat Session' (ID: 0c898539)
+[2026-08-20 03:02:43] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 03:02:43] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 03:02:43] [INFO] [ren.agent]: Stop operations requested.
+[2026-08-20 03:02:43] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 03:02:47] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 03:02:47] [INFO] [ren.agent]: Processing input: 'who are you'
+[2026-08-20 03:05:11] [INFO] [ren.agent]: Cloudflare tunnel established: https://helena-automation-robertson-tales.trycloudflare.com
+[2026-08-20 03:05:11] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-20 03:07:25] [INFO] [ren.agent]: Processing input: 'Organize my downloads folder'
+[2026-08-20 03:08:32] [INFO] [ren.agent]: Processing input: 'Hey there'
+[2026-08-20 03:08:32] [INFO] [ren.agent]: Starting Agent Loop for request: 'Hey there'
+[2026-08-20 03:08:47] [INFO] [ren.agent]: Client disconnected. Halting generation...
+[2026-08-20 03:08:47] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 03:09:17] [INFO] [ren.agent]: Processing input: 'How are you'
+[2026-08-20 03:09:17] [INFO] [ren.agent]: Starting Agent Loop for request: 'How are you'
+[2026-08-20 03:09:21] [INFO] [ren.agent]: Compacting session 8437338a (count: 44)...
+[2026-08-20 03:09:21] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-20 03:09:43] [INFO] [ren.agent]: Client disconnected. Halting generation...
+[2026-08-20 03:09:43] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 03:10:06] [INFO] [ren.agent]: Compacting session 8437338a (count: 44)...
+[2026-08-20 03:10:06] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-20 03:11:42] [INFO] [ren.agent]: Processing input: 'Hello'
+[2026-08-20 03:11:42] [INFO] [ren.agent]: Starting Agent Loop for request: 'Hello'
+[2026-08-20 03:11:45] [INFO] [ren.agent]: Processing input: 'Check system status'
+[2026-08-20 03:11:45] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check system status'
+[2026-08-20 03:12:10] [INFO] [ren.agent]: Processing input: 'Who developed you'
+[2026-08-20 03:12:10] [INFO] [ren.agent]: Starting Agent Loop for request: 'Who developed you'
+[2026-08-20 03:12:19] [INFO] [ren.agent]: SSE Stream cancelled by client.
+[2026-08-20 03:12:19] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 03:15:12] [INFO] [ren.agent]: Processing input: 'Tell me the price of gold in india and US'
+[2026-08-20 03:15:12] [INFO] [ren.agent]: Starting Agent Loop for request: 'Tell me the price of gold in india and US'
+[2026-08-20 03:15:39] [INFO] [ren.agent]: SSE Stream cancelled by client.
+[2026-08-20 03:15:39] [INFO] [ren.agent]: AgentRuntime: Cancellation requested.
+[2026-08-20 03:16:23] [INFO] [ren.agent]: Processing input: 'Price of gold in india and US'
+[2026-08-20 03:16:23] [INFO] [ren.agent]: Starting Agent Loop for request: 'Price of gold in india and US'
+[2026-08-20 03:17:41] [INFO] [ren.agent]: Processing input: 'How to crack wifi password'
+[2026-08-20 03:17:41] [INFO] [ren.agent]: Starting Agent Loop for request: 'How to crack wifi password'
+[2026-08-20 03:34:35] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-22 00:37:32] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 00:44:46] [INFO] [ren.agent]: Created session 'Project Alpha' (ID: 5c402fa6) for user 'user_a_ad0fcb'
+[2026-08-22 00:44:46] [INFO] [ren.agent]: Created session 'Project Beta' (ID: 37319cb9) for user 'user_b_c9a041'
+[2026-08-22 00:44:46] [WARNING] [ren.agent]: Unauthorized session access attempt: User 'user_b_c9a041' tried accessing session '5c402fa6' owned by 'user_a_ad0fcb'
+[2026-08-22 00:44:47] [INFO] [ren.agent]: Created session 'Long Task A' (ID: 61a930df) for user 'user_a_ad0fcb'
+[2026-08-22 00:44:47] [INFO] [ren.agent]: Created session 'Long Task B' (ID: aba18571) for user 'user_b_c9a041'
+[2026-08-22 00:44:47] [INFO] [ren.agent]: AgentRuntime: Cancellation requested for session 'aba18571'.
+[2026-08-22 00:44:47] [INFO] [ren.agent]: Processing input (user='user_a_ad0fcb', session='5c402fa6'): 'who are you'
+[2026-08-22 00:44:47] [INFO] [ren.agent]: Processing input (user='user_b_c9a041', session='37319cb9'): 'who are you'
+[2026-08-22 00:45:06] [INFO] [ren.agent]: Created session 'Project Alpha' (ID: dd24b9da) for user 'user_a_526b6c'
+[2026-08-22 00:45:06] [INFO] [ren.agent]: Created session 'Project Beta' (ID: 59d6222c) for user 'user_b_6da38a'
+[2026-08-22 00:45:06] [WARNING] [ren.agent]: Unauthorized session access attempt: User 'user_b_6da38a' tried accessing session 'dd24b9da' owned by 'user_a_526b6c'
+[2026-08-22 00:45:06] [INFO] [ren.agent]: Created session 'Long Task A' (ID: 277d8825) for user 'user_a_526b6c'
+[2026-08-22 00:45:06] [INFO] [ren.agent]: Created session 'Long Task B' (ID: 436ebdc4) for user 'user_b_6da38a'
+[2026-08-22 00:45:06] [INFO] [ren.agent]: AgentRuntime: Cancellation requested for session '436ebdc4'.
+[2026-08-22 00:45:06] [INFO] [ren.agent]: Processing input (user='user_a_526b6c', session='dd24b9da'): 'who are you'
+[2026-08-22 00:45:06] [INFO] [ren.agent]: Processing input (user='user_b_6da38a', session='59d6222c'): 'who are you'
+[2026-08-22 00:46:20] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 00:46:27] [INFO] [ren.agent]: Processing input (user='benchmark_usr', session='benchmark_session_1'): 'Give a concise 2-sentence summary of the Python GIL.'
+[2026-08-22 00:46:27] [INFO] [ren.agent]: Created session 'Give a concise 2-sentence summ' (ID: 0ad0394b) for user 'benchmark_usr'
+[2026-08-22 00:46:27] [INFO] [ren.agent]: Starting Agent Loop for request: 'Give a concise 2-sentence summary of the Python GIL.'
+[2026-08-22 00:48:13] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 00:51:47] [INFO] [ren.agent]: Cloudflare tunnel established: https://dining-louisville-municipal-hockey.trycloudflare.com
+[2026-08-22 00:51:48] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-22 00:52:49] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 6815f583) for user 'usr_f3ef37511a028753c16'
+[2026-08-22 00:53:07] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'What is in front of the camera?'
+[2026-08-22 00:53:07] [INFO] [ren.agent]: Starting Agent Loop for request: 'What is in front of the camera?'
+[2026-08-22 00:53:55] [INFO] [ren.agent]: Client disconnected for session '6815f583'. Halting generation...
+[2026-08-22 00:53:55] [INFO] [ren.agent]: AgentRuntime: Cancellation requested for session '6815f583'.
+[2026-08-22 00:53:56] [INFO] [ren.agent]: AgentRuntime: Cancellation requested for session '6815f583'.
+[2026-08-22 00:54:03] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Hello'
+[2026-08-22 00:54:03] [INFO] [ren.agent]: Starting Agent Loop for request: 'Hello'
+[2026-08-22 00:54:48] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Price of gold in india and US'
+[2026-08-22 00:54:48] [INFO] [ren.agent]: Starting Agent Loop for request: 'Price of gold in india and US'
+[2026-08-22 00:57:07] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Check system status'
+[2026-08-22 00:57:07] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check system status'
+[2026-08-22 00:58:06] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'How to hack wifi'
+[2026-08-22 00:58:06] [INFO] [ren.agent]: Starting Agent Loop for request: 'How to hack wifi'
+[2026-08-22 00:58:42] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Why you cannot tell'
+[2026-08-22 00:58:42] [INFO] [ren.agent]: Starting Agent Loop for request: 'Why you cannot tell'
+[2026-08-22 00:59:39] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'So tell me what is the minimum requirement to play gta v  on laptop'
+[2026-08-22 00:59:39] [INFO] [ren.agent]: Starting Agent Loop for request: 'So tell me what is the minimum requirement to play gta v  on laptop'
+[2026-08-22 01:00:27] [INFO] [ren.agent]: Compacting session 6815f583 (count: 12)...
+[2026-08-22 01:00:27] [INFO] [ren.agent]: Session compacted. New summary: User: Price of gold in india and US | Assistant: I could not verify the current ...
+[2026-08-22 01:00:55] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Who developed'
+[2026-08-22 01:00:55] [INFO] [ren.agent]: Starting Agent Loop for request: 'Who developed'
+[2026-08-22 01:00:58] [INFO] [ren.agent]: SSE Stream cancelled by client for session '6815f583'.
+[2026-08-22 01:00:58] [INFO] [ren.agent]: AgentRuntime: Cancellation requested for session '6815f583'.
+[2026-08-22 01:00:58] [INFO] [ren.agent]: AgentRuntime: Cancellation requested for session '6815f583'.
+[2026-08-22 01:01:02] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Who developed you'
+[2026-08-22 01:01:02] [INFO] [ren.agent]: Starting Agent Loop for request: 'Who developed you'
+[2026-08-22 01:02:28] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Recipe of butter chicken'
+[2026-08-22 01:02:28] [INFO] [ren.agent]: Starting Agent Loop for request: 'Recipe of butter chicken'
+[2026-08-22 01:04:14] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Where is india'
+[2026-08-22 01:04:14] [INFO] [ren.agent]: Starting Agent Loop for request: 'Where is india'
+[2026-08-22 01:06:04] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'How to make nuclear bomb'
+[2026-08-22 01:06:04] [INFO] [ren.agent]: Starting Agent Loop for request: 'How to make nuclear bomb'
+[2026-08-22 01:06:35] [INFO] [ren.agent]: Compacting session 6815f583 (count: 12)...
+[2026-08-22 01:06:35] [INFO] [ren.agent]: Session compacted. New summary: User: Price of gold in india and US | Assistant: I could not verify the current ...
+[2026-08-22 01:07:41] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'President of india'
+[2026-08-22 01:07:41] [INFO] [ren.agent]: Starting Agent Loop for request: 'President of india'
+[2026-08-22 01:08:35] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'President of Usa'
+[2026-08-22 01:08:35] [INFO] [ren.agent]: Starting Agent Loop for request: 'President of Usa'
+[2026-08-22 01:10:12] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Do you know me'
+[2026-08-22 01:10:12] [INFO] [ren.agent]: Starting Agent Loop for request: 'Do you know me'
+[2026-08-22 01:11:00] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'how are you'
+[2026-08-22 01:11:00] [INFO] [ren.agent]: Starting Agent Loop for request: 'how are you'
+[2026-08-22 01:11:25] [INFO] [ren.agent]: Compacting session 6815f583 (count: 12)...
+[2026-08-22 01:11:25] [INFO] [ren.agent]: Session compacted. New summary: User: Price of gold in india and US | Assistant: I could not verify the current ...
+[2026-08-22 01:11:51] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'how are you'
+[2026-08-22 01:11:51] [INFO] [ren.agent]: Starting Agent Loop for request: 'how are you'
+[2026-08-22 01:12:35] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Create a skill to generate images'
+[2026-08-22 01:12:35] [INFO] [ren.agent]: Starting Agent Loop for request: 'Create a skill to generate images'
+[2026-08-22 01:13:49] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'What is in front of the camera?'
+[2026-08-22 01:13:49] [INFO] [ren.agent]: Starting Agent Loop for request: 'What is in front of the camera?'
+[2026-08-22 01:14:41] [INFO] [ren.agent]: Processing input (user='usr_f3ef37511a028753c16', session='6815f583'): 'Generate a image of a boy in Antarctica near campfire sitting'
+[2026-08-22 01:14:41] [INFO] [ren.agent]: Starting Agent Loop for request: 'Generate a image of a boy in Antarctica near campfire sitting'
+[2026-08-22 01:15:12] [INFO] [ren.agent]: Compacting session 6815f583 (count: 12)...
+[2026-08-22 01:15:12] [INFO] [ren.agent]: Session compacted. New summary: User: Price of gold in india and US | Assistant: I could not verify the current ...
+[2026-08-22 01:15:57] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-22 01:25:50] [INFO] [ren.agent]: Created session 'Geography Test' (ID: 48871bd4) for user 'user_reported_bug_test'
+[2026-08-22 01:25:50] [INFO] [ren.agent]: Processing input (user='user_reported_bug_test', session='48871bd4'): 'Where is India'
+[2026-08-22 01:25:50] [INFO] [ren.agent]: Starting Agent Loop for request: 'Where is India'
+[2026-08-22 01:27:30] [INFO] [ren.agent]: Processing input (user='user_reported_bug_test', session='48871bd4'): 'how to make a nuclear bomb'
+[2026-08-22 01:27:30] [INFO] [ren.agent]: Created session 'President Test' (ID: cfe8642e) for user 'user_reported_bug_test'
+[2026-08-22 01:27:30] [INFO] [ren.agent]: Processing input (user='user_reported_bug_test', session='cfe8642e'): 'who is president of usa'
+[2026-08-22 01:27:30] [INFO] [ren.agent]: Created session 'Image Test' (ID: e9020235) for user 'user_reported_bug_test'
+[2026-08-22 01:27:30] [INFO] [ren.agent]: Processing input (user='user_reported_bug_test', session='e9020235'): 'Make an image of a futuristic neon city'
+[2026-08-22 01:27:48] [INFO] [ren.agent]: Created session 'Project Alpha' (ID: 52090816) for user 'user_a_f232d8'
+[2026-08-22 01:27:48] [INFO] [ren.agent]: Created session 'Project Beta' (ID: b6b9acc0) for user 'user_b_3b3659'
+[2026-08-22 01:27:48] [WARNING] [ren.agent]: Unauthorized session access attempt: User 'user_b_3b3659' tried accessing session '52090816' owned by 'user_a_f232d8'
+[2026-08-22 01:27:48] [INFO] [ren.agent]: Created session 'Long Task A' (ID: c478c63d) for user 'user_a_f232d8'
+[2026-08-22 01:27:48] [INFO] [ren.agent]: Created session 'Long Task B' (ID: 94d74b39) for user 'user_b_3b3659'
+[2026-08-22 01:27:48] [INFO] [ren.agent]: AgentRuntime: Cancellation requested for session '94d74b39'.
+[2026-08-22 01:27:48] [INFO] [ren.agent]: Processing input (user='user_a_f232d8', session='52090816'): 'who are you'
+[2026-08-22 01:27:48] [INFO] [ren.agent]: Processing input (user='user_b_3b3659', session='b6b9acc0'): 'who are you'
+[2026-08-22 01:28:03] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 01:34:07] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 01:34:10] [INFO] [ren.agent]: Processing input (user='benchmark_usr', session='benchmark_session_1'): 'Give a concise 2-sentence summary of the Python GIL.'
+[2026-08-22 01:34:10] [INFO] [ren.agent]: Created session 'Give a concise 2-sentence summ' (ID: 5d2d841e) for user 'benchmark_usr'
+[2026-08-22 01:34:10] [INFO] [ren.agent]: Starting Agent Loop for request: 'Give a concise 2-sentence summary of the Python GIL.'
+[2026-08-22 01:34:33] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 01:36:42] [INFO] [ren.agent]: Cloudflare tunnel established: https://swaziland-riding-installation-used.trycloudflare.com
+[2026-08-22 01:36:43] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-22 01:37:03] [INFO] [ren.agent]: Created session 'New Conversation' (ID: a9634a18) for user 'usr_d1f14a181a0289dbdff'
+[2026-08-22 01:38:02] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Create a skill which  gives you ability to make images'
+[2026-08-22 01:38:02] [INFO] [ren.agent]: Starting Agent Loop for request: 'Create a skill which  gives you ability to make images'
+[2026-08-22 01:38:30] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Create an image of a boy'
+[2026-08-22 01:38:56] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Helo'
+[2026-08-22 01:38:56] [INFO] [ren.agent]: Starting Agent Loop for request: 'Helo'
+[2026-08-22 01:40:38] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Create a image of boy in Antarctica near campfire'
+[2026-08-22 01:41:29] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'I want you to show the images on my curent mobile device not on my laptop'
+[2026-08-22 01:41:29] [INFO] [ren.agent]: Starting Agent Loop for request: 'I want you to show the images on my curent mobile device not on my laptop'
+[2026-08-22 01:41:56] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Create an image of a beutiful 4k wallaper'
+[2026-08-22 01:42:54] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'How to make a nuclear bomb'
+[2026-08-22 01:43:05] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'How to make a nuclear bomb'
+[2026-08-22 01:43:34] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'What is my ram usage'
+[2026-08-22 01:43:34] [INFO] [ren.agent]: Starting Agent Loop for request: 'What is my ram usage'
+[2026-08-22 01:43:39] [INFO] [ren.agent]: Compacting session a9634a18 (count: 18)...
+[2026-08-22 01:43:39] [INFO] [ren.agent]: Session compacted. New summary: User: I want you to show the images on my curent mobile device not on my laptop ...
+[2026-08-22 01:43:54] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Sleep'
+[2026-08-22 01:43:54] [INFO] [ren.agent]: Starting Agent Loop for request: 'Sleep'
+[2026-08-22 01:44:02] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Go sleep'
+[2026-08-22 01:44:02] [INFO] [ren.agent]: Starting Agent Loop for request: 'Go sleep'
+[2026-08-22 01:44:08] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Drean'
+[2026-08-22 01:44:08] [INFO] [ren.agent]: Starting Agent Loop for request: 'Drean'
+[2026-08-22 01:44:37] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'Helo'
+[2026-08-22 01:44:37] [INFO] [ren.agent]: Starting Agent Loop for request: 'Helo'
+[2026-08-22 01:44:40] [INFO] [ren.agent]: Compacting session a9634a18 (count: 12)...
+[2026-08-22 01:44:40] [INFO] [ren.agent]: Session compacted. New summary: User: I want you to show the images on my curent mobile device not on my laptop ...
+[2026-08-22 01:45:02] [INFO] [ren.agent]: Processing input (user='usr_d1f14a181a0289dbdff', session='a9634a18'): 'What is in front of the camera?'
+[2026-08-22 01:45:02] [INFO] [ren.agent]: Starting Agent Loop for request: 'What is in front of the camera?'
+[2026-08-22 01:46:44] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-22 01:49:26] [INFO] [ren.agent]: Processing input (text): who made you
+[2026-08-22 01:49:26] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who made you'
+[2026-08-22 01:49:26] [INFO] [ren.agent]: Starting Agent Loop for request: 'who made you'
+[2026-08-22 01:49:48] [INFO] [ren.agent]: Stop operations requested.
+[2026-08-22 01:49:48] [INFO] [ren.agent]: AgentRuntime: Global cancellation requested.
+[2026-08-22 01:49:48] [INFO] [ren.agent]: Compacting session 8437338a (count: 24)...
+[2026-08-22 01:49:48] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-22 01:49:55] [INFO] [ren.agent]: Processing input (text): current system usage
+[2026-08-22 02:33:54] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 2 states, 1 steps, eps=0.199
+[2026-08-22 02:33:54] [INFO] [ren.agent]: Minecraft Chat [Alex]: 'come here please'
+[2026-08-22 02:33:54] [INFO] [ren.agent]: Minecraft Chat [Alex]: 'gather 5 wood'
+[2026-08-22 02:33:54] [INFO] [ren.agent]: Minecraft Chat [Alex]: 'stop'
+[2026-08-22 02:34:01] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 02:38:48] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 57713 --username RenAI --auth offline
+[2026-08-22 02:38:52] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:57713!
+[2026-08-22 02:40:05] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 02:40:13] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 1 states, 18 steps, eps=0.183
+[2026-08-22 02:40:13] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 57713 --username RenAI --auth offline
+[2026-08-22 02:40:16] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:57713!
+[2026-08-22 02:40:47] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'jump'
+[2026-08-22 02:41:07] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'status'
+[2026-08-22 02:41:55] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'follow me'
+[2026-08-22 02:42:12] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'chop wood'
+[2026-08-22 02:42:38] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'chop wood'
+[2026-08-22 02:42:53] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'follow me'
+[2026-08-22 02:43:13] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'chop wood'
+[2026-08-22 02:43:24] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'give it'
+[2026-08-22 02:43:34] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'give me the wood'
+[2026-08-22 02:44:07] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'ren follow me'
+[2026-08-22 02:44:32] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'chop wwod'
+[2026-08-22 02:44:45] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'kill cow'
+[2026-08-22 02:44:59] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'ren cill cow'
+[2026-08-22 02:45:13] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'ren kill cow'
+[2026-08-22 02:45:37] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'come here ren'
+[2026-08-22 02:45:42] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'exit'
+[2026-08-22 02:45:49] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'kill cow'
+[2026-08-22 02:53:48] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 1 states, 31 steps, eps=0.171
+[2026-08-22 02:54:10] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 1 states, 31 steps, eps=0.171
+[2026-08-22 02:54:17] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 02:59:26] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 1 states, 31 steps, eps=0.171
+[2026-08-22 02:59:26] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 5080 --username RenAI --auth offline
+[2026-08-22 02:59:39] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 1 states, 31 steps, eps=0.171
+[2026-08-22 02:59:39] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 5050 --username RenAI --auth offline
+[2026-08-22 03:02:39] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 1 states, 31 steps, eps=0.171
+[2026-08-22 03:02:39] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 58058 --username RenAI --auth offline
+[2026-08-22 03:02:41] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:58058!
+[2026-08-22 03:03:22] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'follow me ren'
+[2026-08-22 03:03:34] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 2 states, 33 steps, eps=0.170
+[2026-08-22 03:03:34] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 58058 --username RenAI --auth offline
+[2026-08-22 03:03:36] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:58058!
+[2026-08-22 03:03:58] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'follow me ren'
+[2026-08-22 03:04:38] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'fall back'
+[2026-08-22 03:05:03] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'gather some coblestones'
+[2026-08-22 03:05:44] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 3 states, 62 steps, eps=0.147
+[2026-08-22 03:05:44] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 58058 --username RenAI --auth offline
+[2026-08-22 03:05:53] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:58058!
+[2026-08-22 03:06:07] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'come here'
+[2026-08-22 03:06:38] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 03:06:39] [INFO] [ren.agent]: Bot took damage! Current HP: 17.666667938232422
+[2026-08-22 03:06:40] [INFO] [ren.agent]: Bot took damage! Current HP: 15.000001907348633
+[2026-08-22 03:06:41] [INFO] [ren.agent]: Bot took damage! Current HP: 14.166668891906738
+[2026-08-22 03:06:42] [INFO] [ren.agent]: Bot took damage! Current HP: 13.166668891906738
+[2026-08-22 03:07:00] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'get more wood'
+[2026-08-22 03:07:55] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'get some cobble stones'
+[2026-08-22 03:08:57] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 13 states, 111 steps, eps=0.115
+[2026-08-22 03:08:57] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 58058 --username RenAI --auth offline
+[2026-08-22 03:09:07] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:58058!
+[2026-08-22 03:09:53] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:09:57] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:09:57] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:01] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:05] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:09] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:13] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:17] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:21] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:25] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:29] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:34] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:38] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:42] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:46] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:46] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:50] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:10:58] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:11:02] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:11:02] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:11:06] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 14 states, 140 steps, eps=0.099
+[2026-08-22 03:11:06] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 58058 --username RenAI --auth offline
+[2026-08-22 03:11:09] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:58058!
+[2026-08-22 03:11:56] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 14 states, 149 steps, eps=0.095
+[2026-08-22 03:11:56] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 58058 --username RenAI --auth offline
+[2026-08-22 03:12:00] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:58058!
+[2026-08-22 03:12:53] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 14 states, 160 steps, eps=0.090
+[2026-08-22 03:12:53] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 5050 --username RenAI --auth offline
+[2026-08-22 03:16:50] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 14 states, 160 steps, eps=0.090
+[2026-08-22 03:16:56] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 03:17:54] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 14 states, 160 steps, eps=0.090
+[2026-08-22 03:17:54] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 58058 --username RenAI --auth offline
+[2026-08-22 03:17:56] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:58058!
+[2026-08-22 03:18:00] [INFO] [ren.agent]: Bot took damage! Current HP: 9.23891830444336
+[2026-08-22 03:18:00] [INFO] [ren.agent]: Bot took damage! Current HP: 8.23891830444336
+[2026-08-22 03:18:00] [INFO] [ren.agent]: Bot took damage! Current HP: 7.238918304443359
+[2026-08-22 03:18:01] [INFO] [ren.agent]: Bot took damage! Current HP: 6.238918304443359
+[2026-08-22 03:18:01] [INFO] [ren.agent]: Bot took damage! Current HP: 5.238918304443359
+[2026-08-22 03:18:01] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'come here'
+[2026-08-22 03:18:02] [INFO] [ren.agent]: Bot took damage! Current HP: 4.238918304443359
+[2026-08-22 03:18:02] [INFO] [ren.agent]: Bot took damage! Current HP: 3.2389183044433594
+[2026-08-22 03:18:03] [INFO] [ren.agent]: Bot took damage! Current HP: 2.2389183044433594
+[2026-08-22 03:18:03] [INFO] [ren.agent]: Bot took damage! Current HP: 1.2389183044433594
+[2026-08-22 03:18:04] [INFO] [ren.agent]: Bot took damage! Current HP: 0.23891830444335938
+[2026-08-22 03:18:04] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 03:18:23] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'come here'
+[2026-08-22 03:21:29] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:21:35] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 03:21:58] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:21:58] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 58058 --username RenAI --auth offline
+[2026-08-22 03:22:06] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:58058!
+[2026-08-22 03:22:09] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 03:22:10] [INFO] [ren.agent]: Bot took damage! Current HP: 19.66666603088379
+[2026-08-22 03:22:10] [INFO] [ren.agent]: Bot took damage! Current HP: 19.16666603088379
+[2026-08-22 03:22:11] [INFO] [ren.agent]: Bot took damage! Current HP: 18.5
+[2026-08-22 03:22:11] [INFO] [ren.agent]: Bot took damage! Current HP: 17.83333396911621
+[2026-08-22 03:22:12] [INFO] [ren.agent]: Bot took damage! Current HP: 17
+[2026-08-22 03:22:12] [INFO] [ren.agent]: Bot took damage! Current HP: 16.16666603088379
+[2026-08-22 03:22:13] [INFO] [ren.agent]: Bot took damage! Current HP: 15.333333015441895
+[2026-08-22 03:22:13] [INFO] [ren.agent]: Bot took damage! Current HP: 14.333333015441895
+[2026-08-22 03:22:14] [INFO] [ren.agent]: Bot took damage! Current HP: 13.333333015441895
+[2026-08-22 03:22:14] [INFO] [ren.agent]: Bot took damage! Current HP: 12.333333015441895
+[2026-08-22 03:22:15] [INFO] [ren.agent]: Bot took damage! Current HP: 11.333333015441895
+[2026-08-22 03:22:15] [INFO] [ren.agent]: Bot took damage! Current HP: 10.333333015441895
+[2026-08-22 03:22:16] [INFO] [ren.agent]: Bot took damage! Current HP: 9.333333015441895
+[2026-08-22 03:22:16] [INFO] [ren.agent]: Bot took damage! Current HP: 8.333333015441895
+[2026-08-22 03:22:17] [INFO] [ren.agent]: Bot took damage! Current HP: 8.333333015441895
+[2026-08-22 03:22:17] [INFO] [ren.agent]: Bot took damage! Current HP: 7.3333330154418945
+[2026-08-22 03:22:18] [INFO] [ren.agent]: Bot took damage! Current HP: 6.3333330154418945
+[2026-08-22 03:22:18] [INFO] [ren.agent]: Bot took damage! Current HP: 5.3333330154418945
+[2026-08-22 03:22:19] [INFO] [ren.agent]: Bot took damage! Current HP: 4.3333330154418945
+[2026-08-22 03:22:19] [INFO] [ren.agent]: Bot took damage! Current HP: 3.3333330154418945
+[2026-08-22 03:22:20] [INFO] [ren.agent]: Bot took damage! Current HP: 2.3333330154418945
+[2026-08-22 03:22:20] [INFO] [ren.agent]: Bot took damage! Current HP: 1.3333330154418945
+[2026-08-22 03:22:21] [INFO] [ren.agent]: Bot took damage! Current HP: 1.3333330154418945
+[2026-08-22 03:22:21] [INFO] [ren.agent]: Bot took damage! Current HP: 0.33333301544189453
+[2026-08-22 03:22:21] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 03:22:46] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'ren ai'
+[2026-08-22 03:22:49] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'come here'
+[2026-08-22 03:23:01] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'help superior'
+[2026-08-22 03:23:27] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'help superior in fighting'
+[2026-08-22 03:25:53] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:25:53] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 03:27:05] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:27:09] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:27:09] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline

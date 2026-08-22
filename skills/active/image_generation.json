@@ -1,0 +1,27 @@
+{
+  "name": "Image Generation",
+  "description": "Generates AI images from text prompts and displays them in chat.",
+  "version": "1.0.0",
+  "triggers": [
+    "image",
+    "generate image",
+    "make an image",
+    "draw",
+    "picture",
+    "generate picture",
+    "create image",
+    "render image"
+  ],
+  "capabilities": [
+    "image generation",
+    "ai art",
+    "visual generation"
+  ],
+  "dependencies": [],
+  "entrypoint": "main",
+  "permissions": [],
+  "enabled": true,
+  "created_at": "2026-08-22T08:13:13.976347",
+  "source_task": "Generate images from text prompts",
+  "tested": true
+}

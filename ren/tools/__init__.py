@@ -8,6 +8,8 @@ from ren.tools.python_runner import PythonRunnerTool
 from ren.tools.system import SystemStatusTool, BatteryStatusTool, ProcessListTool
 from ren.tools.project import InspectProjectTool
 from ren.tools.git import GitStatusTool, GitDiffTool, GitCommitTool, GitLogTool
+from ren.tools.web_search import WebSearchTool
+from ren.tools.generate_image import GenerateImageTool
 
 __all__ = [
     "BaseTool",
@@ -29,4 +31,6 @@ __all__ = [
     "GitDiffTool",
     "GitCommitTool",
     "GitLogTool",
+    "WebSearchTool",
+    "GenerateImageTool",
 ]

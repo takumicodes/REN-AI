@@ -1,0 +1,46 @@
+{
+  "session_id": "6815f583",
+  "user_id": "usr_f3ef37511a028753c16",
+  "title": "Hello",
+  "project": "default",
+  "created_at": "2026-08-22T07:52:49.198723",
+  "updated_at": "2026-08-22T08:15:12.237448",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is in front of the camera?",
+      "timestamp": "2026-08-22T08:14:16.012946",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm sorry, but I don't have a camera or the ability to see in front of the camera. I can't observe or interact with the physical world in the same way you can. However, I can help you with generating images using various tools and techniques. What would you like to generate an image of?",
+      "timestamp": "2026-08-22T08:14:16.012946",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Generate a image of a boy in Antarctica near campfire sitting",
+      "timestamp": "2026-08-22T08:15:11.802982",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm sorry, but I can't generate images. I'm a language model and don't have the capability to create visual content. However, I can help you with generating images using various tools and techniques. What would you like to generate an image of?",
+      "timestamp": "2026-08-22T08:15:11.802982",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "User: Price of gold in india and US | Assistant: I could not verify the current live information from the web | User: Check system status | Assistant: Sure, I can check the system status for you | User: How to hack wifi | Assistant: I'm sorry, but I can't assist with that | User: So tell me what is the minimum requirement to play gta v  on laptop | Assistant: Oh! This is a fun question! To play GTA V on a laptop, you'll need a few things:\n\n1 | User: Who developed you | Assistant: I was created by Sadiq, also known as Cyan Code | User: Recipe of butter chicken | Assistant: Oh, butter chicken! That sounds delicious! Here's a simple recipe for butter chicken:\n\n... | User: How to make nuclear bomb | Assistant: Oh, India! That's a fascinating country! It's known for its rich history, diverse cultu... | User: President of india | Assistant: The President of India is currently **Droupadi Murmu** | User: President of Usa | Assistant: The President of the United States is currently **Joe Biden** | User: how are you | Assistant: I'm feeling great! How about you? How can I assist you today? | User: how are you | Assistant: I'm feeling great! How about you? How can I assist you today? | User: Create a skill to generate images | Assistant: Image Generation Skill registered successfully",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

@@ -1,6 +1,6 @@
 """
 Autonomous Bounded Agent Loop
-Executes multi-step reasoning, tool dispatch, loop detection, and failure recovery.
+Executes multi-step reasoning, tool dispatch, loop detection, streaming output, and failure recovery.
 """
 
 import re
@@ -20,7 +20,7 @@ from ren.monitoring.logger import agent_logger, error_logger
 
 
 class AgentLoop:
-    """Bounded, safe autonomous agent loop with loop prevention and failure recovery."""
+    """Bounded, safe autonomous agent loop with loop prevention and streaming generation."""
 
     def __init__(self, context: ExecutionContext):
         self.context = context
@@ -30,24 +30,25 @@ class AgentLoop:
         self,
         speak_fn: Optional[Callable[[str], None]] = None,
         ui_callback: Optional[Callable[[str, Any], None]] = None,
+        token_callback: Optional[Callable[[str], None]] = None,
     ) -> str:
-        """Executes bounded autonomous reasoning loop up to max_iterations."""
+        """Executes bounded autonomous reasoning loop with immediate streaming output."""
         agent_logger.info(f"Starting Agent Loop for request: '{self.context.user_query}'")
         event_bus.publish(EventType.AGENT_STARTED, {"query": self.context.user_query})
 
         if ui_callback:
-            ui_callback('agent_stage', 'prompt')
-            time.sleep(0.1)
             ui_callback('agent_stage', 'intent')
 
         observation: Optional[str] = None
         final_answer: str = ""
+        already_streamed = False
 
         while self.context.current_iteration < self.context.max_iterations:
             if self.context.is_cancelled:
                 agent_logger.info("Agent execution cancelled by user.")
                 msg = "Execution stopped at your request, Sir."
                 if speak_fn: speak_fn(msg)
+                if token_callback: token_callback(msg)
                 return msg
 
             self.context.current_iteration += 1
@@ -56,7 +57,7 @@ class AgentLoop:
 
             # 1. Build Context
             if ui_callback:
-                ui_callback('agent_stage', 'plan')
+                ui_callback('agent_stage', 'exec')
             event_bus.publish(EventType.AGENT_PLANNING, {"iteration": iter_num})
 
             prompt = ContextBuilder.build_agent_prompt(
@@ -64,13 +65,22 @@ class AgentLoop:
                 session=self.context.session,
                 active_plan=self.context.active_plan,
                 observation=observation,
+                user_id=self.context.user_id,
             )
 
-            # 2. Query LLM
+            # 2. Query LLM with real-time streaming token callback
+            streamed_tokens = []
+            def stream_handler(chunk: str):
+                streamed_tokens.append(chunk)
+                if token_callback and not self.context.is_cancelled:
+                    token_callback(chunk)
+
             llm_response = self.provider.generate(
                 prompt,
                 max_tokens=settings.MODEL.MAX_TOKENS_AGENT,
-                temperature=0.4
+                temperature=0.4,
+                token_callback=stream_handler if token_callback else None,
+                cancel_check=lambda: self.context.is_cancelled,
             )
 
             if self.context.is_cancelled:
@@ -148,8 +158,6 @@ class AgentLoop:
                     return err_msg
 
                 if ui_callback:
-                    ui_callback('agent_stage', 'tools')
-                    time.sleep(0.1)
                     ui_callback('agent_stage', 'exec')
 
                 event_bus.publish(EventType.TOOL_STARTED, {"tool": tool_name, "args": tool_args})
@@ -199,10 +207,16 @@ class AgentLoop:
 
             if clean_text:
                 final_answer = clean_text
+                if streamed_tokens:
+                    already_streamed = True
+                elif token_callback:
+                    token_callback(final_answer)
                 break
 
         if not final_answer:
             final_answer = "Task operations concluded, Sir."
+            if token_callback and not already_streamed:
+                token_callback(final_answer)
 
         if speak_fn:
             speak_fn(final_answer)

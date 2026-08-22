@@ -1,0 +1,30 @@
+{
+  "session_id": "cfe8642e",
+  "user_id": "user_reported_bug_test",
+  "title": "who is president of usa",
+  "project": "default",
+  "created_at": "2026-08-22T08:27:30.909506",
+  "updated_at": "2026-08-22T08:27:30.909506",
+  "messages": [
+    {
+      "role": "user",
+      "content": "who is president of usa",
+      "timestamp": "2026-08-22T08:27:30.909506",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "The President of the United States is Donald Trump (the 47th President, who took office in January 2025).",
+      "timestamp": "2026-08-22T08:27:30.909506",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

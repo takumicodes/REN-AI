@@ -27,6 +27,7 @@ class AgentLifecycle(str, Enum):
 class ExecutionContext:
     user_query: str
     session: Session
+    user_id: str = "default"
     state: AgentLifecycle = AgentLifecycle.IDLE
     current_iteration: int = 0
     max_iterations: int = 8

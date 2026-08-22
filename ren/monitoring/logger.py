@@ -32,8 +32,14 @@ class SensitiveDataFilter(logging.Filter):
 
     @staticmethod
     def sanitize(text: str) -> str:
-        for pattern in SECRET_PATTERNS:
-            text = pattern.sub(r'\1: [REDACTED]', text)
+        if not isinstance(text, str):
+            return str(text)
+        try:
+            text = re.sub(r'(?i)(api[_-]?key|password|secret|token|bearer)\s*[:=]\s*["\']?[^"\'\s\n]+["\']?', r'\1: [REDACTED]', text)
+            text = re.sub(r'(?i)sk-[a-zA-Z0-9]{20,}', '[REDACTED_KEY]', text)
+            text = re.sub(r'(?i)ghp_[a-zA-Z0-9]{20,}', '[REDACTED_TOKEN]', text)
+        except Exception:
+            pass
         return text
 
 

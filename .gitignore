@@ -9,3 +9,14 @@ todo_list.json
 chats/
 Ren_AI_Installer.spec
 vosk-model-small-en-us-0.15
+.env
+.env.*
+*.env
+data/tools/
+data/cloudflared/
+cloudflared.exe
+cloudflared
+*.credentials.json
+cert.pem
+logs/*.log
+*.log

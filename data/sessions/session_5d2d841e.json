@@ -1,0 +1,30 @@
+{
+  "session_id": "5d2d841e",
+  "user_id": "benchmark_usr",
+  "title": "Give a concise 2-sentence summ",
+  "project": "default",
+  "created_at": "2026-08-22T08:34:10.379338",
+  "updated_at": "2026-08-22T08:34:26.342360",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Give a concise 2-sentence summary of the Python GIL.",
+      "timestamp": "2026-08-22T08:34:25.973240",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to assist you!",
+      "timestamp": "2026-08-22T08:34:25.973240",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

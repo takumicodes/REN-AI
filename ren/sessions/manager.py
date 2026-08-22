@@ -1,6 +1,6 @@
 """
 REN Session Manager
-Handles session lifecycle, disk persistence, compaction, and active conversation tracking.
+Handles multi-user session lifecycle, disk persistence, compaction, and per-user conversation isolation.
 """
 
 import json
@@ -16,56 +16,72 @@ from ren.monitoring.logger import agent_logger, error_logger
 
 
 class SessionManager:
-    """Manages persistent dialog sessions and sliding-window compaction."""
+    """Manages persistent dialog sessions with strict user isolation and sliding-window compaction."""
 
     def __init__(self, sessions_dir: Optional[Path] = None):
         self.sessions_dir = sessions_dir or settings.PATHS.SESSIONS_DIR
         self.sessions_dir.mkdir(parents=True, exist_ok=True)
-        self._active_session: Optional[Session] = None
-        self._init_active_session()
+        self._active_sessions: Dict[str, Session] = {}
+        self._init_default_session()
 
     def _get_session_path(self, session_id: str) -> Path:
         return self.sessions_dir / f"session_{session_id}.json"
 
-    def _init_active_session(self):
-        """Loads most recent active session or creates a new one."""
-        session_files = sorted(
-            self.sessions_dir.glob("session_*.json"),
-            key=lambda p: p.stat().st_mtime,
-            reverse=True
-        )
-        if session_files:
-            try:
-                with open(session_files[0], "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    session = Session.from_dict(data)
-                    if not session.is_archived:
-                        self._active_session = session
-                        return
-            except Exception as e:
-                error_logger.error(f"Failed to load recent session {session_files[0]}: {e}")
-
-        # If none found or failed, create fresh
-        self._active_session = self.create_session(title="Primary Session")
+    def _init_default_session(self):
+        """Initializes default master session for desktop HUD."""
+        default_session = self.get_active_session_for_user(user_id="default")
+        self._active_sessions["default"] = default_session
 
     @property
     def active_session(self) -> Session:
-        if self._active_session is None:
-            self._init_active_session()
-        return self._active_session
+        """Desktop compatibility property for the default master session."""
+        return self.get_active_session_for_user(user_id="default")
 
-    def create_session(self, title: str = "New Session", project: str = "default") -> Session:
-        """Creates and saves a new persistent session."""
+    def get_active_session_for_user(self, user_id: str = "default") -> Session:
+        """Retrieves or creates the active session for a specific user."""
+        if user_id in self._active_sessions:
+            return self._active_sessions[user_id]
+
+        # Scan for user's most recent session
+        user_sessions = []
+        for p in self.sessions_dir.glob("session_*.json"):
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    sess_user = data.get("user_id", "default")
+                    if sess_user == user_id and not data.get("is_archived", False):
+                        user_sessions.append((p.stat().st_mtime, data))
+            except Exception:
+                continue
+
+        if user_sessions:
+            user_sessions.sort(key=lambda x: x[0], reverse=True)
+            most_recent = Session.from_dict(user_sessions[0][1])
+            self._active_sessions[user_id] = most_recent
+            return most_recent
+
+        # No existing session for this user -> create fresh
+        new_sess = self.create_session(user_id=user_id, title="New Conversation")
+        return new_sess
+
+    def create_session(
+        self,
+        user_id: str = "default",
+        title: str = "New Conversation",
+        project: str = "default"
+    ) -> Session:
+        """Creates and saves a new persistent session belonging to a specific user."""
         session = Session(
             session_id=str(uuid.uuid4())[:8],
+            user_id=user_id,
             title=title,
             project=project,
             created_at=datetime.utcnow().isoformat(),
             updated_at=datetime.utcnow().isoformat(),
         )
         self.save_session(session)
-        self._active_session = session
-        agent_logger.info(f"Created session '{session.title}' (ID: {session.session_id})")
+        self._active_sessions[user_id] = session
+        agent_logger.info(f"Created session '{session.title}' (ID: {session.session_id}) for user '{user_id}'")
         return session
 
     def save_session(self, session: Session) -> bool:
@@ -75,13 +91,14 @@ class SessionManager:
             path = self._get_session_path(session.session_id)
             with open(path, "w", encoding="utf-8") as f:
                 json.dump(session.to_dict(), f, indent=2)
+            self._active_sessions[session.user_id] = session
             return True
         except Exception as e:
             error_logger.error(f"Failed to save session {session.session_id}: {e}")
             return False
 
-    def resume_session(self, session_id: str) -> Optional[Session]:
-        """Loads a session by ID and makes it active."""
+    def resume_session(self, session_id: str, user_id: Optional[str] = None) -> Optional[Session]:
+        """Loads a session by ID and verifies user ownership."""
         path = self._get_session_path(session_id)
         if not path.exists():
             return None
@@ -89,31 +106,45 @@ class SessionManager:
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 session = Session.from_dict(data)
-                self._active_session = session
+
+                # Enforce user boundary if specified
+                if user_id is not None and user_id != "default" and session.user_id != user_id:
+                    agent_logger.warning(f"Unauthorized session access attempt: User '{user_id}' tried accessing session '{session_id}' owned by '{session.user_id}'")
+                    return None
+
+                self._active_sessions[session.user_id] = session
                 return session
         except Exception as e:
             error_logger.error(f"Error resuming session {session_id}: {e}")
             return None
 
-    def rename_session(self, session_id: str, new_title: str) -> bool:
-        """Renames a session."""
-        session = self.resume_session(session_id)
+    def rename_session(self, session_id: str, new_title: str, user_id: Optional[str] = None) -> bool:
+        """Renames a session with user ownership check."""
+        session = self.resume_session(session_id, user_id=user_id)
         if session:
             session.title = new_title
             return self.save_session(session)
         return False
 
-    def list_sessions(self, include_archived: bool = False) -> List[Dict[str, Any]]:
-        """Lists all persistent sessions with summaries."""
+    def list_sessions(self, user_id: Optional[str] = None, include_archived: bool = False) -> List[Dict[str, Any]]:
+        """Lists persistent sessions filtered strictly by user_id."""
         results = []
         for p in self.sessions_dir.glob("session_*.json"):
             try:
                 with open(p, "r", encoding="utf-8") as f:
                     d = json.load(f)
+                    sess_user = d.get("user_id", "default")
+
+                    # Filter by user
+                    if user_id is not None and sess_user != user_id:
+                        continue
+
                     if not include_archived and d.get("is_archived", False):
                         continue
+
                     results.append({
                         "session_id": d.get("session_id"),
+                        "user_id": sess_user,
                         "title": d.get("title"),
                         "project": d.get("project"),
                         "message_count": len(d.get("messages", [])),
@@ -127,44 +158,43 @@ class SessionManager:
         results.sort(key=lambda x: x.get("updated_at", ""), reverse=True)
         return results
 
-    def archive_session(self, session_id: str) -> bool:
-        """Marks a session as archived."""
-        session = self.resume_session(session_id)
+    def archive_session(self, session_id: str, user_id: Optional[str] = None) -> bool:
+        """Marks a session as archived with ownership check."""
+        session = self.resume_session(session_id, user_id=user_id)
         if session:
             session.is_archived = True
             return self.save_session(session)
         return False
 
-    def delete_session(self, session_id: str) -> bool:
-        """Permanently removes a session file."""
+    def delete_session(self, session_id: str, user_id: Optional[str] = None) -> bool:
+        """Permanently removes a session file with ownership verification."""
+        session = self.resume_session(session_id, user_id=user_id)
+        if not session:
+            return False
+
         path = self._get_session_path(session_id)
         if path.exists():
             try:
                 path.unlink()
-                if self._active_session and self._active_session.session_id == session_id:
-                    self._init_active_session()
+                if session.user_id in self._active_sessions and self._active_sessions[session.user_id].session_id == session_id:
+                    self._active_sessions.pop(session.user_id, None)
                 return True
             except Exception as e:
                 error_logger.error(f"Failed deleting session {session_id}: {e}")
         return False
 
-    def reset_current_conversation(self) -> Session:
-        """Resets the active conversation by starting a fresh session while leaving memory intact."""
-        agent_logger.info("Resetting current conversation state...")
-        new_session = self.create_session(title="Fresh Session")
+    def reset_current_conversation(self, user_id: str = "default") -> Session:
+        """Resets the active conversation for a user by creating a fresh session."""
+        agent_logger.info(f"Resetting current conversation state for user '{user_id}'...")
+        new_session = self.create_session(user_id=user_id, title="New Conversation")
         return new_session
 
     def compact_session_if_needed(self, session: Session, max_messages: int = 10, keep_recent: int = 4):
-        """
-        Compacts older messages into a condensed summary when message count exceeds threshold.
-        Never sends hundreds of old messages to Qwen unnecessarily.
-        """
+        """Compacts older messages into a condensed summary when threshold exceeded."""
         if len(session.messages) <= max_messages:
             return
 
         agent_logger.info(f"Compacting session {session.session_id} (count: {len(session.messages)})...")
-        
-        # Partition into old and recent
         old_messages = session.messages[:-keep_recent]
         recent_messages = session.messages[-keep_recent:]
 

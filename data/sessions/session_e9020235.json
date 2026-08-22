@@ -1,0 +1,30 @@
+{
+  "session_id": "e9020235",
+  "user_id": "user_reported_bug_test",
+  "title": "Make an image of a",
+  "project": "default",
+  "created_at": "2026-08-22T08:27:30.909506",
+  "updated_at": "2026-08-22T08:27:34.405283",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Make an image of a futuristic neon city",
+      "timestamp": "2026-08-22T08:27:34.405283",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Here is your generated image for **'a futuristic neon city'**:\n\n![a futuristic neon city](https://image.pollinations.ai/prompt/a%20futuristic%20neon%20city?width=768&height=768&nologo=true)\n\n*(Image saved locally to `D:\\Coding projects\\REN-AI-main (1)\\REN-AI-main\\data\\generated_images\\image_1787387250.jpg`)*",
+      "timestamp": "2026-08-22T08:27:34.405283",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

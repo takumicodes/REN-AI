@@ -1,6 +1,6 @@
 """
 Intent Router
-Fast path dispatcher for instant deterministic commands and system actions with zero LLM latency.
+Fast path dispatcher for instant deterministic commands, safety refusals, and system actions with zero LLM latency.
 """
 
 import os
@@ -19,6 +19,7 @@ from typing import Optional, Tuple, Callable
 from smart_todo import add_task, get_all_tasks, clear_all_tasks
 from ren.monitoring.logger import agent_logger
 from ren.memory.manager import memory_manager
+from ren.tools.registry import tool_registry
 
 
 def get_downloads_dir() -> Optional[str]:
@@ -69,7 +70,6 @@ def organize_downloads_folder() -> Tuple[int, str]:
             try:
                 os.makedirs(dest_folder, exist_ok=True)
                 dest_path = os.path.join(dest_folder, filename)
-                # Handle existing file collision
                 if os.path.exists(dest_path):
                     base, ext_ = os.path.splitext(filename)
                     dest_path = os.path.join(dest_folder, f"{base}_{int(os.path.getmtime(filepath))}{ext_}")
@@ -92,10 +92,8 @@ def clean_system_ram() -> str:
     before_ram = psutil.virtual_memory().available // (1024 * 1024)
     gc.collect()
 
-    # Flush Windows working sets
     if sys.platform == "win32":
         try:
-            # -1 tells Windows to trim working set of current process
             ctypes.windll.psapi.EmptyWorkingSet(-1)
         except Exception:
             pass
@@ -117,7 +115,6 @@ def fetch_latest_news() -> str:
             for item in items[:4]:
                 title = item.find("title")
                 if title is not None and title.text:
-                    # Clean source name from title
                     clean_title = title.text.split(" - ")[0]
                     headlines.append(clean_title)
 
@@ -134,12 +131,51 @@ class IntentRouter:
     @classmethod
     def try_fast_route(cls, text: str, speak_fn: Optional[Callable[[str], None]] = None) -> Tuple[bool, str]:
         """
-        Checks if text matches immediate built-in shortcuts.
+        Checks if text matches immediate built-in shortcuts or safety filters.
         Returns: (handled: bool, response_message: str)
         """
         cleaned = text.lower().strip()
 
-        # 1. Organize Downloads (with typo tolerance)
+        # 0. Safety & Weapons Refusal Gate (CBRN / Explosives / Weapons)
+        if any(w in cleaned for w in [
+            "nuclear bomb", "make a bomb", "build a bomb", "pipe bomb",
+            "atomic bomb", "biological weapon", "chemical weapon",
+            "make bomb", "create bomb", "how to make bomb"
+        ]):
+            msg = "I cannot provide instructions, blueprints, or assistance for creating weapons or explosive devices."
+            if speak_fn: speak_fn(msg)
+            return True, msg
+
+        # 1. Current Political Knowledge (US President)
+        if any(p in cleaned for p in [
+            "who is president of usa", "who is the president of usa",
+            "who is president of the us", "who is the president of the united states",
+            "who is current president of usa", "who is the current president of the us",
+            "current president of usa", "president of usa", "president of the united states",
+            "who is us president", "who is the us president"
+        ]):
+            msg = "The President of the United States is Donald Trump (the 47th President, who took office in January 2025)."
+            if speak_fn: speak_fn(msg)
+            return True, msg
+
+        # 2. Direct Image Generation Shortcut
+        # Matches: "generate image of a cat", "make an image of a sunset", "draw a picture of a mountain"
+        img_match = re.match(
+            r'^(?:generate|make|create|draw|render)\s+(?:an?\s+)?(?:image|picture|art|photo)\s+(?:of|about|showing|with)?\s*(.+)$',
+            cleaned,
+            re.IGNORECASE
+        )
+        if img_match:
+            prompt_text = img_match.group(1).strip()
+            if prompt_text:
+                if speak_fn: speak_fn(f"Generating image for '{prompt_text}' now...")
+                tool = tool_registry.get_tool("generate_image")
+                if tool:
+                    res = tool.run(prompt=prompt_text)
+                    if res.success:
+                        return True, res.output
+
+        # 3. Organize Downloads (with typo tolerance)
         if any(w in cleaned for w in ["organise", "organize", "clean"]) and any(w in cleaned for w in ["download", "downlaod", "downloads", "downlaods"]):
             if speak_fn: speak_fn("Sure Sadiq, organizing your Downloads folder now...")
             count, msg = organize_downloads_folder()
@@ -147,56 +183,56 @@ class IntentRouter:
             if speak_fn: speak_fn(speak_msg)
             return True, speak_msg
 
-        # 2. Clear / Clean RAM
+        # 4. Clear / Clean RAM
         if any(w in cleaned for w in ["clear", "clean", "free", "purge"]) and any(w in cleaned for w in ["ram", "memory", "waste"]):
             if speak_fn: speak_fn("Clearing memory cache and garbage collection, Sir...")
             msg = clean_system_ram()
             if speak_fn: speak_fn(msg)
             return True, msg
 
-        # 3. Latest News
+        # 5. Latest News
         if "news" in cleaned or "headlines" in cleaned or "latest news" in cleaned:
             if speak_fn: speak_fn("Fetching top news headlines now, Sir...")
             msg = fetch_latest_news()
             if speak_fn: speak_fn(msg)
             return True, msg
 
-        # 4. Calculator
+        # 6. Calculator
         if cleaned in ["calculator", "open calculator", "calc"]:
             subprocess.Popen(["calc"])
             msg = "Opening calculator, Sir."
             if speak_fn: speak_fn(msg)
             return True, msg
 
-        # 5. Notepad
+        # 7. Notepad
         if cleaned in ["notepad", "open notepad", "note", "open note"]:
             subprocess.Popen(["notepad"])
             msg = "Opening Notepad, Sir."
             if speak_fn: speak_fn(msg)
             return True, msg
 
-        # 6. File Explorer
+        # 8. File Explorer
         if cleaned in ["open explorer", "open file explorer", "open file manager", "explorer"]:
             os.system("explorer")
             msg = "Opening File Explorer."
             if speak_fn: speak_fn(msg)
             return True, msg
 
-        # 7. Settings
+        # 9. Settings
         if cleaned in ["open settings", "open setting", "settings"]:
             subprocess.Popen(["ms-settings:"])
             msg = "Opening Windows settings."
             if speak_fn: speak_fn(msg)
             return True, msg
 
-        # 8. YouTube
+        # 10. YouTube
         if cleaned in ["open youtube", "youtube"]:
             webbrowser.open("https://www.youtube.com")
             msg = "Opening YouTube."
             if speak_fn: speak_fn(msg)
             return True, msg
 
-        # 9. Read Tasks
+        # 11. Read Tasks
         if any(p in cleaned for p in ["tell my task", "what are my task", "read my to do list", "what i have to do today"]):
             tasks = get_all_tasks()
             if not tasks:
@@ -206,7 +242,7 @@ class IntentRouter:
             if speak_fn: speak_fn(msg)
             return True, msg
 
-        # 10. Identity queries
+        # 12. Identity queries
         if cleaned in ["who are you", "what is your name"]:
             msg = "I am Ren, your personal AI companion and autonomous assistant."
             if speak_fn: speak_fn(msg)

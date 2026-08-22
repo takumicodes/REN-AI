@@ -76,12 +76,34 @@ pip install -r requirements.txt
 
 ## 🎮 Usage Guide
 
-### Booting the System
-Launch the assistant by running the main interface script:
+### Booting Desktop HUD
+Launch the desktop assistant by running:
 ```bash
-python main_app.py
+python gui.py
 ```
 Click **INITIALIZE CORE** on the startup screen to launch the reactor and activate the HUD panels.
+
+### 📱 Booting Mobile Web Client
+
+#### 1. Local Wi-Fi Access (Same Network)
+```bash
+python server.py
+```
+* **Local PC Access:** `http://localhost:8000`
+* **Phone on Same Wi-Fi:** `http://<YOUR_PC_IP>:8000`
+
+#### 2. 🌍 Global Remote Access (Any Country, 4G/5G, Zero-Config HTTPS)
+Access REN from anywhere in the world without port forwarding:
+```bash
+python server.py --public
+```
+* **Zero-Config Cloudflare HTTPS Tunnel:** Instant global `https://*.trycloudflare.com` URL with SSL encryption.
+* **🔒 Passkey Protection:** Auto-generates a 6-character access passkey (or set custom with `--key YOUR_PASSKEY`).
+* **📷 Instant QR Code:** Scans directly with your phone camera to open REN with one tap.
+* **📱 PWA Standalone Mode:** Tap *"Add to Home Screen"* on Safari/Chrome to install REN as a full-screen native mobile app.
+* **🎙 Mobile Microphone Support:** Full Web Speech API voice input unlocked via trusted HTTPS.
+* **⚡ Real-time Token Streaming:** Live typewriter responses via Server-Sent Events (SSE).
+* **⏹ Instant Cancellation:** Real stop button halts Ollama generation and speech immediately.
 
 ### Interacting
 * **Voice / Chat Commands:** Ask Ren questions or give commands.

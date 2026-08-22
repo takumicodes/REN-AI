@@ -7,7 +7,7 @@ adaptive context window scaling, and automated memory-fallback model selection.
 import time
 import json
 import requests
-from typing import Dict, Any, Optional, List, Tuple
+from typing import Dict, Any, Optional, List, Tuple, Callable
 
 from ren.models.provider import ModelProvider
 from ren.config.settings import settings
@@ -114,12 +114,73 @@ class OllamaProvider(ModelProvider):
         except Exception as e:
             return False, str(e), 0, str(e)
 
+    def _execute_stream_request(
+        self,
+        model: str,
+        prompt: str,
+        ctx: int,
+        num_predict: int,
+        temp: float,
+        token_callback: Optional[Callable[[str], None]] = None,
+        cancel_check: Optional[Callable[[], bool]] = None,
+    ) -> Tuple[bool, str, int, str]:
+        """
+        Sends streaming generation request to Ollama.
+        Calls token_callback(chunk_text) for each chunk.
+        Returns: (success: bool, full_text_or_error: str, tokens_count: int, raw_error_text: str)
+        """
+        payload = {
+            "model": model,
+            "prompt": prompt,
+            "stream": True,
+            "options": {
+                "num_predict": num_predict,
+                "num_ctx": ctx,
+                "temperature": temp,
+            },
+        }
+
+        try:
+            response = requests.post(self.generate_url, json=payload, stream=True, timeout=self.timeout)
+            if response.status_code != 200:
+                return False, f"HTTP {response.status_code}", 0, response.text
+
+            accumulated_tokens = []
+            token_count = 0
+            for line in response.iter_lines():
+                if cancel_check and cancel_check():
+                    response.close()
+                    return True, "".join(accumulated_tokens).strip(), token_count, "Cancelled"
+                if line:
+                    try:
+                        chunk_json = json.loads(line.decode("utf-8"))
+                        text_part = chunk_json.get("response", "")
+                        if text_part:
+                            accumulated_tokens.append(text_part)
+                            token_count += 1
+                            if token_callback:
+                                token_callback(text_part)
+                        if chunk_json.get("done", False):
+                            eval_count = chunk_json.get("eval_count", token_count)
+                            return True, "".join(accumulated_tokens).strip(), eval_count, ""
+                    except json.JSONDecodeError:
+                        continue
+
+            full_text = "".join(accumulated_tokens).strip()
+            return True, full_text, token_count, ""
+        except requests.Timeout:
+            return False, "Timeout", 0, "Inference timed out"
+        except Exception as e:
+            return False, str(e), 0, str(e)
+
     def generate(
         self,
         prompt: str,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         num_ctx: Optional[int] = None,
+        token_callback: Optional[Callable[[str], None]] = None,
+        cancel_check: Optional[Callable[[], bool]] = None,
         **kwargs,
     ) -> str:
         """Sends prompt to Ollama with single-inference concurrency and auto-fallback."""
@@ -151,13 +212,25 @@ class OllamaProvider(ModelProvider):
             for target_model in candidate_models:
                 for attempt_ctx in ctx_steps:
                     agent_logger.debug(f"Ollama generating ({target_model}) ctx={attempt_ctx} predict={num_predict}...")
-                    success, result_text, tokens_count, raw_err = self._execute_request(
-                        model=target_model,
-                        prompt=prompt,
-                        ctx=attempt_ctx,
-                        num_predict=num_predict,
-                        temp=temp,
-                    )
+                    
+                    if token_callback or cancel_check:
+                        success, result_text, tokens_count, raw_err = self._execute_stream_request(
+                            model=target_model,
+                            prompt=prompt,
+                            ctx=attempt_ctx,
+                            num_predict=num_predict,
+                            temp=temp,
+                            token_callback=token_callback,
+                            cancel_check=cancel_check,
+                        )
+                    else:
+                        success, result_text, tokens_count, raw_err = self._execute_request(
+                            model=target_model,
+                            prompt=prompt,
+                            ctx=attempt_ctx,
+                            num_predict=num_predict,
+                            temp=temp,
+                        )
 
                     if success:
                         latency = time.perf_counter() - start_time

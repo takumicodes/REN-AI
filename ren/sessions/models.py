@@ -72,6 +72,7 @@ class Plan:
 @dataclass
 class Session:
     session_id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
+    user_id: str = "default"
     title: str = "New Conversation"
     project: str = "default"
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
@@ -91,6 +92,7 @@ class Session:
     def to_dict(self) -> Dict[str, Any]:
         return {
             "session_id": self.session_id,
+            "user_id": self.user_id,
             "title": self.title,
             "project": self.project,
             "created_at": self.created_at,
@@ -111,6 +113,7 @@ class Session:
 
         return cls(
             session_id=data.get("session_id", str(uuid.uuid4())[:8]),
+            user_id=data.get("user_id", "default"),
             title=data.get("title", "New Conversation"),
             project=data.get("project", "default"),
             created_at=data.get("created_at", datetime.utcnow().isoformat()),

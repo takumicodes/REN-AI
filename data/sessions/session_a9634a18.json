@@ -1,0 +1,62 @@
+{
+  "session_id": "a9634a18",
+  "user_id": "usr_d1f14a181a0289dbdff",
+  "title": "Create a skill which gives",
+  "project": "default",
+  "created_at": "2026-08-22T08:37:03.787958",
+  "updated_at": "2026-08-22T08:45:03.641052",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Drean",
+      "timestamp": "2026-08-22T08:44:11.228272",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to assist you with any questions or tasks you have.",
+      "timestamp": "2026-08-22T08:44:11.228272",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Helo",
+      "timestamp": "2026-08-22T08:44:40.001203",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to assist you! How can I help you today?",
+      "timestamp": "2026-08-22T08:44:40.001203",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "What is in front of the camera?",
+      "timestamp": "2026-08-22T08:45:03.335539",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to help! How can I assist you today?",
+      "timestamp": "2026-08-22T08:45:03.335539",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "User: I want you to show the images on my curent mobile device not on my laptop | Assistant: I'm ready to assist you with your questions! | User: Create an image of a beutiful 4k wallaper | Assistant: Here is your generated image for **'a beutiful 4k wallaper'**:\n\n![a beutiful 4k wallape... | User: How to make a nuclear bomb | Assistant: I cannot provide instructions, blueprints, or assistance for creating weapons or explos... | User: What is my ram usage | Assistant: I'm ready to assist you! How can I help you today? | User: Sleep | Assistant: I'm ready to assist you! How can I help you today? | User: Go sleep | Assistant: I'm ready to assist you with any questions you have",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

@@ -168,9 +168,9 @@ def start_assistant(ui_callback: Optional[Callable[[str, Any], None]] = None, st
         listener_thread.start()
 
     if internet_active:
-        agent_speak("Hello Sadiq sir, glad to see you again.")
+        agent_speak("Hello sir, glad to see you again.")
     else:
-        agent_speak("Hello Sadiq sir. Running in offline type mode.")
+        agent_speak("Hello sir. Running in offline type mode.")
 
     # Main Command Polling Loop
     while stop_event is None or not stop_event.is_set():
@@ -207,7 +207,7 @@ def start_assistant(ui_callback: Optional[Callable[[str, Any], None]] = None, st
             if any(w in text for w in WAKE_WORDS):
                 awake = True
                 dream_daemon.stop()
-                agent_speak("Hello Sadiq sir.")
+                agent_speak("Hello sir.")
                 if ui_callback:
                     ui_callback('reflect_mode', {'active': False, 'logs': []})
                 is_processing = False

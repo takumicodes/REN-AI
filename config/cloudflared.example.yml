@@ -1,0 +1,32 @@
+# ==============================================================================
+# Cloudflare Permanent Named Tunnel Configuration Template (Optional)
+# Use this when you want to bind REN-AI to your own permanent domain (e.g., ren.yourdomain.com)
+#
+# Steps to set up a permanent named tunnel:
+# 1. Authenticate with Cloudflare:
+#      cloudflared tunnel login
+# 2. Create a tunnel named "ren-ai":
+#      cloudflared tunnel create ren-ai
+#    (This creates a credentials JSON file in ~/.cloudflared/<TUNNEL_ID>.json)
+# 3. Route your domain DNS:
+#      cloudflared tunnel route dns ren-ai ren.yourdomain.com
+# 4. Copy this file to config/cloudflared.yml and fill in your Tunnel ID and path:
+# ==============================================================================
+
+# Your unique Cloudflare Tunnel ID or Name
+tunnel: YOUR_TUNNEL_UUID_HERE
+
+# Path to the credentials file generated during "cloudflared tunnel create"
+credentials-file: C:\Users\Cyan Code\.cloudflared\YOUR_TUNNEL_UUID_HERE.json
+
+# Ingress rules routing public traffic to local REN FastAPI instance on 127.0.0.1:8000
+ingress:
+  # Route traffic for your custom domain to local REN-AI
+  - hostname: ren.yourdomain.com
+    service: http://127.0.0.1:8000
+    originRequest:
+      connectTimeout: 30s
+      noTLSVerify: false
+
+  # Default catch-all rule (Required by Cloudflare)
+  - service: http_status:404

@@ -34,15 +34,17 @@ class MemoryManager:
         key: Optional[str] = None,
         importance: int = 1,
         tags: str = "",
+        user_id: str = "default",
     ) -> int:
         """Stores a user or domain fact into long-term memory."""
-        memory_logger.info(f"Storing memory fact [{category}]: {content[:60]}...")
+        memory_logger.info(f"Storing memory fact [{category}] for user '{user_id}': {content[:60]}...")
         return self.store.add_long_term_memory(
             content=content,
             category=category,
             key=key,
             importance=importance,
             tags=tags,
+            user_id=user_id,
         )
 
     def record_episode(
@@ -52,6 +54,7 @@ class MemoryManager:
         actions_taken: str = "",
         error: str = "",
         solution: str = "",
+        user_id: str = "default",
     ) -> int:
         """Records the result of an attempted task in episodic memory."""
         return self.store.record_episode(
@@ -60,11 +63,12 @@ class MemoryManager:
             actions_taken=actions_taken,
             error=error,
             solution=solution,
+            user_id=user_id,
         )
 
-    def get_recent_episodes(self, limit: int = 3) -> List[Dict[str, Any]]:
-        """Returns recent task execution episodes."""
-        return self.store.get_recent_episodes(limit=limit)
+    def get_recent_episodes(self, limit: int = 3, user_id: str = "default") -> List[Dict[str, Any]]:
+        """Returns recent task execution episodes for user."""
+        return self.store.get_recent_episodes(limit=limit, user_id=user_id)
 
     def upsert_project(
         self,
@@ -102,10 +106,11 @@ class MemoryManager:
     def get_relevant_memory_context(
         self,
         query: str,
+        user_id: str = "default",
         budget_tokens: Optional[int] = None,
     ) -> str:
         """
-        Retrieves compact, ranked relevant memories to inject into LLM prompt
+        Retrieves compact, ranked relevant memories for this specific user to inject into LLM prompt
         without dumping the entire database.
         """
         budget = budget_tokens or settings.AGENT.MEMORY_BUDGET_TOKENS
@@ -122,8 +127,8 @@ class MemoryManager:
         if "favorite_language" in facts:
             core_lines.append(f"Favorite Language: {facts['favorite_language']}")
 
-        # 2. Retrieve relevant long-term memories
-        all_memories = self.store.get_all_long_term_memories()
+        # 2. Retrieve relevant long-term memories strictly for this user + shared system baseline
+        all_memories = self.store.get_all_long_term_memories(user_id=user_id)
         ranked_ltm = MemoryRetrieval.rank_memories(query, all_memories, top_k=4)
 
         ltm_lines = []
@@ -131,7 +136,7 @@ class MemoryManager:
             ltm_lines.append(f"- {mem.get('content')}")
 
         # 3. Retrieve relevant episodic memories (e.g. past errors/solutions)
-        recent_episodes = self.store.get_recent_episodes(limit=3)
+        recent_episodes = self.store.get_recent_episodes(limit=3, user_id=user_id)
         ranked_episodes = MemoryRetrieval.rank_memories(
             query,
             [{"content": f"Past Task: '{e['task']}' -> Outcome: {e['outcome']}. Solution: {e['solution']}", "importance": 2} for e in recent_episodes],

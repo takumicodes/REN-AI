@@ -18,4 +18,5 @@ async def speak(text):
     while pygame.mixer.music.get_busy():
         await asyncio.sleep(0.1)
 
-asyncio.run(speak("Hello Sadiq. Ren is online."))
+if __name__ == "__main__":
+    asyncio.run(speak("Hello Sadiq. Ren is online."))

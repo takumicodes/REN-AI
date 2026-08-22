@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#09090b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>REN AI — Autonomous Assistant</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪐</text></svg>">
+    
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div id="app" class="app-wrapper">
+        <!-- Backdrop for Sidebar Drawer -->
+        <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+        <!-- Sidebar Navigation Drawer -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-avatar">🪐</div>
+                    <div class="brand-info">
+                        <span class="brand-name">REN AI</span>
+                        <span class="brand-badge">v2.5</span>
+                    </div>
+                </div>
+                <button id="btn-close-sidebar" class="icon-btn" aria-label="Close Sidebar">✕</button>
+            </div>
+
+            <div class="sidebar-actions">
+                <button id="btn-new-chat" class="btn btn-primary btn-block">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>New Chat</span>
+                </button>
+            </div>
+
+            <div class="sidebar-conversations">
+                <div class="section-label">Your Conversations</div>
+                <div id="conversations-list" class="conversations-list">
+                    <!-- Dynamic user conversations loaded here -->
+                    <div class="loading-state-mini">Loading chats...</div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <!-- System Telemetry Widget -->
+                <div class="telemetry-widget" id="telemetry-widget">
+                    <div class="telemetry-row">
+                        <span class="telemetry-label">Model:</span>
+                        <span class="telemetry-value" id="system-model-val">Checking...</span>
+                    </div>
+                    <div class="telemetry-row">
+                        <span class="telemetry-label">CPU / RAM:</span>
+                        <span class="telemetry-value" id="system-cpu-ram-val">0% / 0%</span>
+                    </div>
+                </div>
+
+                <div class="footer-controls">
+                    <button id="btn-open-skills" class="btn btn-secondary btn-sm">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>Skills</span>
+                    </button>
+                    
+                    <button id="btn-toggle-voice" class="btn btn-secondary btn-sm" title="Toggle Auto-Speak">
+                        <svg id="icon-voice-on" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        </svg>
+                        <span id="voice-toggle-label">Voice Off</span>
+                    </button>
+                </div>
+
+                <div class="footer-secondary-controls">
+                    <button id="btn-toggle-dream" class="btn btn-ghost btn-sm btn-block" title="Cognitive Reflection Mode">
+                        <span>🌙 Sleep Mode (Dream)</span>
+                    </button>
+                    <button id="btn-open-awakening" class="btn btn-ghost btn-sm btn-block" title="Calibrate Sensors">
+                        <span>⚡ Sensory Calibration</span>
+                    </button>
+                </div>
+
+                <div id="auth-status-container" class="auth-status-container hidden">
+                    <button id="btn-lock-auth" class="btn btn-ghost btn-sm btn-block">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Lock Assistant</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat View Area -->
+        <main class="main-content">
+            <!-- App Header -->
+            <header class="app-header">
+                <button id="btn-open-sidebar" class="icon-btn" aria-label="Open Sidebar">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+
+                <div class="header-title">
+                    <div class="title-text">REN</div>
+                    <div id="status-badge" class="status-badge status-online">
+                        <span class="status-dot"></span>
+                        <span id="status-label" class="status-label">Online</span>
+                    </div>
+                </div>
+
+                <button id="btn-header-new-chat" class="icon-btn" aria-label="New Chat">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+            </header>
+
+            <!-- Chat Messages Scroll Container -->
+            <div id="chat-container" class="chat-container">
+                <!-- Welcome View (when conversation is empty) -->
+                <div id="welcome-view" class="welcome-view">
+                    <div class="welcome-icon">🪐</div>
+                    <h2>Hello, I'm REN</h2>
+                    <p class="welcome-subtitle">Your autonomous AI companion and system assistant.</p>
+
+                    <div class="quick-prompts">
+                        <button class="prompt-chip" data-prompt="What is today's gold price?">
+                            <span class="chip-icon">🌐</span>
+                            <span>Today's gold price</span>
+                        </button>
+                        <button class="prompt-chip" data-prompt="Check system status">
+                            <span class="chip-icon">⚡</span>
+                            <span>System status</span>
+                        </button>
+                        <button class="prompt-chip" data-prompt="Create a skill that sorts my files">
+                            <span class="chip-icon">✨</span>
+                            <span>Create file skill</span>
+                        </button>
+                        <button class="prompt-chip" data-prompt="Explain your architecture">
+                            <span class="chip-icon">🧠</span>
+                            <span>Explain architecture</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Message stream container -->
+                <div id="messages-list" class="messages-list"></div>
+
+                <!-- Floating Live Stage Activity Pill -->
+                <div id="stage-indicator" class="stage-indicator hidden">
+                    <span class="stage-spinner"></span>
+                    <span id="stage-text">Thinking...</span>
+                </div>
+            </div>
+
+            <!-- Listening Feedback Bar (Voice Input) -->
+            <div id="listening-banner" class="listening-banner hidden">
+                <div class="pulse-ring"></div>
+                <div class="listening-content">
+                    <span class="listening-title">Listening...</span>
+                    <span id="transcript-preview" class="transcript-preview">Say something to Ren</span>
+                </div>
+                <button id="btn-cancel-voice" class="btn btn-sm btn-ghost">Cancel</button>
+            </div>
+
+            <!-- Bottom Sticky Chat Input -->
+            <div class="input-wrapper">
+                <div class="input-box">
+                    <button id="btn-camera" class="action-btn camera-btn" title="Camera Vision Snapshot" aria-label="Camera">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </button>
+
+                    <button id="btn-mic" class="action-btn mic-btn" title="Voice Input" aria-label="Microphone">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+
+                    <textarea
+                        id="user-input"
+                        rows="1"
+                        placeholder="Message REN..."
+                        aria-label="Message Input"
+                        autocomplete="off"
+                        autocorrect="on"
+                    ></textarea>
+
+                    <!-- Send Button (Swaps with Stop Button during generation) -->
+                    <button id="btn-send" class="action-btn send-btn" title="Send message" aria-label="Send">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="19" x2="12" y2="5"></line>
+                            <polyline points="5 12 12 5 19 12"></polyline>
+                        </svg>
+                    </button>
+
+                    <button id="btn-stop" class="action-btn stop-btn hidden" title="Stop Generation" aria-label="Stop">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Awakening Modal Sheet -->
+        <div id="awakening-modal" class="modal-sheet hidden">
+            <div class="modal-sheet-backdrop"></div>
+            <div class="modal-sheet-content awakening-modal-content">
+                <div class="awakening-header">
+                    <div class="brand-avatar pulse-slow">🪐</div>
+                    <h3>REN IS WAKING UP...</h3>
+                    <p class="auth-subtitle">Calibrating phone sensory systems...</p>
+                </div>
+                <div class="senses-checklist">
+                    <div class="sense-item">
+                        <span class="sense-icon">🎤</span>
+                        <span class="sense-label">Hearing (Microphone)</span>
+                        <span id="sense-hearing-status" class="sense-val">Calibrating...</span>
+                    </div>
+                    <div class="sense-item">
+                        <span class="sense-icon">📷</span>
+                        <span class="sense-label">Vision (Camera)</span>
+                        <span id="sense-vision-status" class="sense-val">Calibrating...</span>
+                    </div>
+                    <div class="sense-item">
+                        <span class="sense-icon">📱</span>
+                        <span class="sense-label">Motion (Accelerometer)</span>
+                        <span id="sense-motion-status" class="sense-val">Calibrating...</span>
+                    </div>
+                    <div class="sense-item">
+                        <span class="sense-icon">🔊</span>
+                        <span class="sense-label">Voice (Speech Synthesis)</span>
+                        <span id="sense-voice-status" class="sense-val">Calibrating...</span>
+                    </div>
+                    <div class="sense-item">
+                        <span class="sense-icon">🌐</span>
+                        <span class="sense-label">Network (Connectivity)</span>
+                        <span id="sense-network-status" class="sense-val">Calibrating...</span>
+                    </div>
+                </div>
+                <button id="btn-complete-awakening" class="btn btn-primary btn-block" disabled>Complete Calibration</button>
+            </div>
+        </div>
+
+        <!-- Passkey Security Modal -->
+        <div id="auth-modal" class="modal-sheet hidden">
+            <div class="modal-sheet-backdrop"></div>
+            <div class="modal-sheet-content auth-modal-content">
+                <div class="auth-icon">🔒</div>
+                <h3>Passkey Required</h3>
+                <p class="auth-subtitle">Enter your access key to connect to REN AI</p>
+                <div class="auth-input-group">
+                    <input type="password" id="auth-passkey-input" placeholder="Enter Access Passkey" autocomplete="current-password">
+                    <button id="btn-unlock-auth" class="btn btn-primary btn-block">Unlock Assistant</button>
+                </div>
+                <div id="auth-error-msg" class="auth-error-msg hidden"></div>
+            </div>
+        </div>
+
+        <!-- Skills Modal Sheet -->
+        <div id="skills-modal" class="modal-sheet hidden">
+            <div class="modal-sheet-backdrop" id="skills-backdrop"></div>
+            <div class="modal-sheet-content">
+                <div class="modal-header">
+                    <h3>Unlocked Skills</h3>
+                    <button id="btn-close-skills" class="icon-btn">✕</button>
+                </div>
+                <div id="skills-list-container" class="modal-body">
+                    <div class="loading-state-mini">Loading skills...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification Container -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- Hidden Audio Player for Speech Output -->
+    <audio id="tts-audio" preload="none"></audio>
+
+    <script src="/static/js/sensors.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
