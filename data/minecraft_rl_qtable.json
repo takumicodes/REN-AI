@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "total_steps": 174,
-    "total_reward": 168.0,
-    "epsilon": 0.0836,
-    "states_explored": 16
+    "total_steps": 186,
+    "total_reward": 553.0,
+    "epsilon": 0.0787,
+    "states_explored": 18
   },
   "q_table": {
     "HP_FULL|FD_FULL|DAY|SAFE|T0_NONE|W0|FC0": {
@@ -70,7 +70,7 @@
       "IDLE_OBSERVE": 0.0
     },
     "HP_FULL|FD_FULL|NIGHT|SAFE|T2_STONE|W0|FC0": {
-      "GATHER_WOOD": 0.075,
+      "GATHER_WOOD": 0.636,
       "CRAFT_PLANKS": 0.0,
       "CRAFT_CRAFTING_TABLE": 0.0,
       "CRAFT_WOODEN_PICKAXE": 0.0,
@@ -323,6 +323,48 @@
     },
     "DEAD": {
       "GATHER_WOOD": 0.0,
+      "CRAFT_PLANKS": 0.0,
+      "CRAFT_CRAFTING_TABLE": 0.0,
+      "CRAFT_WOODEN_PICKAXE": 0.0,
+      "MINE_STONE": 0.0,
+      "CRAFT_STONE_PICKAXE": 0.0,
+      "CRAFT_STONE_SWORD": 0.0,
+      "MINE_COAL": 0.0,
+      "CRAFT_TORCHES": 0.0,
+      "MINE_IRON": 0.0,
+      "CRAFT_FURNACE": 0.0,
+      "HUNT_FOOD": 0.0,
+      "EAT_FOOD": 0.0,
+      "BUILD_SHELTER": 0.0,
+      "DEFEND_SELF": 0.0,
+      "RETREAT_SAFETY": 0.0,
+      "EXPLORE": 0.0,
+      "FOLLOW_PLAYER": 0.0,
+      "IDLE_OBSERVE": 0.0
+    },
+    "HP_FULL|FD_FULL|DUSK|SAFE|T2_STONE|W0|FC0": {
+      "GATHER_WOOD": 0.0,
+      "CRAFT_PLANKS": 0.0,
+      "CRAFT_CRAFTING_TABLE": 0.0,
+      "CRAFT_WOODEN_PICKAXE": 0.0,
+      "MINE_STONE": 0.0,
+      "CRAFT_STONE_PICKAXE": 0.0,
+      "CRAFT_STONE_SWORD": -0.675,
+      "MINE_COAL": 0.0,
+      "CRAFT_TORCHES": 0.0,
+      "MINE_IRON": 0.0,
+      "CRAFT_FURNACE": 0.0,
+      "HUNT_FOOD": 0.0,
+      "EAT_FOOD": 0.0,
+      "BUILD_SHELTER": 0.0,
+      "DEFEND_SELF": 0.0,
+      "RETREAT_SAFETY": 0.075,
+      "EXPLORE": 0.0,
+      "FOLLOW_PLAYER": 0.0,
+      "IDLE_OBSERVE": 0.0
+    },
+    "HP_FULL|FD_FULL|DUSK|SAFE|T2_STONE|W2|FC0": {
+      "GATHER_WOOD": 56.8849,
       "CRAFT_PLANKS": 0.0,
       "CRAFT_CRAFTING_TABLE": 0.0,
       "CRAFT_WOODEN_PICKAXE": 0.0,
