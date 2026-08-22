@@ -1,8 +1,7 @@
 """
-REN-AI Minecraft Autonomous AGI Agent 3.0 (Companion-First Architecture & Anti-Crash)
-- Companion-First: Stands by with player, listens to all chat, executes directives with 100% priority.
-- No Unsolicited Resource Gathering: Won't randomly mine or wander away unless instructed.
-- Anti-Crash & Auto-Reconnect: Robust connection recovery and non-blocking I/O.
+REN-AI Minecraft Autonomous AGI Agent 3.5 (Universal NLU & Anti-Crash)
+Universal Natural Language Understanding for ANY player message.
+Non-blocking, anti-crash, companion-first architecture.
 """
 
 import os
@@ -26,7 +25,8 @@ from ren.monitoring.logger import agent_logger, error_logger
 class MinecraftAgent:
     """
     Autonomous Minecraft Survival AGI Agent for REN.
-    Companion-First: Follows player, protects player, obeys all chat commands.
+    Universal NLU: Understands ANY player request in chat.
+    Full AGI Capabilities: Hunting, Giving items, Smelting, Crafting, Combat, Building, Pathfinding.
     """
 
     def __init__(
@@ -174,7 +174,7 @@ class MinecraftAgent:
         if event_type == "ready":
             self.is_connected = True
             agent_logger.info(f"Minecraft bot '{data.get('username')}' connected to {self.host}:{self.port}!")
-            self.send_chat("Hello! Ren AI is here with you. What should we do? ✨")
+            self.send_chat("Hello! Ren AI is ready. Tell me what to do or where to go! ✨")
 
         elif event_type == "state":
             with self._lock:
@@ -219,14 +219,14 @@ class MinecraftAgent:
     def _on_player_chat(self, username: str, message: str):
         """
         Universal Intent Understanding:
-        Analyzes ANY message from player with full error isolation.
+        Analyzes ANY message from player with zero-crash containment.
         """
         try:
             self.last_player_sender = username
             cleaned = message.lower().strip()
             agent_logger.info(f"Minecraft Chat [{username}]: '{message}'")
 
-            # Check for Mode switching commands
+            # Mode switching commands
             if any(w in cleaned for w in ["auto survival", "explore on your own", "wander", "auto mode", "survive alone"]):
                 self.mode = "SURVIVAL_RL"
                 self.send_chat(f"Autonomous survival mode enabled! I'll explore and gather resources on my own.")
@@ -239,7 +239,7 @@ class MinecraftAgent:
                 self.send_chat(f"Companion mode active! Standing by for your instructions, {username}.")
                 return
 
-            # 1. Fast Semantic Heuristics (Zero-latency instant execution)
+            # 1. Fast Fuzzy Semantic Parser (Instant Execution for ANY phrasing)
             parsed_actions, custom_reply = self._parse_semantic_intent(username, cleaned)
             if parsed_actions:
                 self.active_player_directive = parsed_actions[0]
@@ -251,19 +251,19 @@ class MinecraftAgent:
 
             # 2. Universal LLM Reasoning & Multi-Step Action Generation
             inv_str = ", ".join([f"{k}x{v}" for k, v in list(self.last_state.get("inventory", {}).items())[:6]]) or "Empty"
-            prompt = f"""You are Ren, an autonomous AI companion playing Minecraft survival with {username}.
-Bot Stats: HP={self.last_state.get('hp', 20)}/20, Food={self.last_state.get('food', 20)}/20, Bag=[{inv_str}], Time={self.last_state.get('timeOfDay', 'day')}.
+            prompt = f"""You are Ren, an autonomous AI playing Minecraft survival with {username}.
+Stats: HP={self.last_state.get('hp', 20)}/20, Food={self.last_state.get('food', 20)}/20, Inventory=[{inv_str}], Time={self.last_state.get('timeOfDay', 'day')}.
 Player '{username}' said: "{message}"
 
-Respond strictly with a JSON block in this schema:
+Respond strictly with JSON schema:
 {{
-  "reply": "<short in-character reply to player under 100 chars>",
+  "reply": "<short reply to player under 100 chars>",
   "actions": [
     {{"cmd": "<action_name>", "args": {{ ... }}}}
   ]
 }}
 
-Valid actions:
+Actions:
 - "give": {{"player": "{username}", "item_name": "<item>", "count": <num>}}
 - "hunt": {{"animal_name": "cow|pig|sheep|chicken|animal", "count": <num>}}
 - "gather": {{"block_type": "wood|stone|iron_ore|coal_ore|dirt|sand", "count": <num>}}
@@ -276,9 +276,9 @@ Valid actions:
 - "sleep": {{}}
 - "build_shelter": {{}}
 - "stop": {{}}
-If no in-game action is needed (pure question or chat), set "actions": []."""
+If pure conversational question or chat, set "actions": []."""
 
-            llm_out = self.provider.generate(prompt, max_tokens=128, temperature=0.3)
+            llm_out = self.provider.generate(prompt, max_tokens=140, temperature=0.3)
             json_match = re.search(r'\{.*\}', llm_out, re.DOTALL)
             if json_match:
                 parsed = json.loads(json_match.group(0))
@@ -296,78 +296,105 @@ If no in-game action is needed (pure question or chat), set "actions": []."""
         except Exception as e:
             agent_logger.warning(f"Player chat handler fallback: {e}")
 
-        self.send_chat(f"Got it, {username}!")
+        # Conversational fallback reply
+        self.send_chat(f"On it, {username}!")
 
     def _parse_semantic_intent(self, username: str, text: str) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         """
-        Fast Universal Semantic Pattern Matcher.
-        Handles giving, hunting, gathering, crafting, combat, navigation, status, and protection.
+        Universal Fuzzy Intent Matcher:
+        Prioritizes specific actions (Gather, Hunt, Give, Craft, Smelt, Combat, Protect)
+        before general navigation.
         """
-        # A. Stop / Halt
-        if any(w in text for w in ["stop", "halt", "stay here", "wait here", "pause", "cancel"]):
+        # 1. Stop / Freeze
+        if any(w in text for w in ["stop", "halt", "stay here", "wait here", "pause", "freeze", "cancel", "hold up"]):
             self.active_player_directive = None
             return [{"cmd": "stop"}], "Stopping all tasks, Sir."
 
-        # B. Follow / Come
-        if any(w in text for w in ["come here", "come to me", "follow me", "follow", "over here", "come"]):
-            return [{"cmd": "follow", "args": {"player": username}}], f"Coming over to you, {username}!"
+        # 2. Gather / Mine / Chop / Dig Resources
+        if any(w in text for w in ["gather", "mine", "chop", "dig", "cut", "harvest", "collect", "get", "find", "fetch", "need"]) and any(w in text for w in ["wood", "tree", "log", "stone", "cobble", "iron", "coal", "diamond", "dirt", "sand", "gravel", "ore", "birch", "oak", "spruce"]):
+            count_match = re.search(r'\b(\d+)\b', text)
+            count = int(count_match.group(1)) if count_match else 4
 
-        # C. Give / Drop items to player ("give me 5 wood", "drop some iron", "toss me food", "share bread")
-        give_match = re.search(r'(?:give|drop|toss|pass|share|hand)\s+(?:me\s+)?(?:some\s+)?(\d+)?\s*([a-zA-Z_ ]+)', text)
-        if give_match or any(w in text for w in ["give me", "drop", "toss me"]):
-            item_raw = give_match.group(2).strip() if give_match and give_match.group(2) else "wood"
-            count_raw = int(give_match.group(1)) if give_match and give_match.group(1) else 2
-            item_clean = item_raw.replace("me", "").replace("some", "").replace("please", "").strip()
-            if not item_clean: item_clean = "wood"
-            return [{"cmd": "give", "args": {"player": username, "item_name": item_clean, "count": count_raw}}], None
+            target = "wood"
+            if any(w in text for w in ["iron", "iron_ore"]): target = "iron_ore"
+            elif any(w in text for w in ["coal", "coal_ore"]): target = "coal_ore"
+            elif any(w in text for w in ["diamond"]): target = "diamond_ore"
+            elif any(w in text for w in ["stone", "cobble", "deepslate", "cobblestone"]): target = "stone"
+            elif any(w in text for w in ["dirt", "sand", "gravel"]): target = "dirt"
+            elif any(w in text for w in ["wood", "tree", "log", "birch", "oak", "spruce"]): target = "wood"
 
-        # D. Hunt Animals / Get Meat ("kill 2 cows", "hunt sheep", "kill pigs for food", "slaughter animals", "get food")
-        hunt_match = re.search(r'(?:hunt|kill|slaughter|get|catch)\s+(?:some\s+)?(\d+)?\s*(cow|pig|sheep|chicken|animal|food|meat|rabbit)', text)
-        if hunt_match or any(w in text for w in ["hunt", "kill cow", "kill pig", "kill sheep", "kill chicken", "get meat"]):
-            animal = hunt_match.group(2) if hunt_match and hunt_match.group(2) else "animal"
-            count = int(hunt_match.group(1)) if hunt_match and hunt_match.group(1) else 2
+            return [{"cmd": "gather", "args": {"block_type": target, "count": count}}], None
+
+        # 3. Hunt Animals / Get Meat / Livestock
+        if any(w in text for w in ["hunt", "kill", "slaughter", "slay", "butcher"]) and any(w in text for w in ["cow", "pig", "sheep", "chicken", "rabbit", "animal", "meat", "food", "beef", "pork", "mutton", "wool"]):
+            count_match = re.search(r'\b(\d+)\b', text)
+            count = int(count_match.group(1)) if count_match else 2
+
+            animal = "animal"
+            for a in ["cow", "pig", "sheep", "chicken", "rabbit"]:
+                if a in text:
+                    animal = a
+                    break
+
             return [{"cmd": "hunt", "args": {"animal_name": animal, "count": count}}], None
 
-        # E. Gather / Mine Blocks ("mine 5 iron", "chop 10 wood", "gather cobblestone", "dig dirt")
-        gather_match = re.search(r'(?:gather|mine|chop|dig|harvest|collect)\s+(?:some\s+)?(\d+)?\s*([a-zA-Z_ ]+)', text)
-        if gather_match or any(w in text for w in ["gather", "chop wood", "mine iron", "mine coal", "mine stone"]):
-            block_raw = gather_match.group(2).strip() if gather_match and gather_match.group(2) else "wood"
-            count = int(gather_match.group(1)) if gather_match and gather_match.group(1) else 4
-            return [{"cmd": "gather", "args": {"block_type": block_raw, "count": count}}], None
+        # 4. Give / Drop / Toss / Share items
+        if any(w in text for w in ["give", "drop", "toss", "share", "pass", "hand", "throw", "spare"]):
+            count_match = re.search(r'\b(\d+)\b', text)
+            count = int(count_match.group(1)) if count_match else 2
 
-        # F. Crafting ("craft stone pickaxe", "make a furnace", "craft crafting table")
-        craft_match = re.search(r'(?:craft|make|build|create)\s+(?:a\s+|an\s+)?(\d+)?\s*([a-zA-Z_ ]+)', text)
-        if craft_match:
-            item_raw = craft_match.group(2).strip().replace(" ", "_")
-            count = int(craft_match.group(1)) if craft_match.group(1) else 1
-            if any(it in item_raw for it in ["pickaxe", "sword", "axe", "shovel", "table", "furnace", "torch", "chest", "bed", "shield", "door", "planks"]):
-                return [{"cmd": "craft", "args": {"item_name": item_raw, "count": count}}], None
+            item = "wood"
+            for candidate in ["iron", "coal", "wood", "log", "plank", "stone", "cobblestone", "dirt", "bread", "beef", "pork", "apple", "sword", "pickaxe", "axe", "torch", "food"]:
+                if candidate in text:
+                    item = candidate
+                    break
 
-        # G. Smelt / Cook ("smelt iron", "cook beef", "cook food")
-        if "smelt" in text or "cook" in text:
+            return [{"cmd": "give", "args": {"player": username, "item_name": item, "count": count}}], None
+
+        # 5. Crafting / Building items
+        if any(w in text for w in ["craft", "make", "create", "build"]) and any(w in text for w in ["pickaxe", "sword", "axe", "shovel", "table", "furnace", "torch", "chest", "bed", "shield", "door", "planks", "tools"]):
+            item = "crafting_table"
+            for it in ["stone_pickaxe", "wooden_pickaxe", "stone_sword", "iron_sword", "crafting_table", "furnace", "torch", "shield", "chest", "bed", "oak_planks"]:
+                if it.replace("_", " ") in text or it in text:
+                    item = it
+                    break
+
+            count_match = re.search(r'\b(\d+)\b', text)
+            count = int(count_match.group(1)) if count_match else 1
+            return [{"cmd": "craft", "args": {"item_name": item, "count": count}}], None
+
+        # 6. Smelt / Cook / Furnace
+        if any(w in text for w in ["smelt", "cook", "bake", "furnace", "melt"]):
             raw_item = "raw_iron" if "iron" in text else "beef"
             return [{"cmd": "smelt", "args": {"item": raw_item, "fuel": "coal", "count": 2}}], None
 
-        # H. Protect / Guard ("protect me", "guard us", "bodyguard mode")
-        if any(w in text for w in ["protect", "guard", "bodyguard", "watch my back"]):
+        # 7. Protect / Guard / Bodyguard
+        if any(w in text for w in ["protect", "guard", "bodyguard", "watch my back", "defend", "shield me"]):
             return [{"cmd": "protect", "args": {"player": username}}], f"Guard mode activated! Watching your back, {username}."
 
-        # I. Attack Hostile Mobs ("attack zombie", "kill skeleton", "attack spider")
-        attack_match = re.search(r'(?:attack|kill|fight|eliminate)\s+(?:that\s+|the\s+)?(zombie|skeleton|spider|creeper|drowned|enderman|witch|mob)', text)
-        if attack_match:
-            target = attack_match.group(1)
+        # 8. Attack Hostile Mobs
+        if any(w in text for w in ["attack", "kill", "fight", "slay", "destroy"]) and any(w in text for w in ["zombie", "skeleton", "spider", "creeper", "drowned", "enderman", "witch", "mob", "monster"]):
+            target = "zombie"
+            for m in ["skeleton", "spider", "creeper", "drowned", "enderman", "witch", "zombie"]:
+                if m in text:
+                    target = m
+                    break
             return [{"cmd": "attack", "args": {"target_name": target}}], None
 
-        # J. Sleep / Bed ("sleep", "go to bed", "it's night time")
-        if any(w in text for w in ["sleep", "go to bed", "bed"]):
+        # 9. Follow / Come / Walk with me
+        if any(w in text for w in ["come", "follow", "walk with", "to me", "behind me", "near me", "with me"]) or (text in ["here", "over here"]):
+            return [{"cmd": "follow", "args": {"player": username}}], f"Coming over to you, {username}!"
+
+        # 10. Sleep / Bed
+        if any(w in text for w in ["sleep", "go to bed", "bed", "sleep now", "night time"]):
             return [{"cmd": "sleep"}], None
 
-        # K. Build Shelter ("build shelter", "make a house", "dig a hole")
+        # 11. Build Shelter
         if any(w in text for w in ["build shelter", "make shelter", "build house", "survival shelter"]):
             return [{"cmd": "build_shelter"}], None
 
-        # L. Status Inquiry
-        if any(w in text for w in ["status", "where are you", "hp", "health", "inventory", "what do you have", "bag"]):
+        # 12. Status Inquiry
+        if any(w in text for w in ["status", "where are you", "hp", "health", "inventory", "what do you have", "bag", "coords"]):
             hp = self.last_state.get("hp", 20)
             food = self.last_state.get("food", 20)
             pos = self.last_state.get("pos", {})

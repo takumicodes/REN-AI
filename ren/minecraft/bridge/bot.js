@@ -1,8 +1,11 @@
 /**
- * REN-AI Minecraft Mineflayer Bridge 2.5 (High Performance & Anti-Crash Protected)
- * - Zero Unhandled Crashes: Full uncaughtException and unhandledRejection containment.
- * - Ultra-Low CPU Footprint: Eliminated heavy continuous 3D block scans; calls on-demand only.
- * - Non-blocking async pathfinding and action handlers.
+ * REN-AI Minecraft Mineflayer Bridge 4.0 (Active Dynamic Movement & Companion AI)
+ * Features:
+ * - Fluid Dynamic Follow Engine: Active real-time following with sprinting and path tracking.
+ * - Unrestricted Full Movement: Parkour jumping, 1-block stepping, sprinting, door opening, swimming.
+ * - Auto-Follow Companion Mode: Stays close to player naturally (leash behavior).
+ * - Full 64-block Detection Radius for Mobs, Animals, Players, and Blocks.
+ * - Non-blocking async execution with zero crash containment.
  */
 
 const mineflayer = require('mineflayer');
@@ -50,7 +53,8 @@ function sendEvent(type, data = {}) {
 let bot = null;
 let defaultMovements = null;
 let currentTask = null;
-let guardTargetPlayer = null;
+let followingPlayerName = null;
+let followIntervalId = null;
 
 function createBot() {
     sendEvent('connecting', { host: options.host, port: options.port, username: options.username });
@@ -83,10 +87,23 @@ function createBot() {
 
     bot.once('spawn', () => {
         try {
-            defaultMovements = new Movements(bot);
+            const mcData = require('minecraft-data')(bot.version);
+            defaultMovements = new Movements(bot, mcData);
             defaultMovements.canDig = true;
+            defaultMovements.canOpenDoors = true;
             defaultMovements.allow1by1towers = true;
-            defaultMovements.scafoldingBlocks = [];
+            defaultMovements.allowParkour = true;
+            defaultMovements.allowSprinting = true;
+            defaultMovements.maxDropDown = 4;
+
+            if (mcData.blocksByName.dirt) {
+                defaultMovements.scafoldingBlocks = [
+                    mcData.blocksByName.dirt.id,
+                    mcData.blocksByName.cobblestone ? mcData.blocksByName.cobblestone.id : null,
+                    mcData.blocksByName.oak_planks ? mcData.blocksByName.oak_planks.id : null
+                ].filter(id => id !== null);
+            }
+
             bot.pathfinder.setMovements(defaultMovements);
 
             // Auto-eat configuration
@@ -100,11 +117,11 @@ function createBot() {
                 difficulty: bot.game ? bot.game.difficulty : 'normal'
             });
 
-            // Lightweight periodic state publisher (every 2.5s)
+            // Periodic telemetry (every 2.5s)
             setInterval(publishState, 2500);
 
-            // Auto-maintenance loop (every 5s)
-            setInterval(autoMaintenanceTick, 5000);
+            // Active companion & maintenance loop (every 1s)
+            setInterval(companionTick, 1000);
         } catch (err) {
             sendEvent('error', { error: `Spawn setup error: ${err.message}` });
         }
@@ -124,6 +141,7 @@ function createBot() {
     });
 
     bot.on('death', () => {
+        stopFollowLoop();
         sendEvent('death', {
             position: bot.entity ? bot.entity.position : null,
             inventory: getInventorySummary()
@@ -164,7 +182,7 @@ function getInventorySummary() {
     return summary;
 }
 
-function getNearbyEntities(maxDistance = 24) {
+function getNearbyEntities(maxDistance = 64) {
     if (!bot || !bot.entities || !bot.entity) return [];
     const nearby = [];
     const botPos = bot.entity.position;
@@ -182,7 +200,8 @@ function getNearbyEntities(maxDistance = 24) {
                     distance: Math.round(dist * 10) / 10,
                     position: { x: Math.round(ent.position.x), y: Math.round(ent.position.y), z: Math.round(ent.position.z) },
                     isHostile: isHostileMob(ent.name),
-                    isAnimal: isPassiveAnimal(ent.name)
+                    isAnimal: isPassiveAnimal(ent.name),
+                    isPlayer: ent.type === 'player'
                 });
             }
         }
@@ -202,6 +221,34 @@ function isPassiveAnimal(name) {
     return animals.some(a => name.toLowerCase().includes(a));
 }
 
+// Robust Player Entity Finder
+function findTargetPlayer(playerName) {
+    if (!bot || !bot.entity) return null;
+
+    // 1. Direct match in bot.players
+    if (playerName && bot.players[playerName] && bot.players[playerName].entity) {
+        return bot.players[playerName].entity;
+    }
+
+    // 2. Case-insensitive match
+    if (playerName) {
+        const cleanName = playerName.toLowerCase().trim();
+        for (const name in bot.players) {
+            if (name.toLowerCase() === cleanName && bot.players[name].entity) {
+                return bot.players[name].entity;
+            }
+        }
+    }
+
+    // 3. Nearest player in world
+    try {
+        const nearest = bot.nearestEntity(e => e.type === 'player' && e !== bot.entity);
+        if (nearest) return nearest;
+    } catch (e) {}
+
+    return null;
+}
+
 function publishState() {
     if (!bot || !bot.entity) return;
 
@@ -219,7 +266,7 @@ function publishState() {
                 z: Math.round(bot.entity.position.z * 10) / 10
             },
             inventory: getInventorySummary(),
-            entities: getNearbyEntities(16),
+            entities: getNearbyEntities(32),
             timeOfDay: isNight ? 'night' : (isDusk ? 'dusk' : 'day'),
             rawTime: timeOfDay,
             activeTask: currentTask
@@ -229,7 +276,40 @@ function publishState() {
     } catch (e) {}
 }
 
-async function autoMaintenanceTick() {
+// Active Following Engine
+function startFollowLoop(playerName) {
+    stopFollowLoop();
+    followingPlayerName = playerName;
+
+    followIntervalId = setInterval(() => {
+        if (!bot || !bot.entity || currentTask !== 'follow') return;
+
+        const playerEntity = findTargetPlayer(followingPlayerName);
+        if (!playerEntity) return;
+
+        const dist = bot.entity.position.distanceTo(playerEntity.position);
+
+        if (dist > 3) {
+            // Look at player while moving
+            bot.lookAt(playerEntity.position.offset(0, playerEntity.height * 0.8, 0)).catch(() => {});
+            bot.pathfinder.setGoal(new goals.GoalNear(playerEntity.position.x, playerEntity.position.y, playerEntity.position.z, 2));
+        } else if (dist <= 2) {
+            // Close enough, pause walking and look at player face
+            bot.lookAt(playerEntity.position.offset(0, playerEntity.height * 0.8, 0)).catch(() => {});
+        }
+    }, 800);
+}
+
+function stopFollowLoop() {
+    if (followIntervalId) {
+        clearInterval(followIntervalId);
+        followIntervalId = null;
+    }
+    followingPlayerName = null;
+}
+
+// Companion Living Tick
+async function companionTick() {
     if (!bot || !bot.entity || currentTask) return;
 
     try {
@@ -253,6 +333,12 @@ async function autoMaintenanceTick() {
         if (shield) {
             await bot.equip(shield, 'off-hand').catch(() => {});
         }
+
+        // Natural Idle Behavior: Look at nearest player if nearby
+        const nearestPlayer = bot.nearestEntity(e => e.type === 'player' && e !== bot.entity);
+        if (nearestPlayer && bot.entity.position.distanceTo(nearestPlayer.position) < 10) {
+            await bot.lookAt(nearestPlayer.position.offset(0, nearestPlayer.height * 0.8, 0)).catch(() => {});
+        }
     } catch (e) {}
 }
 
@@ -260,7 +346,21 @@ async function autoMaintenanceTick() {
 async function handleAction(action) {
     const { cmd, task_id } = action;
 
-    // Immediately stop previous goals to prioritize new command
+    // Direct Chat speaking does NOT stop pathfinding!
+    if (cmd === 'chat') {
+        if (action.message && bot) {
+            bot.chat(action.message);
+            sendEvent('task_done', { task_id, cmd, success: true });
+        }
+        return;
+    }
+
+    // Stop follow loop if switching to non-follow task
+    if (cmd !== 'follow') {
+        stopFollowLoop();
+    }
+
+    // Stop current pathfinding
     try {
         if (bot.pathfinder) bot.pathfinder.stop();
         if (bot.pvp) bot.pvp.stop();
@@ -270,30 +370,23 @@ async function handleAction(action) {
 
     try {
         switch (cmd) {
-            case 'chat': {
-                if (action.message && bot) {
-                    bot.chat(action.message);
-                    sendEvent('task_done', { task_id, cmd, success: true });
-                }
-                break;
-            }
-
             case 'follow': {
-                const targetPlayer = bot.players[action.player];
-                if (!targetPlayer || !targetPlayer.entity) {
-                    sendEvent('task_done', { task_id, cmd, success: false, error: `Player '${action.player}' not found nearby.` });
+                const targetEntity = findTargetPlayer(action.player);
+                if (!targetEntity) {
+                    bot.chat(`I can't see ${action.player || 'you'} right now. Move closer into view!`);
+                    sendEvent('task_done', { task_id, cmd, success: false, error: `Player entity not visible.` });
                     return;
                 }
-                guardTargetPlayer = action.player;
-                bot.pathfinder.setGoal(new goals.GoalFollow(targetPlayer.entity, 2), true);
-                sendEvent('task_done', { task_id, cmd, success: true, message: `Following ${action.player}` });
+
+                startFollowLoop(action.player);
+                sendEvent('task_done', { task_id, cmd, success: true, message: `Following player` });
                 break;
             }
 
             case 'stop': {
+                stopFollowLoop();
                 if (bot.pathfinder) bot.pathfinder.stop();
                 if (bot.pvp) bot.pvp.stop();
-                guardTargetPlayer = null;
                 currentTask = null;
                 sendEvent('task_done', { task_id, cmd, success: true, message: 'Stopped all tasks.' });
                 break;
@@ -337,8 +430,8 @@ async function handleAction(action) {
             }
 
             case 'protect': {
-                guardTargetPlayer = action.player;
-                sendEvent('task_done', { task_id, cmd, success: true, message: `Guard mode active for ${action.player}.` });
+                startFollowLoop(action.player);
+                sendEvent('task_done', { task_id, cmd, success: true, message: `Guard mode active.` });
                 break;
             }
 
@@ -366,15 +459,18 @@ async function handleAction(action) {
     } catch (err) {
         sendEvent('task_done', { task_id, cmd, success: false, error: err.message });
     } finally {
-        currentTask = null;
+        if (cmd !== 'follow') {
+            currentTask = null;
+        }
     }
 }
 
 // 1. Give Item to Player
 async function giveItemToPlayer(playerName, itemName, count, taskId) {
-    const player = bot.players[playerName];
-    if (!player || !player.entity) {
-        sendEvent('task_done', { task_id: taskId, cmd: 'give', success: false, error: `Player '${playerName}' is not nearby.` });
+    const playerEntity = findTargetPlayer(playerName);
+    if (!playerEntity) {
+        bot.chat(`I can't find you nearby to give items, ${playerName}!`);
+        sendEvent('task_done', { task_id: taskId, cmd: 'give', success: false, error: `Player '${playerName}' not found.` });
         return;
     }
 
@@ -404,8 +500,8 @@ async function giveItemToPlayer(playerName, itemName, count, taskId) {
 
     try {
         bot.chat(`Coming over to give you ${dropCount}x ${targetItem.name.replace('_', ' ')}...`);
-        await bot.pathfinder.goto(new goals.GoalNear(player.entity.position.x, player.entity.position.y, player.entity.position.z, 2)).catch(() => {});
-        await bot.lookAt(player.entity.position.offset(0, player.entity.height * 0.8, 0)).catch(() => {});
+        await bot.pathfinder.goto(new goals.GoalNear(playerEntity.position.x, playerEntity.position.y, playerEntity.position.z, 2)).catch(() => {});
+        await bot.lookAt(playerEntity.position.offset(0, playerEntity.height * 0.8, 0)).catch(() => {});
         await bot.toss(targetItem.type, null, dropCount);
         bot.chat(`Here you go, ${playerName}! Dropped ${dropCount}x ${targetItem.name.replace('_', ' ')} for you.`);
         sendEvent('task_done', { task_id: taskId, cmd: 'give', success: true, message: `Gave ${dropCount}x ${targetItem.name} to ${playerName}` });
@@ -414,13 +510,13 @@ async function giveItemToPlayer(playerName, itemName, count, taskId) {
     }
 }
 
-// 2. Hunt Animals
+// 2. Hunt Animals (Searches 64 blocks)
 async function huntAnimals(animalName, totalCount, taskId) {
     let killed = 0;
     const cleanAnimal = (animalName || 'animal').toLowerCase();
 
     for (let i = 0; i < totalCount; i++) {
-        const entities = getNearbyEntities(24);
+        const entities = getNearbyEntities(64);
         const candidates = entities.filter(e => {
             if (cleanAnimal === 'animal' || cleanAnimal === 'food') return e.isAnimal;
             return e.name.toLowerCase().includes(cleanAnimal);
@@ -446,7 +542,7 @@ async function huntAnimals(animalName, totalCount, taskId) {
                 waited++;
             }
             killed++;
-            await collectNearbyDrops(6);
+            await collectNearbyDrops(12);
         } catch (e) {}
     }
 
@@ -454,13 +550,13 @@ async function huntAnimals(animalName, totalCount, taskId) {
         bot.chat(`Hunted ${killed} animal(s)! Food and drops collected.`);
         sendEvent('task_done', { task_id: taskId, cmd: 'hunt', success: true, message: `Hunted ${killed} animals.` });
     } else {
-        bot.chat(`Couldn't find any ${animalName} nearby to hunt.`);
+        bot.chat(`Couldn't find any ${animalName} within 64 blocks.`);
         sendEvent('task_done', { task_id: taskId, cmd: 'hunt', success: false, error: `No ${animalName} found.` });
     }
 }
 
 // 3. Collect Drops
-async function collectNearbyDrops(radius = 6) {
+async function collectNearbyDrops(radius = 12) {
     if (!bot || !bot.entities) return;
     try {
         const botPos = bot.entity.position;
@@ -475,7 +571,7 @@ async function collectNearbyDrops(radius = 6) {
     } catch (e) {}
 }
 
-// 4. Gather Blocks
+// 4. Gather Blocks (Searches 64 blocks)
 async function gatherBlocks(blockType, count, taskId) {
     let targetNames = [blockType];
     const clean = blockType.toLowerCase();
@@ -497,12 +593,12 @@ async function gatherBlocks(blockType, count, taskId) {
 
     const blocksToCollect = bot.findBlocks({
         matching: matchingIds,
-        maxDistance: 24,
+        maxDistance: 64,
         count: count
     });
 
     if (!blocksToCollect || blocksToCollect.length === 0) {
-        bot.chat(`I couldn't find any ${blockType} within range.`);
+        bot.chat(`I couldn't find any ${blockType} within 64 blocks.`);
         sendEvent('task_done', { task_id: taskId, cmd: 'gather', success: false, error: `No ${blockType} found.` });
         return;
     }
@@ -535,7 +631,7 @@ async function craftItem(itemName, count, taskId) {
 
     let craftingTableBlock = bot.findBlock({
         matching: bot.registry.blocksByName.crafting_table.id,
-        maxDistance: 5
+        maxDistance: 6
     });
 
     if (!craftingTableBlock) {
@@ -571,7 +667,7 @@ async function craftItem(itemName, count, taskId) {
 async function smeltItem(rawItemName, fuelName, count, taskId) {
     const furnaceBlock = bot.findBlock({
         matching: bot.registry.blocksByName.furnace.id,
-        maxDistance: 5
+        maxDistance: 6
     });
 
     if (!furnaceBlock) {
@@ -598,7 +694,7 @@ async function smeltItem(rawItemName, fuelName, count, taskId) {
 
 // 7. Attack
 async function attackNearestMob(mobName, taskId) {
-    const entities = getNearbyEntities(20);
+    const entities = getNearbyEntities(32);
     const target = entities.find(e => e.name.toLowerCase().includes(mobName.toLowerCase()));
 
     if (!target) {
@@ -628,7 +724,7 @@ async function sleepInBed(taskId) {
             bot.registry.blocksByName.red_bed ? bot.registry.blocksByName.red_bed.id : null,
             bot.registry.blocksByName.white_bed ? bot.registry.blocksByName.white_bed.id : null
         ].filter(id => id !== null),
-        maxDistance: 5
+        maxDistance: 6
     });
 
     if (!bedBlock) {

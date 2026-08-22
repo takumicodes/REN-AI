@@ -552,3 +552,72 @@
 [2026-08-22 03:27:05] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
 [2026-08-22 03:27:09] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
 [2026-08-22 03:27:09] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 03:30:05] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:30:05] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host 10.95.30.88 --port 1234 --username RenAI --auth offline
+[2026-08-22 03:30:07] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to 10.95.30.88:1234!
+[2026-08-22 03:30:15] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'come here'
+[2026-08-22 03:31:16] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'come to me ren'
+[2026-08-22 03:32:10] [INFO] [ren.agent]: Minecraft Chat [ConsoleUser]: 'follow me'
+[2026-08-22 03:33:02] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'come here'
+[2026-08-22 03:33:14] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'follow me'
+[2026-08-22 03:33:19] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 03:33:30] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'break wood'
+[2026-08-22 03:33:59] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'chop wood with hand'
+[2026-08-22 03:34:06] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'stop'
+[2026-08-22 03:34:15] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give wood to me'
+[2026-08-22 03:34:26] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'follow me'
+[2026-08-22 03:34:47] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'follow me with your legs'
+[2026-08-22 03:35:00] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'get food'
+[2026-08-22 03:35:14] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'roam freely'
+[2026-08-22 03:35:31] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'ok roam'
+[2026-08-22 03:35:40] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'yes'
+[2026-08-22 03:36:00] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'dig down to 4 blocks'
+[2026-08-22 03:36:35] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'dig your downward blocks upto 4'
+[2026-08-22 03:36:55] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'dig my bottom blocks upto 4'
+[2026-08-22 03:37:12] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'make a small shelter'
+[2026-08-22 03:37:33] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 03:37:33] [INFO] [ren.agent]: Bot took damage! Current HP: 9.5
+[2026-08-22 03:37:34] [INFO] [ren.agent]: Bot took damage! Current HP: 6.467040061950684
+[2026-08-22 03:37:34] [INFO] [ren.agent]: Bot took damage! Current HP: 3.434080123901367
+[2026-08-22 03:37:35] [INFO] [ren.agent]: Bot took damage! Current HP: 0.4011201858520508
+[2026-08-22 03:37:35] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 03:37:48] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'come here'
+[2026-08-22 03:38:44] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'come here buddy'
+[2026-08-22 03:39:03] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:39:07] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'destroy cobblestone'
+[2026-08-22 03:39:16] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 03:39:46] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'follow me'
+[2026-08-22 03:40:52] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 03:40:53] [INFO] [ren.agent]: Bot took damage! Current HP: 19.33333396911621
+[2026-08-22 03:40:53] [INFO] [ren.agent]: Bot took damage! Current HP: 19
+[2026-08-22 03:40:54] [INFO] [ren.agent]: Bot took damage! Current HP: 18.83333396911621
+[2026-08-22 03:40:55] [INFO] [ren.agent]: Bot took damage! Current HP: 18.166667938232422
+[2026-08-22 03:40:55] [INFO] [ren.agent]: Bot took damage! Current HP: 17.33333396911621
+[2026-08-22 03:40:56] [INFO] [ren.agent]: Bot took damage! Current HP: 16.5
+[2026-08-22 03:40:56] [INFO] [ren.agent]: Bot took damage! Current HP: 15.666666984558105
+[2026-08-22 03:41:00] [INFO] [ren.agent]: Bot took damage! Current HP: 14.833333969116211
+[2026-08-22 03:41:01] [INFO] [ren.agent]: Bot took damage! Current HP: 14.833333969116211
+[2026-08-22 03:41:02] [INFO] [ren.agent]: Bot took damage! Current HP: 13.833333969116211
+[2026-08-22 03:41:03] [INFO] [ren.agent]: Bot took damage! Current HP: 12.833333969116211
+[2026-08-22 03:41:18] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:41:37] [INFO] [ren.agent]: Bot took damage! Current HP: 12.833333969116211
+[2026-08-22 03:41:38] [INFO] [ren.agent]: Bot took damage! Current HP: 6.897335052490234
+[2026-08-22 03:41:38] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:41:38] [INFO] [ren.agent]: Bot took damage! Current HP: 4.097335338592529
+[2026-08-22 03:41:40] [INFO] [ren.agent]: Bot took damage! Current HP: 1.064375400543213
+[2026-08-22 03:41:40] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 03:41:44] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 03:42:02] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 03:42:03] [INFO] [ren.agent]: Bot took damage! Current HP: 15
+[2026-08-22 03:42:04] [INFO] [ren.agent]: Bot took damage! Current HP: 14.333333015441895
+[2026-08-22 03:42:17] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 03:42:41] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:42:41] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host 10.95.30.88 --port 1234 --username RenAI --auth offline
+[2026-08-22 03:42:44] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to 10.95.30.88:1234!
+[2026-08-22 03:42:57] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'follow me'
+[2026-08-22 03:43:14] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'cop woods'
+[2026-08-22 03:43:34] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'chop woods'
+[2026-08-22 03:44:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'now follow me'
+[2026-08-22 03:44:43] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me woods'
+[2026-08-22 03:45:04] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'make crafting table'
+[2026-08-22 03:45:14] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084

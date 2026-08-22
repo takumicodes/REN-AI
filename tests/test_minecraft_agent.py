@@ -138,4 +138,27 @@ def test_minecraft_agent_v3():
         ("slay the skeleton", "attack")
     ]
     for prompt, expected_cmd in combat_tests:
-        acts, _ = agent._parse_semanti
+        acts, _ = agent._parse_semantic_intent("Sadiq", prompt)
+        assert len(acts) == 1 and acts[0]["cmd"] == expected_cmd, f"Failed on '{prompt}' -> {acts}"
+        print(f"  [PASS] '{prompt}' -> {expected_cmd}")
+
+    # 6. Crafting, Sleeping, Stopping
+    misc_tests = [
+        ("make a crafting table", "craft"),
+        ("let's craft a stone pickaxe", "craft"),
+        ("bake the mutton in the furnace", "smelt"),
+        ("it's night time let's sleep", "sleep"),
+        ("hold up and freeze", "stop")
+    ]
+    for prompt, expected_cmd in misc_tests:
+        acts, _ = agent._parse_semantic_intent("Sadiq", prompt)
+        assert len(acts) == 1 and acts[0]["cmd"] == expected_cmd, f"Failed on '{prompt}' -> {acts}"
+        print(f"  [PASS] '{prompt}' -> {expected_cmd}")
+
+    print("\n" + "=" * 64)
+    print(" [PASS] ALL MINECRAFT AGI 3.5 UNIVERSAL TESTS PASSED (100%)")
+    print("=" * 64 + "\n")
+
+
+if __name__ == "__main__":
+    test_minecraft_agent_v3()
