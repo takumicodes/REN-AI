@@ -621,3 +621,5 @@
 [2026-08-22 03:44:43] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me woods'
 [2026-08-22 03:45:04] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'make crafting table'
 [2026-08-22 03:45:14] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 16 states, 174 steps, eps=0.084
+[2026-08-22 03:45:18] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'make woods into planks'
+[2026-08-22 03:45:18] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
