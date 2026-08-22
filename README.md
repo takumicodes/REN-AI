@@ -18,59 +18,15 @@ REN-AI is a next-generation, local AI assistant designed to adapt, learn, and ma
 * **🧬 Autonomous Dream Daemon (Self-Learning):**
   * **Self-Healing Code:** Automatically intercepts Python exceptions, queries the local LLM for code patches, and runs the mutation scripts to fix itself.
   * **Web Book Downloader:** Periodically connects to Project Gutenberg to download and catalog text books.
-  * **Self-Education:** Summarizes book passages and technical topics relevant to Sadiq's skills and youtube channel, saving the knowledge to `memory.json`.
+  * **Self-Education:** Summarizes book passages and technical topics relevant to User skills and youtube channel, saving the knowledge to `memory.json`.
   * **System Organizer:** Scans the Windows `Downloads/` directory and categorizes files (Documents, Images, Archives, Installers) into tidy subfolders.
-* **📝 Detailed Action Logging:** Keeps a persistent, timestamped chronicle of all background dream accomplishments in [dream_history.log](file:///D:/Coding%20projects/REN-AI-main/dream_history.log).
 
----
 
-## 🗺️ System Architecture
-
-```mermaid
-graph TD
-    User([Sadiq / User]) -->|Keyboard / Voice| HUD[HUD Frontend - pywebview]
-    HUD -->|Prompt / Events| Backend[Python Core - back_end.py]
-    
-    subgraph Offline Mechanics
-        Backend -->|Check Socket| NetTest{Internet Connected?}
-        NetTest -->|Yes| Online[Edge TTS + SpeechRecognition]
-        NetTest -->|No| Offline[pyttsx3 SAPI5 + Keyboard Input Mode]
-    end
-
-    subgraph Cognitive Engine
-        Backend -->|Ollama Query| LLM[Local Qwen / Ollama]
-        Backend -->|Execute Script| Sandbox[exec Namespace Sandbox]
-        Sandbox -->|Writes skill_*.py| SkillsDir[skills/ folder]
-        Sandbox -->|Saves variables| Memory[memory.json]
-    end
-
-    subgraph Dream Daemon (Sleep Mode)
-        Backend -->|Idle 1m / 'sleep'| DreamLoop[Dream Reflection Loop]
-        DreamLoop -->|Parse tracebacks| Resolver[Self-Mutation Exception Patching]
-        DreamLoop -->|Download text books| Gutenberg[Project Gutenberg Reader]
-        DreamLoop -->|Scan user system| Clean[Downloads Folder Organizer]
-        DreamLoop -->|Write history| LogFile[(dream_history.log)]
-    end
-```
 
 ---
 
 ## 📦 Installation & Setup
-
-### Prerequisites
-1. **Ollama:** Install [Ollama for Windows](https://ollama.com/) and run the target local LLM (e.g. Qwen / Llama):
-   ```bash
-   ollama run qwen
-   ```
-2. **Python:** Python 3.8+ is recommended.
-
-### Dependency Installation
-Clone the repository and install the required libraries inside a virtual environment:
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-```
+Install Ren_AI_Installer.exe from releases and run it has administrator.
 
 ---
 
