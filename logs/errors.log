@@ -948,3 +948,4 @@
 [2026-08-22 00:34:51] [ERROR] [ren.errors]: Failed restoring backup: [WinError 32] The process cannot access the file because it is being used by another process: 'D:\\Coding projects\\REN-AI-main (1)\\REN-AI-main\\data\\ren_memory.db'
 [2026-08-25 02:34:49] [ERROR] [ren.errors]: Ollama error on 'qwen2.5-coder:1.5b': {"error":"an error was encountered while running the model: read tcp 127.0.0.1:53078-\u003e127.0.0.1:52659: wsarecv: An existing connection was forcibly closed by the remote host."}
 [2026-08-25 02:35:01] [ERROR] [ren.errors]: Ollama error on 'qwen2.5-coder:3b': {"error":"llama-server process has terminated: exit status 1"}
+[2026-08-25 04:19:43] [ERROR] [ren.errors]: Error adding long term memory: Error binding parameter 5 - probably unsupported type.
