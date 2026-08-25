@@ -1,0 +1,587 @@
+{
+  "spatial": {
+    "test_base": {
+      "pos": {
+        "x": 100.0,
+        "y": 64.0,
+        "z": -100.0
+      },
+      "updated_at": 1787564929.3894742,
+      "metadata": {}
+    },
+    "death_point": {
+      "pos": {
+        "x": -10.5,
+        "y": 87,
+        "z": 93.5
+      },
+      "updated_at": 1787565142.2990766,
+      "metadata": {}
+    },
+    "structure_small_house": {
+      "pos": {
+        "x": -4,
+        "y": 89,
+        "z": 101.5
+      },
+      "updated_at": 1787565444.5730507,
+      "metadata": {}
+    },
+    "home_base": {
+      "pos": {
+        "x": -4,
+        "y": 89,
+        "z": 101.5
+      },
+      "updated_at": 1787565444.5730507,
+      "metadata": {}
+    }
+  },
+  "semantic": {},
+  "skill": {},
+  "structures": {
+    "small_house": {
+      "origin": {
+        "x": -4,
+        "y": 89,
+        "z": 101.5
+      },
+      "dimensions": {
+        "width": 4,
+        "length": 4,
+        "height": 3
+      },
+      "block_count": 4,
+      "built_at": 1787565444.5730507
+    }
+  },
+  "failures": [
+    {
+      "action": "gather",
+      "reason": "Expected wood increase, but delta was 0 (total: 0)",
+      "context": {
+        "event": "state",
+        "timestamp": 1787565135913,
+        "hp": 18,
+        "max_hp": 20,
+        "food": 20,
+        "saturation": 5,
+        "pos": {
+          "x": -10.5,
+          "y": 86,
+          "z": 94.5
+        },
+        "yaw": -1.57,
+        "pitch": -0.84,
+        "dimension": "overworld",
+        "biome": "plains",
+        "inventory": {
+          "dirt": 4
+        },
+        "equipment": {
+          "main_hand": "dirt",
+          "off_hand": null,
+          "helmet": null,
+          "chestplate": null,
+          "leggings": null,
+          "boots": null
+        },
+        "entities": [
+          {
+            "id": 58,
+            "name": "player",
+            "type": "player",
+            "distance": 2.7,
+            "position": {
+              "x": -9,
+              "y": 88,
+              "z": 96
+            },
+            "isHostile": false,
+            "isAnimal": false,
+            "isPlayer": true
+          },
+          {
+            "id": 12008,
+            "name": "zombie",
+            "type": "hostile",
+            "distance": 1.1,
+            "position": {
+              "x": -10,
+              "y": 87,
+              "z": 94
+            },
+            "isHostile": true,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 12141,
+            "name": "skeleton",
+            "type": "hostile",
+            "distance": 31.1,
+            "position": {
+              "x": 16,
+              "y": 79,
+              "z": 109
+            },
+            "isHostile": true,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 14866,
+            "name": "item",
+            "type": "other",
+            "distance": 23.4,
+            "position": {
+              "x": 10,
+              "y": 83,
+              "z": 84
+            },
+            "isHostile": false,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 14867,
+            "name": "item",
+            "type": "other",
+            "distance": 18.7,
+            "position": {
+              "x": 6,
+              "y": 84,
+              "z": 87
+            },
+            "isHostile": false,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 14868,
+            "name": "item",
+            "type": "other",
+            "distance": 21.3,
+            "position": {
+              "x": 9,
+              "y": 84,
+              "z": 86
+            },
+            "isHostile": false,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 14869,
+            "name": "item",
+            "type": "other",
+            "distance": 22,
+            "position": {
+              "x": 8,
+              "y": 83,
+              "z": 83
+            },
+            "isHostile": false,
+            "isAnimal": false,
+            "isPlayer": false
+          }
+        ],
+        "pois": {
+          "crafting_tables": [
+            {
+              "x": -14,
+              "y": 82,
+              "z": 86
+            }
+          ],
+          "furnaces": [
+            {
+              "x": -23,
+              "y": 88,
+              "z": 100
+            }
+          ],
+          "beds": [],
+          "chests": [],
+          "hazards": []
+        },
+        "timeOfDay": "night",
+        "rawTime": 19513,
+        "activeTask": "gather"
+      },
+      "timestamp": 1787565136.6752892
+    },
+    {
+      "action": "gather",
+      "reason": "Verification failed",
+      "context": {
+        "event": "state",
+        "timestamp": 1787565439174,
+        "hp": 15,
+        "max_hp": 20,
+        "food": 17,
+        "saturation": 5,
+        "pos": {
+          "x": -4.5,
+          "y": 90,
+          "z": 102.5
+        },
+        "yaw": -1.57,
+        "pitch": -1.13,
+        "dimension": "overworld",
+        "biome": "plains",
+        "inventory": {
+          "birch_log": 6
+        },
+        "equipment": {
+          "main_hand": "birch_log",
+          "off_hand": null,
+          "helmet": null,
+          "chestplate": null,
+          "leggings": null,
+          "boots": null
+        },
+        "entities": [
+          {
+            "id": 16276,
+            "name": "item",
+            "type": "other",
+            "distance": 14.2,
+            "position": {
+              "x": -13,
+              "y": 86,
+              "z": 92
+            },
+            "isHostile": false,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 19828,
+            "name": "item",
+            "type": "other",
+            "distance": 31.5,
+            "position": {
+              "x": -33,
+              "y": 92,
+              "z": 115
+            },
+            "isHostile": false,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 26341,
+            "name": "creeper",
+            "type": "hostile",
+            "distance": 21.9,
+            "position": {
+              "x": 13,
+              "y": 78,
+              "z": 106
+            },
+            "isHostile": true,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 26342,
+            "name": "creeper",
+            "type": "hostile",
+            "distance": 28.4,
+            "position": {
+              "x": 15,
+              "y": 76,
+              "z": 117
+            },
+            "isHostile": true,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 26343,
+            "name": "zombie",
+            "type": "hostile",
+            "distance": 21.3,
+            "position": {
+              "x": 10,
+              "y": 75,
+              "z": 101
+            },
+            "isHostile": true,
+            "isAnimal": false,
+            "isPlayer": false
+          },
+          {
+            "id": 26344,
+            "name": "zombie",
+            "type": "hostile",
+            "distance": 24.8,
+            "position": {
+              "x": 12,
+              "y": 75,
+              "z": 114
+            },
+            "isHostile": true,
+            "isAnimal": false,
+            "isPlayer": false
+          }
+        ],
+        "pois": {
+          "crafting_tables": [],
+          "furnaces": [],
+          "beds": [],
+          "chests": [],
+          "hazards": []
+        },
+        "timeOfDay": "day",
+        "rawTime": 5269,
+        "activeTask": "gather"
+      },
+      "timestamp": 1787565439.7963648
+    }
+  ],
+  "goals": [
+    {
+      "goal": "Build Small House",
+      "duration": 10.0,
+      "success": true,
+      "timestamp": 1787565444.5880127
+    }
+  ],
+  "episodic": [
+    {
+      "id": "ep_1787564137394",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564137.39493,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564180697",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564180.6979306,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564181669",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564181.6695902,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564210583",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564210.5837126,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564211685",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564211.6856728,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564282705",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564282.7050698,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564286279",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564286.2799504,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564300279",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564300.2790592,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564303071",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564303.0716612,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564869488",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564869.4887342,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564871436",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564871.4368327,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564927396",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564927.3963168,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787564929389",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787564929.3894742,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787565121303",
+      "category": "episodic",
+      "content": {
+        "event": "death",
+        "summary": "Died at X:9 Z:84",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787565121.3038964,
+      "location": {
+        "x": 9.502164357748821,
+        "y": 83,
+        "z": 84.36672390454977
+      },
+      "tags": [
+        "death"
+      ]
+    },
+    {
+      "id": "ep_1787565142299",
+      "category": "episodic",
+      "content": {
+        "event": "death",
+        "summary": "Died at X:-10 Z:93",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787565142.2990766,
+      "location": {
+        "x": -10.473597291390421,
+        "y": 87,
+        "z": 93.5
+      },
+      "tags": [
+        "death"
+      ]
+    }
+  ]
+}

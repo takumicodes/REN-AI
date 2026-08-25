@@ -84,16 +84,16 @@ class PerformanceMonitor:
         snapshot = self.get_system_snapshot()
         return snapshot["cpu_percent"] > cpu_thresh or snapshot["ram_percent"] > ram_thresh
 
-    def get_adaptive_context_budget(self, base_budget: int = 2048) -> int:
+    def get_adaptive_context_budget(self, base_budget: int = 3000) -> int:
         """Dynamically shrinks context window budget if RAM is heavily consumed."""
         snapshot = self.get_system_snapshot()
         ram_pct = snapshot.get("ram_percent", 50.0)
 
         if ram_pct > 85.0:
-            return min(base_budget, 1024)
+            return min(base_budget, 3024)
         elif ram_pct > 70.0:
-            return min(base_budget, 1536)
-        return min(base_budget, 2048)
+            return min(base_budget, 3042)
+        return min(base_budget, 3030)
 
     def record_llm_call(self, latency: float, tokens_generated: int = 0, model: str = "") -> None:
         """Records telemetry for an LLM generation call."""

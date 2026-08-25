@@ -20,10 +20,6 @@ class OllamaProvider(ModelProvider):
 
     FALLBACK_MODELS = [
         "qwen2.5-coder:1.5b",
-        "qwen2.5:1.5b",
-        "qwen2.5:0.5b",
-        "qwen2.5-coder:0.5b",
-        "llama3.2:1b",
     ]
 
     def __init__(
@@ -188,8 +184,7 @@ class OllamaProvider(ModelProvider):
         temp = temperature if temperature is not None else settings.MODEL.DEFAULT_TEMPERATURE
         ctx = num_ctx or settings.MODEL.NUM_CTX
 
-        # Adjust context budget based on system pressure
-        ctx = perf_monitor.get_adaptive_context_budget(ctx)
+        
 
         # Enforce single primary inference to avoid thrashing CPU/RAM
         with perf_monitor.inference_lock:
@@ -197,10 +192,8 @@ class OllamaProvider(ModelProvider):
 
             # Context size steps to try
             ctx_steps = [ctx]
-            if ctx > 1024:
-                ctx_steps.append(1024)
-            if ctx > 512:
-                ctx_steps.append(512)
+            
+            
 
             # Candidate models (primary target first, followed by installed fallbacks)
             installed = self.get_installed_models()

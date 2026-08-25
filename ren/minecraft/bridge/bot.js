@@ -1,13 +1,7 @@
 /**
- * REN-AI Minecraft Mineflayer Bridge 9.0 (Full Creative & Survival Player Agency)
- * Complete feature set:
- * - Walking 3D Builder: Walks to each block position to construct complete 3x3 houses and ceilings without reach errors.
- * - Creative Mode Support: Auto-supplies materials in creative mode; auto-harvests in survival.
- * - In-Game Gamemode Commands: Executes /gamemode survival / /gamemode creative on command.
- * - Bridging Engine: Places bridges across chasms and air.
- * - Item Pickup & Drop All: Picks up dropped swords/items and drops all items on command.
- * - PvP Duel & Area Defense: Duels players or clears all nearby monsters.
- * - Fluid Dynamic Follow: Real-time sprinting and pathing.
+ * REN-AI Minecraft Mineflayer Bridge 11.0
+ * Comprehensive Action Execution Engine with Procedural Building, Mace & Wind Charge PvP,
+ * Verifiable Block Operations, Resource Mining, Crafting, and Real-time Telemetry.
  */
 
 const mineflayer = require('mineflayer');
@@ -27,7 +21,7 @@ process.on('unhandledRejection', (reason) => {
     sendEvent('error', { error: `UnhandledRejection: ${typeof reason === 'object' ? reason.message : String(reason)}` });
 });
 
-// Parse CLI Arguments
+// CLI Argument Parsing
 const args = process.argv.slice(2);
 const options = {
     host: 'localhost',
@@ -117,7 +111,7 @@ function createBot() {
                 difficulty: bot.game ? bot.game.difficulty : 'normal'
             });
 
-            setInterval(publishState, 2500);
+            setInterval(publishState, 2000);
             setInterval(companionTick, 1000);
         } catch (err) {
             sendEvent('error', { error: `Spawn setup error: ${err.message}` });
@@ -169,17 +163,13 @@ function getInventorySummary() {
     const summary = {};
     try {
         for (const item of bot.inventory.items()) {
-            if (summary[item.name]) {
-                summary[item.name] += item.count;
-            } else {
-                summary[item.name] = item.count;
-            }
+            summary[item.name] = (summary[item.name] || 0) + item.count;
         }
     } catch (e) {}
     return summary;
 }
 
-function getNearbyEntities(maxDistance = 64) {
+function getNearbyEntities(maxDistance = 32) {
     if (!bot || !bot.entities || !bot.entity) return [];
     const nearby = [];
     const botPos = bot.entity.position;
@@ -208,7 +198,7 @@ function getNearbyEntities(maxDistance = 64) {
 
 function isHostileMob(name) {
     if (!name) return false;
-    const hostiles = ['zombie', 'skeleton', 'spider', 'creeper', 'enderman', 'witch', 'drowned', 'husk', 'phantom', 'slime', 'pillager'];
+    const hostiles = ['zombie', 'skeleton', 'spider', 'creeper', 'enderman', 'witch', 'drowned', 'husk', 'phantom', 'slime', 'pillager', 'blaze'];
     return hostiles.some(h => name.toLowerCase().includes(h));
 }
 
@@ -242,6 +232,48 @@ function findTargetPlayer(playerName) {
     return null;
 }
 
+function getEquipmentSummary() {
+    if (!bot || !bot.inventory) return {};
+    try {
+        return {
+            main_hand: bot.heldItem ? bot.heldItem.name : null,
+            off_hand: bot.inventory.slots[45] ? bot.inventory.slots[45].name : null,
+            helmet: bot.inventory.slots[5] ? bot.inventory.slots[5].name : null,
+            chestplate: bot.inventory.slots[6] ? bot.inventory.slots[6].name : null,
+            leggings: bot.inventory.slots[7] ? bot.inventory.slots[7].name : null,
+            boots: bot.inventory.slots[8] ? bot.inventory.slots[8].name : null
+        };
+    } catch (e) {
+        return {};
+    }
+}
+
+function getNearbyPOIs() {
+    if (!bot || !bot.findBlocks) return { crafting_tables: [], furnaces: [], beds: [], chests: [], hazards: [] };
+    try {
+        const mcData = require('minecraft-data')(bot.version);
+        const findIds = (names) => names.map(n => mcData.blocksByName[n] ? mcData.blocksByName[n].id : null).filter(id => id !== null);
+
+        const tablePositions = bot.findBlocks({ matching: findIds(['crafting_table']), maxDistance: 16, count: 2 }) || [];
+        const furnacePositions = bot.findBlocks({ matching: findIds(['furnace', 'blast_furnace', 'smoker']), maxDistance: 16, count: 2 }) || [];
+        const bedPositions = bot.findBlocks({ matching: findIds(['white_bed', 'red_bed', 'blue_bed', 'bed']), maxDistance: 16, count: 2 }) || [];
+        const chestPositions = bot.findBlocks({ matching: findIds(['chest', 'trapped_chest', 'barrel']), maxDistance: 16, count: 2 }) || [];
+        const hazardPositions = bot.findBlocks({ matching: findIds(['lava', 'fire', 'cactus', 'magma_block']), maxDistance: 8, count: 4 }) || [];
+
+        const toCoords = (positions) => positions.map(p => ({ x: Math.round(p.x), y: Math.round(p.y), z: Math.round(p.z) }));
+
+        return {
+            crafting_tables: toCoords(tablePositions),
+            furnaces: toCoords(furnacePositions),
+            beds: toCoords(bedPositions),
+            chests: toCoords(chestPositions),
+            hazards: toCoords(hazardPositions)
+        };
+    } catch (e) {
+        return { crafting_tables: [], furnaces: [], beds: [], chests: [], hazards: [] };
+    }
+}
+
 function publishState() {
     if (!bot || !bot.entity) return;
 
@@ -250,16 +282,28 @@ function publishState() {
         const isNight = timeOfDay >= 13000 && timeOfDay <= 23000;
         const isDusk = (timeOfDay >= 12000 && timeOfDay < 13000) || (timeOfDay > 23000);
 
+        const currBlock = bot.blockAt(bot.entity.position);
+        const biomeName = (currBlock && currBlock.biome && currBlock.biome.name) ? currBlock.biome.name : 'plains';
+        const pois = getNearbyPOIs();
+
         const state = {
             hp: Math.round(bot.health || 20),
+            max_hp: 20,
             food: Math.round(bot.food || 20),
+            saturation: Math.round((bot.foodSaturation || 5) * 10) / 10,
             pos: {
                 x: Math.round(bot.entity.position.x * 10) / 10,
                 y: Math.round(bot.entity.position.y * 10) / 10,
                 z: Math.round(bot.entity.position.z * 10) / 10
             },
+            yaw: Math.round(bot.entity.yaw * 100) / 100,
+            pitch: Math.round(bot.entity.pitch * 100) / 100,
+            dimension: bot.game ? bot.game.dimension : 'overworld',
+            biome: biomeName,
             inventory: getInventorySummary(),
+            equipment: getEquipmentSummary(),
             entities: getNearbyEntities(32),
+            pois: pois,
             timeOfDay: isNight ? 'night' : (isDusk ? 'dusk' : 'day'),
             rawTime: timeOfDay,
             activeTask: currentTask
@@ -319,11 +363,6 @@ async function companionTick() {
         const shield = bot.inventory.items().find(i => i.name === 'shield');
         if (shield) {
             await bot.equip(shield, 'off-hand').catch(() => {});
-        }
-
-        const nearestPlayer = bot.nearestEntity(e => e.type === 'player' && e !== bot.entity);
-        if (nearestPlayer && bot.entity.position.distanceTo(nearestPlayer.position) < 8) {
-            await bot.lookAt(nearestPlayer.position.offset(0, nearestPlayer.height * 0.8, 0)).catch(() => {});
         }
     } catch (e) {}
 }
@@ -423,9 +462,10 @@ async function handleAction(action) {
                 break;
             }
 
-            case 'goTo': {
+            case 'goTo':
+            case 'move_to': {
                 const { x, y, z } = action;
-                await bot.pathfinder.goto(new goals.GoalNear(x, y, z, 1)).catch(() => {});
+                await bot.pathfinder.goto(new goals.GoalNear(x, y, z, 1.5)).catch(() => {});
                 sendEvent('task_done', { task_id, cmd, success: true, message: `Moved to ${x}, ${y}, ${z}` });
                 break;
             }
@@ -440,17 +480,20 @@ async function handleAction(action) {
                 break;
             }
 
-            case 'gather': {
+            case 'gather':
+            case 'mine_block': {
                 await gatherBlocks(action.block_type || 'oak_log', action.count || 3, task_id);
                 break;
             }
 
-            case 'craft': {
+            case 'craft':
+            case 'craft_item': {
                 await craftItem(action.item_name, action.count || 1, task_id);
                 break;
             }
 
-            case 'smelt': {
+            case 'smelt':
+            case 'smelt_item': {
                 await smeltItem(action.item, action.fuel, action.count || 1, task_id);
                 break;
             }
@@ -477,7 +520,13 @@ async function handleAction(action) {
                 break;
             }
 
-            case 'eat': {
+            case 'build_structure': {
+                await executeStructuredBlueprint(action.blocks, action.structure_name, task_id);
+                break;
+            }
+
+            case 'eat':
+            case 'eat_food': {
                 if (bot.autoEat) {
                     bot.autoEat.eat();
                     sendEvent('task_done', { task_id, cmd, success: true, message: 'Eating available food.' });
@@ -534,18 +583,12 @@ async function performPvPCombat(targetPlayer, taskId) {
             const dist = bot.entity.position.distanceTo(targetPlayer.position);
             if (dist < 8) {
                 try {
-                    // 1. Equip Wind Charge
                     await bot.equip(windCharge, 'hand').catch(() => {});
-                    // 2. Look straight down at feet
                     await bot.look(bot.entity.yaw, -Math.PI / 2, true).catch(() => {});
-                    // 3. Launch into the air with wind burst!
                     bot.activateItem();
                     await new Promise(r => setTimeout(r, 250));
-                    // 4. Swap to Mace in mid-air
                     await bot.equip(mace, 'hand').catch(() => {});
-                    // 5. Aim crosshair directly down onto opponent's head
                     await bot.lookAt(targetPlayer.position.offset(0, targetPlayer.height * 0.8, 0)).catch(() => {});
-                    // 6. Smash attack on descent!
                     bot.attack(targetPlayer);
                 } catch (e) {}
             }
@@ -621,8 +664,7 @@ async function dropAllItemsToPlayer(playerName, taskId) {
 async function pickupNearbyItems(taskId) {
     bot.chat("Picking up items nearby...");
     await collectNearbyDrops(16);
-    // Equip best sword
-    const sword = bot.inventory.items().find(i => i.name.includes('sword') || i.name.includes('axe'));
+    const sword = bot.inventory.items().find(i => i.name.includes('sword') || i.name.includes('axe') || i.name.includes('mace'));
     if (sword) await bot.equip(sword, 'hand').catch(() => {});
     bot.chat("Picked up items and equipped weapon!");
     sendEvent('task_done', { task_id: taskId, cmd: 'pickup', success: true });
@@ -635,7 +677,6 @@ async function buildBridge(length = 8, material = 'wool', taskId) {
     const mcData = require('minecraft-data')(bot.version);
 
     if (isCreative) {
-        // Auto-supply wool in creative
         try {
             const woolItem = mcData.itemsByName.white_wool || mcData.itemsByName.wool || mcData.itemsByName.oak_planks;
             if (woolItem) {
@@ -646,7 +687,6 @@ async function buildBridge(length = 8, material = 'wool', taskId) {
 
     let blockToPlace = bot.inventory.items().find(i => i.name.includes('wool') || i.name.includes('plank') || i.name === 'dirt' || i.name === 'cobblestone');
     if (!blockToPlace && !isCreative) {
-        // Gather 8 dirt
         const targets = bot.findBlocks({ matching: [mcData.blocksByName.dirt.id, mcData.blocksByName.grass_block.id], maxDistance: 16, count: length });
         if (targets && targets.length > 0) {
             try { await bot.collectBlock.collect(targets.map(p => bot.blockAt(p))); } catch (e) {}
@@ -692,7 +732,7 @@ async function killAllNearbyMobs(taskId) {
         if (!mobEntity || !mobEntity.isValid) continue;
 
         try {
-            const weapon = bot.inventory.items().find(i => i.name.includes('sword') || i.name.includes('axe'));
+            const weapon = bot.inventory.items().find(i => i.name.includes('mace') || i.name.includes('sword') || i.name.includes('axe'));
             if (weapon) await bot.equip(weapon, 'hand').catch(() => {});
 
             await bot.pathfinder.goto(new goals.GoalNear(mobEntity.position.x, mobEntity.position.y, mobEntity.position.z, 2)).catch(() => {});
@@ -712,8 +752,8 @@ async function killAllNearbyMobs(taskId) {
     sendEvent('task_done', { task_id: taskId, cmd: 'kill_all_mobs', success: true });
 }
 
-// 6. Walking 3D House Builder (Walks to each block to place 100% of the house)
-async function buildWalking3DHouse(taskId) {
+// 6. Execute Structured Blueprint (Walks to each coordinate and places verified blocks)
+async function executeStructuredBlueprint(blockPlacements, structureName, taskId) {
     const isCreative = bot.game && bot.game.gameMode === 'creative';
     const mcData = require('minecraft-data')(bot.version);
 
@@ -726,63 +766,21 @@ async function buildWalking3DHouse(taskId) {
         } catch (e) {}
     }
 
-    let invItems = bot.inventory.items();
-    let buildingBlock = invItems.find(i => 
-        i.name === 'dirt' || i.name === 'cobblestone' || i.name === 'stone' || i.name.includes('plank') || i.name.includes('log')
-    );
-
-    // If survival and no blocks, harvest 16 dirt blocks
-    if (!buildingBlock || buildingBlock.count < 12) {
-        bot.chat("Harvesting building materials right here...");
-        const groundTargets = bot.findBlocks({
-            matching: [mcData.blocksByName.dirt.id, mcData.blocksByName.grass_block.id, mcData.blocksByName.stone ? mcData.blocksByName.stone.id : 1],
-            maxDistance: 16,
-            count: 16
-        });
-        if (groundTargets && groundTargets.length > 0) {
-            try { await bot.collectBlock.collect(groundTargets.map(p => bot.blockAt(p))); } catch (e) {}
-        }
-    }
-
-    bot.chat("Constructing full 3x3 survival house! Placing walls, doorway, and roof...");
-    const origin = bot.entity.position.floored().offset(3, 0, 0);
     let placedCount = 0;
+    const blocks = blockPlacements || [];
 
-    // List of coordinates for 3x3 house
-    const blocksToPlace = [];
-
-    // Walls layer 0 (y=0) and layer 1 (y=1)
-    for (let y = 0; y < 2; y++) {
-        for (let x = -1; x <= 1; x++) {
-            for (let z = -1; z <= 1; z++) {
-                if (x === 0 && z === 0) continue; // interior
-                if (x === 0 && z === 1) continue; // doorway opening
-                blocksToPlace.push({ pos: origin.offset(x, y, z), y_level: y });
-            }
-        }
-    }
-
-    // Roof layer (y=2)
-    for (let x = -1; x <= 1; x++) {
-        for (let z = -1; z <= 1; z++) {
-            blocksToPlace.push({ pos: origin.offset(x, 2, z), y_level: 2 });
-        }
-    }
-
-    // Sequentially walk and place every single block
-    for (const item of blocksToPlace) {
-        const targetPos = item.pos;
+    for (const b of blocks) {
+        const targetPos = new Vec3(b.x, b.y, b.z);
         const currentBlock = bot.blockAt(targetPos);
         const refBlock = bot.blockAt(targetPos.offset(0, -1, 0));
 
         if (currentBlock && currentBlock.name === 'air' && refBlock && refBlock.name !== 'air') {
-            const blockItem = bot.inventory.items().find(i => 
-                i.name === 'dirt' || i.name === 'cobblestone' || i.name === 'stone' || i.name.includes('plank') || i.name.includes('log') || i.name.includes('wool')
+            const blockItem = bot.inventory.items().find(i =>
+                i.name.includes('plank') || i.name.includes('log') || i.name === 'dirt' || i.name === 'cobblestone' || i.name === 'stone' || i.name.includes('wool')
             );
 
             if (blockItem) {
                 try {
-                    // Walk within 2.5 blocks so placement NEVER fails out of reach
                     await bot.pathfinder.goto(new goals.GoalNear(targetPos.x, targetPos.y, targetPos.z, 2.5)).catch(() => {});
                     await bot.equip(blockItem, 'hand').catch(() => {});
                     await bot.lookAt(targetPos.offset(0.5, 0.5, 0.5)).catch(() => {});
@@ -794,11 +792,42 @@ async function buildWalking3DHouse(taskId) {
         }
     }
 
-    bot.chat(`Finished constructing our house at X:${origin.x} Y:${origin.y} Z:${origin.z}! Placed ${placedCount} blocks.`);
-    sendEvent('task_done', { task_id: taskId, cmd: 'build_shelter', success: true, message: `Built shelter with ${placedCount} blocks at ${origin.x}, ${origin.y}, ${origin.z}` });
+    bot.chat(`Completed ${structureName || 'structure'}! Placed ${placedCount} verified blocks.`);
+    sendEvent('task_done', {
+        task_id: taskId,
+        cmd: 'build_structure',
+        success: placedCount > 0,
+        details: { placed_count: placedCount, total: blocks.length }
+    });
 }
 
-// 7. Collect Drops
+// 7. Walking 3D House Builder
+async function buildWalking3DHouse(taskId) {
+    const origin = bot.entity.position.floored().offset(3, 0, 0);
+    const blocksToPlace = [];
+
+    // Walls layer 0 and 1
+    for (let y = 0; y < 2; y++) {
+        for (let x = -1; x <= 1; x++) {
+            for (let z = -1; z <= 1; z++) {
+                if (x === 0 && z === 0) continue;
+                if (x === 0 && z === 1) continue; // doorway opening
+                blocksToPlace.push({ x: origin.x + x, y: origin.y + y, z: origin.z + z });
+            }
+        }
+    }
+
+    // Roof layer
+    for (let x = -1; x <= 1; x++) {
+        for (let z = -1; z <= 1; z++) {
+            blocksToPlace.push({ x: origin.x + x, y: origin.y + 2, z: origin.z + z });
+        }
+    }
+
+    await executeStructuredBlueprint(blocksToPlace, 'survival_house', taskId);
+}
+
+// 8. Collect Drops
 async function collectNearbyDrops(radius = 12) {
     if (!bot || !bot.entities) return;
     try {
@@ -814,7 +843,7 @@ async function collectNearbyDrops(radius = 12) {
     } catch (e) {}
 }
 
-// 8. Hunt Animals
+// 9. Hunt Animals
 async function huntAnimals(animalName, totalCount, taskId) {
     let killed = 0;
     const cleanAnimal = (animalName || 'animal').toLowerCase();
@@ -833,7 +862,7 @@ async function huntAnimals(animalName, totalCount, taskId) {
         if (!mobEntity) continue;
 
         try {
-            const weapon = bot.inventory.items().find(it => it.name.includes('sword') || it.name.includes('axe'));
+            const weapon = bot.inventory.items().find(it => it.name.includes('mace') || it.name.includes('sword') || it.name.includes('axe'));
             if (weapon) await bot.equip(weapon, 'hand').catch(() => {});
 
             await bot.pathfinder.goto(new goals.GoalNear(mobEntity.position.x, mobEntity.position.y, mobEntity.position.z, 2)).catch(() => {});
@@ -848,16 +877,52 @@ async function huntAnimals(animalName, totalCount, taskId) {
             await collectNearbyDrops(12);
         } catch (e) {}
     }
-
     if (killed > 0) {
         bot.chat(`Hunted ${killed} animal(s)! Food collected.`);
-        sendEvent('task_done', { task_id: taskId, cmd: 'hunt', success: true, message: `Hunted ${killed} animals.` });
+        sendEvent('task_done', { task_id: taskId, cmd: 'hunt', success: true, details: { killed_count: killed } });
     } else {
-        sendEvent('task_done', { task_id: taskId, cmd: 'hunt', success: false, error: `No ${animalName} found.` });
+        sendEvent('task_done', { task_id: taskId, cmd: 'hunt', success: false, error: `No ${animalName} found nearby.` });
     }
 }
 
-// 9. Gather Blocks
+// Active Terrain & Cave Roaming Exploration
+async function roamAndFindCave(matchingIds, maxRoamSteps = 3) {
+    for (let step = 0; step < maxRoamSteps; step++) {
+        let exposed = bot.findBlocks({
+            matching: matchingIds,
+            maxDistance: 48,
+            count: 8
+        });
+
+        if (exposed && exposed.length > 0) {
+            return exposed;
+        }
+
+        const angle = (Math.PI * 2 / maxRoamSteps) * step + (Math.random() * 0.5);
+        const roamDistance = 25 + Math.random() * 10;
+        const targetX = bot.entity.position.x + Math.cos(angle) * roamDistance;
+        const targetZ = bot.entity.position.z + Math.sin(angle) * roamDistance;
+        const targetY = bot.entity.position.y;
+
+        bot.chat(`Roaming terrain to discover cave entrance & exposed stone... 🏔️`);
+        try {
+            await bot.pathfinder.goto(new goals.GoalNear(targetX, targetY, targetZ, 3)).catch(() => {});
+            await new Promise(r => setTimeout(r, 300));
+        } catch (e) {}
+
+        exposed = bot.findBlocks({
+            matching: matchingIds,
+            maxDistance: 32,
+            count: 8
+        });
+        if (exposed && exposed.length > 0) {
+            return exposed;
+        }
+    }
+    return [];
+}
+
+// 10. Gather Blocks with Cave Roaming & Reachable Distance
 async function gatherBlocks(blockType, count, taskId) {
     let targetNames = [blockType];
     const clean = blockType.toLowerCase();
@@ -865,11 +930,13 @@ async function gatherBlocks(blockType, count, taskId) {
     if (clean.includes('wood') || clean.includes('log') || clean.includes('tree')) {
         targetNames = ['oak_log', 'birch_log', 'spruce_log', 'acacia_log', 'dark_oak_log', 'jungle_log', 'mangrove_log', 'cherry_log'];
     } else if (clean.includes('stone') || clean.includes('cobble')) {
-        targetNames = ['stone', 'cobblestone', 'deepslate', 'granite', 'diorite', 'andesite'];
+        targetNames = ['stone', 'cobblestone', 'deepslate', 'granite', 'diorite', 'andesite', 'sandstone'];
     } else if (clean.includes('iron')) {
-        targetNames = ['iron_ore', 'deepslate_iron_ore'];
+        targetNames = ['iron_ore', 'deepslate_iron_ore', 'raw_iron_block'];
     } else if (clean.includes('coal')) {
         targetNames = ['coal_ore', 'deepslate_coal_ore'];
+    } else if (clean.includes('diamond')) {
+        targetNames = ['diamond_ore', 'deepslate_diamond_ore'];
     } else if (clean.includes('dirt') || clean.includes('sand')) {
         targetNames = ['dirt', 'grass_block', 'sand', 'gravel'];
     }
@@ -879,27 +946,58 @@ async function gatherBlocks(blockType, count, taskId) {
         return b ? b.id : null;
     }).filter(id => id !== null);
 
-    let blocksToCollect = bot.findBlocks({
+    // 1. Search for nearest reachable blocks (within 32 blocks)
+    let foundPositions = bot.findBlocks({
         matching: matchingIds,
-        maxDistance: 64,
-        count: count
+        maxDistance: 32,
+        count: Math.max(count * 2, 8)
     });
 
-    if ((!blocksToCollect || blocksToCollect.length === 0) && (clean.includes('stone') || clean.includes('cobble'))) {
-        const surfacePos = bot.entity.position.floored().offset(1, -1, 0);
-        const digTargets = [
-            bot.blockAt(surfacePos),
-            bot.blockAt(surfacePos.offset(0, -1, 0)),
-            bot.blockAt(surfacePos.offset(0, -2, 0))
-        ].filter(b => b && b.name !== 'air');
+    const botPos = bot.entity.position;
+    if (clean.includes('wood') || clean.includes('log')) {
+        foundPositions = foundPositions.filter(p => Math.abs(p.y - botPos.y) <= 4);
+    }
 
-        if (digTargets.length > 0) {
-            try {
-                await bot.collectBlock.collect(digTargets);
-            } catch (e) {}
+    foundPositions.sort((a, b) => botPos.distanceTo(a) - botPos.distanceTo(b));
+    let blocksToCollect = foundPositions.slice(0, count);
+
+    // 2. Roam & Cave Exploration for Stone / Iron / Coal
+    if ((!blocksToCollect || blocksToCollect.length === 0) && (clean.includes('stone') || clean.includes('cobble') || clean.includes('iron') || clean.includes('coal') || clean.includes('diamond'))) {
+        const exposed = await roamAndFindCave(matchingIds, 3);
+        if (exposed && exposed.length > 0) {
+            blocksToCollect = exposed.slice(0, count);
+        } else if (clean.includes('stone') || clean.includes('cobble')) {
+            // Penetrate surface dirt down to stone layer
+            const flooredPos = bot.entity.position.floored();
+            const digOffsets = [
+                flooredPos.offset(1, 0, 0),
+                flooredPos.offset(1, -1, 0),
+                flooredPos.offset(1, -2, 0),
+                flooredPos.offset(1, -3, 0),
+                flooredPos.offset(1, -4, 0)
+            ];
+
+            const shovel = bot.inventory.items().find(i => i.name.includes('shovel'));
+            const pickaxe = bot.inventory.items().find(i => i.name.includes('pickaxe'));
+
+            for (const pos of digOffsets) {
+                const b = bot.blockAt(pos);
+                if (b && b.name !== 'air' && b.name !== 'bedrock') {
+                    try {
+                        if (b.name.includes('stone') || b.name.includes('cobble')) {
+                            if (pickaxe) await bot.equip(pickaxe, 'hand').catch(() => {});
+                        } else {
+                            if (shovel) await bot.equip(shovel, 'hand').catch(() => {});
+                        }
+                        await bot.dig(b).catch(() => {});
+                        await new Promise(r => setTimeout(r, 60));
+                    } catch (e) {}
+                }
+            }
+
+            await collectNearbyDrops(8);
+            blocksToCollect = bot.findBlocks({ matching: matchingIds, maxDistance: 16, count: count });
         }
-
-        blocksToCollect = bot.findBlocks({ matching: matchingIds, maxDistance: 32, count: count });
     }
 
     if (!blocksToCollect || blocksToCollect.length === 0) {
@@ -911,22 +1009,27 @@ async function gatherBlocks(blockType, count, taskId) {
     try {
         const bestTool = bot.inventory.items().find(i => {
             if (clean.includes('wood')) return i.name.includes('axe');
-            if (clean.includes('stone') || clean.includes('iron') || clean.includes('coal')) return i.name.includes('pickaxe');
+            if (clean.includes('stone') || clean.includes('iron') || clean.includes('coal') || clean.includes('diamond')) return i.name.includes('pickaxe');
             return false;
         });
         if (bestTool) await bot.equip(bestTool, 'hand').catch(() => {});
 
         const targets = blocksToCollect.map(pos => bot.blockAt(pos)).filter(b => b !== null);
-        bot.chat(`Harvesting ${targets.length}x ${blockType}...`);
-        await bot.collectBlock.collect(targets);
+        bot.chat(`Harvesting ${targets.length}x ${blockType}... ⛏️`);
+
+        // Wrap collectBlock with a 15-second timeout promise to avoid infinite hang
+        const collectPromise = bot.collectBlock.collect(targets);
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Collect timeout")), 15000));
+
+        await Promise.race([collectPromise, timeoutPromise]);
         bot.chat(`Collected ${targets.length}x ${blockType}!`);
-        sendEvent('task_done', { task_id: taskId, cmd: 'gather', success: true, message: `Collected ${targets.length} ${blockType} blocks.` });
+        sendEvent('task_done', { task_id: taskId, cmd: 'gather', success: true, details: { count: targets.length } });
     } catch (e) {
         sendEvent('task_done', { task_id: taskId, cmd: 'gather', success: false, error: e.message });
     }
 }
 
-// 10. Craft Items
+// 11. Craft Items with Auto-Intermediate Resolution & Table Collection
 async function craftItem(itemName, count, taskId) {
     const item = bot.registry.itemsByName[itemName];
     if (!item) {
@@ -934,13 +1037,61 @@ async function craftItem(itemName, count, taskId) {
         return;
     }
 
+    // 1. If logs exist and planks are needed, craft planks first
+    const invLogs = bot.inventory.items().filter(i => i.name.includes('_log') || i.name === 'log');
+    const invPlanks = bot.inventory.items().filter(i => i.name.includes('_planks') || i.name === 'planks');
+    const invSticks = bot.inventory.items().find(i => i.name === 'stick');
+
+    if (itemName !== 'oak_planks' && invPlanks.length === 0 && invLogs.length > 0) {
+        try {
+            const plankItem = bot.registry.itemsByName.oak_planks || bot.registry.itemsByName.planks;
+            const plankRecipes = bot.recipesFor(plankItem ? plankItem.id : null, null, 1, null);
+            if (plankRecipes && plankRecipes.length > 0) {
+                await bot.craft(plankRecipes[0], 2, null).catch(() => {});
+            }
+        } catch (e) {}
+    }
+
+    // 2. If tools/weapons/torches are requested and sticks are missing, craft sticks first
+    const needsSticks = ['pickaxe', 'sword', 'axe', 'shovel', 'torch', 'bow', 'fishing_rod', 'lever'].some(t => itemName.includes(t));
+    if (needsSticks && (!invSticks || invSticks.count < 2)) {
+        try {
+            const stickItem = bot.registry.itemsByName.stick;
+            const stickRecipes = bot.recipesFor(stickItem ? stickItem.id : null, null, 1, null);
+            if (stickRecipes && stickRecipes.length > 0) {
+                await bot.craft(stickRecipes[0], 1, null).catch(() => {});
+            }
+        } catch (e) {}
+    }
+
+    // 3. Locate or Place Crafting Table (reuse nearby within 16 blocks)
     let craftingTableBlock = bot.findBlock({
         matching: bot.registry.blocksByName.crafting_table.id,
-        maxDistance: 6
+        maxDistance: 16
     });
 
-    if (!craftingTableBlock) {
-        const tableItem = bot.inventory.items().find(i => i.name === 'crafting_table');
+    let placedTablePos = null;
+
+    if (craftingTableBlock) {
+        if (bot.entity.position.distanceTo(craftingTableBlock.position) > 3) {
+            try {
+                await bot.pathfinder.goto(new goals.GoalNear(craftingTableBlock.position.x, craftingTableBlock.position.y, craftingTableBlock.position.z, 2));
+            } catch (e) {}
+        }
+    } else {
+        let tableItem = bot.inventory.items().find(i => i.name === 'crafting_table');
+        if (!tableItem) {
+            // Only craft if we don't have one and none nearby
+            try {
+                const tableItemDef = bot.registry.itemsByName.crafting_table;
+                const tableRecipes = bot.recipesFor(tableItemDef.id, null, 1, null);
+                if (tableRecipes && tableRecipes.length > 0) {
+                    await bot.craft(tableRecipes[0], 1, null).catch(() => {});
+                    tableItem = bot.inventory.items().find(i => i.name === 'crafting_table');
+                }
+            } catch (e) {}
+        }
+
         if (tableItem) {
             const placePos = bot.entity.position.floored().offset(1, 0, 0);
             const ref = bot.blockAt(placePos.offset(0, -1, 0));
@@ -948,6 +1099,7 @@ async function craftItem(itemName, count, taskId) {
                 await bot.equip(tableItem, 'hand').catch(() => {});
                 await bot.placeBlock(ref, new Vec3(0, 1, 0)).catch(() => {});
                 craftingTableBlock = bot.blockAt(placePos);
+                placedTablePos = placePos;
             }
         }
     }
@@ -962,14 +1114,38 @@ async function craftItem(itemName, count, taskId) {
         const recipe = recipes[0];
         const craftAmount = Math.max(1, Math.min(count, 4));
         await bot.craft(recipe, craftAmount, craftingTableBlock);
-        bot.chat(`Crafted ${itemName.replace('_', ' ')}!`);
-        sendEvent('task_done', { task_id: taskId, cmd: 'craft', success: true, message: `Crafted ${itemName}.` });
+        bot.chat(`Crafted ${itemName.replace('_', ' ')}! 🛠️`);
+
+        // Auto-equip if weapon, tool, shield, or armor
+        const craftedItem = bot.inventory.items().find(i => i.name === itemName);
+        if (craftedItem) {
+            if (['sword', 'pickaxe', 'axe', 'mace'].some(w => itemName.includes(w))) {
+                await bot.equip(craftedItem, 'hand').catch(() => {});
+            } else if (itemName === 'shield') {
+                await bot.equip(craftedItem, 'off-hand').catch(() => {});
+            }
+        }
+
+        // Break and collect placed crafting table back to inventory so it is NEVER lost
+        if (placedTablePos) {
+            try {
+                const targetTable = bot.blockAt(placedTablePos);
+                if (targetTable && targetTable.name === 'crafting_table') {
+                    const axe = bot.inventory.items().find(i => i.name.includes('axe'));
+                    if (axe) await bot.equip(axe, 'hand').catch(() => {});
+                    await bot.dig(targetTable).catch(() => {});
+                    await collectNearbyDrops(4);
+                }
+            } catch (e) {}
+        }
+
+        sendEvent('task_done', { task_id: taskId, cmd: 'craft', success: true, details: { item_name: itemName, count: craftAmount } });
     } catch (e) {
         sendEvent('task_done', { task_id: taskId, cmd: 'craft', success: false, error: e.message });
     }
 }
 
-// 11. Smelt Items
+// 12. Smelt Items
 async function smeltItem(rawItemName, fuelName, count, taskId) {
     let furnaceBlock = bot.findBlock({
         matching: bot.registry.blocksByName.furnace.id,
@@ -1010,7 +1186,7 @@ async function smeltItem(rawItemName, fuelName, count, taskId) {
     }
 }
 
-// 12. Attack Nearest Mob
+// 13. Attack Nearest Mob
 async function attackNearestMob(mobName, taskId) {
     const entities = getNearbyEntities(32);
     const target = entities.find(e => e.name.toLowerCase().includes(mobName.toLowerCase()));
@@ -1023,7 +1199,7 @@ async function attackNearestMob(mobName, taskId) {
     const mobEntity = bot.entities[target.id];
     if (mobEntity) {
         try {
-            const weapon = bot.inventory.items().find(i => i.name.includes('sword') || i.name.includes('axe'));
+            const weapon = bot.inventory.items().find(i => i.name.includes('mace') || i.name.includes('sword') || i.name.includes('axe'));
             if (weapon) await bot.equip(weapon, 'hand').catch(() => {});
             bot.chat(`Attacking ${target.name}! ⚔️`);
             bot.pvp.attack(mobEntity);
@@ -1034,7 +1210,7 @@ async function attackNearestMob(mobName, taskId) {
     }
 }
 
-// 13. Sleep
+// 14. Sleep
 async function sleepInBed(taskId) {
     const bedBlock = bot.findBlock({
         matching: [

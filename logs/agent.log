@@ -1004,3 +1004,1573 @@
 [2026-08-22 05:47:34] [INFO] [ren.agent]: Executing AGI Plan Step: pvp with {'target': 'enemy'}
 [2026-08-22 05:48:27] [INFO] [ren.agent]: Bot took damage! Current HP: 20
 [2026-08-22 05:48:28] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 06:58:23] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 06:58:23] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 25565 --username RenAI --auth offline
+[2026-08-22 06:58:54] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 06:58:54] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 25565 --username RenAI --auth offline
+[2026-08-22 06:59:53] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 06:59:53] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host 10.95.30.88 --port 52111 --username RenAI --auth offline
+[2026-08-22 06:59:57] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to 10.95.30.88:52111!
+[2026-08-22 07:00:23] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'Set own game mode to Creative Mode]' (Normalized: 'set own game mode to creative mode]')
+[2026-08-22 07:01:19] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 20:26:03] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 20:26:43] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 20:26:55] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 20:27:15] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 20:27:23] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 20:27:34] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 20:27:59] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 20:27:59] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 20:27:59] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 20:27:59] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 20:27:59] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 20:27:59] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 20:27:59] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 20:27:59] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 20:27:59] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 20:27:59] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 20:28:45] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 20:28:54] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 20:28:54] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 20:28:54] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 20:28:54] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 20:29:19] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-22 20:29:19] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-22 20:29:20] [INFO] [ren.agent]: Compacting session 8437338a (count: 36)...
+[2026-08-22 20:29:20] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-22 20:29:20] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 9686fad8) for user 'default'
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: c1cedee7) for user 'default'
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 7ffe886d) for user 'default'
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Created session 'Session 1' (ID: 1b925095) for user 'default'
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Created session 'Session 2' (ID: be0366d3) for user 'default'
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Created session 'New Conversation' (ID: de3e66ca) for user 'default'
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Created session 'Long Session' (ID: 6b9b58bd) for user 'default'
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Compacting session 6b9b58bd (count: 12)...
+[2026-08-22 20:29:25] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-22 20:29:32] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 20:37:15] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 20:37:15] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 18 states, 186 steps, eps=0.079
+[2026-08-22 20:37:15] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 20:37:18] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-22 20:37:18] [INFO] [ren.agent]: [SUBTASK OK] give (step_1) completed! Progress: 100.0%
+[2026-08-22 20:37:18] [INFO] [ren.agent]: [TASK COMPLETED] 'Give mace to Superiorx80' successfully finished! (100%)
+[2026-08-22 20:37:41] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'go survive on your own'
+[2026-08-22 20:37:41] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-22 20:37:42] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:37:54] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:38:15] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:38:25] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 20:38:25] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 20:46:41] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'come here'
+[2026-08-22 20:46:41] [INFO] [ren.agent]: [INTENT PARSED] GoalType: FOLLOW_PLAYER, Params: {'player': 'CyanCode'}
+[2026-08-22 20:46:41] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-22 20:46:41] [INFO] [ren.agent]: [EXECUTING SUBTASK] follow (step_1) with {'player': 'CyanCode'}
+[2026-08-22 20:46:41] [INFO] [ren.agent]: [SUBTASK OK] follow (step_1) completed! Progress: 100.0%
+[2026-08-22 20:46:41] [INFO] [ren.agent]: [TASK COMPLETED] 'Follow CyanCode' successfully finished! (100%)
+[2026-08-22 20:47:04] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 20:47:25] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'make a house'
+[2026-08-22 20:47:25] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-22 20:47:25] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-22 20:47:25] [INFO] [ren.agent]: [EXECUTING SUBTASK] gather (build_step_1) with {'block_type': 'wood', 'count': 11}
+[2026-08-22 20:47:25] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-22 20:47:25] [INFO] [ren.agent]: [EXECUTING SUBTASK] craft (build_step_2) with {'item_name': 'oak_planks', 'count': 11}
+[2026-08-22 20:47:25] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-22 20:47:25] [INFO] [ren.agent]: [EXECUTING SUBTASK] build_structure (build_step_3) with {'structure_name': 'small_house', 'width': 4, 'length': 4, 'height': 4, 'blocks': [{'x': 552, 'y': 69, 'z': -191, 'type': 'oak_planks'}, {'x': 552, 'y': 69, 'z': -190, 'type': 'oak_planks'}, {'x': 552, 'y': 69, 'z': -189, 'type': 'oak_planks'}, {'x': 552, 'y': 69, 'z': -188, 'type': 'oak_planks'}, {'x': 553, 'y': 69, 'z': -191, 'type': 'oak_planks'}, {'x': 553, 'y': 69, 'z': -190, 'type': 'oak_planks'}, {'x': 553, 'y': 69, 'z': -189, 'type': 'oak_planks'}, {'x': 553, 'y': 69, 'z': -188, 'type': 'oak_planks'}, {'x': 554, 'y': 69, 'z': -191, 'type': 'oak_planks'}, {'x': 554, 'y': 69, 'z': -190, 'type': 'oak_planks'}, {'x': 554, 'y': 69, 'z': -189, 'type': 'oak_planks'}, {'x': 554, 'y': 69, 'z': -188, 'type': 'oak_planks'}, {'x': 555, 'y': 69, 'z': -191, 'type': 'oak_planks'}, {'x': 555, 'y': 69, 'z': -190, 'type': 'oak_planks'}, {'x': 555, 'y': 69, 'z': -189, 'type': 'oak_planks'}, {'x': 555, 'y': 69, 'z': -188, 'type': 'oak_planks'}, {'x': 552, 'y': 70, 'z': -191, 'type': 'oak_planks'}, {'x': 552, 'y': 70, 'z': -190, 'type': 'oak_planks'}, {'x': 552, 'y': 70, 'z': -189, 'type': 'oak_planks'}, {'x': 552, 'y': 70, 'z': -188, 'type': 'oak_planks'}, {'x': 553, 'y': 70, 'z': -188, 'type': 'oak_planks'}, {'x': 554, 'y': 70, 'z': -191, 'type': 'oak_planks'}, {'x': 554, 'y': 70, 'z': -188, 'type': 'oak_planks'}, {'x': 555, 'y': 70, 'z': -191, 'type': 'oak_planks'}, {'x': 555, 'y': 70, 'z': -190, 'type': 'oak_planks'}, {'x': 555, 'y': 70, 'z': -189, 'type': 'oak_planks'}, {'x': 555, 'y': 70, 'z': -188, 'type': 'oak_planks'}, {'x': 552, 'y': 71, 'z': -191, 'type': 'oak_planks'}, {'x': 552, 'y': 71, 'z': -190, 'type': 'oak_planks'}, {'x': 552, 'y': 71, 'z': -189, 'type': 'oak_planks'}, {'x': 552, 'y': 71, 'z': -188, 'type': 'oak_planks'}, {'x': 553, 'y': 71, 'z': -188, 'type': 'oak_planks'}, {'x': 554, 'y': 71, 'z': -191, 'type': 'oak_planks'}, {'x': 554, 'y': 71, 'z': -188, 'type': 'oak_planks'}, {'x': 555, 'y': 71, 'z': -191, 'type': 'oak_planks'}, {'x': 555, 'y': 71, 'z': -190, 'type': 'oak_planks'}, {'x': 555, 'y': 71, 'z': -189, 'type': 'oak_planks'}, {'x': 555, 'y': 71, 'z': -188, 'type': 'oak_planks'}, {'x': 552, 'y': 72, 'z': -191, 'type': 'oak_planks'}, {'x': 552, 'y': 72, 'z': -190, 'type': 'oak_planks'}, {'x': 552, 'y': 72, 'z': -189, 'type': 'oak_planks'}, {'x': 552, 'y': 72, 'z': -188, 'type': 'oak_planks'}, {'x': 553, 'y': 72, 'z': -191, 'type': 'oak_planks'}, {'x': 553, 'y': 72, 'z': -190, 'type': 'oak_planks'}, {'x': 553, 'y': 72, 'z': -189, 'type': 'oak_planks'}, {'x': 553, 'y': 72, 'z': -188, 'type': 'oak_planks'}, {'x': 554, 'y': 72, 'z': -191, 'type': 'oak_planks'}, {'x': 554, 'y': 72, 'z': -190, 'type': 'oak_planks'}, {'x': 554, 'y': 72, 'z': -189, 'type': 'oak_planks'}, {'x': 554, 'y': 72, 'z': -188, 'type': 'oak_planks'}, {'x': 555, 'y': 72, 'z': -191, 'type': 'oak_planks'}, {'x': 555, 'y': 72, 'z': -190, 'type': 'oak_planks'}, {'x': 555, 'y': 72, 'z': -189, 'type': 'oak_planks'}, {'x': 555, 'y': 72, 'z': -188, 'type': 'oak_planks'}], 'interior': [{'feature': 'torch', 'pos': {'x': 554, 'y': 71, 'z': -190}}, {'feature': 'crafting_table', 'pos': {'x': 553, 'y': 70, 'z': -189}}, {'feature': 'furnace', 'pos': {'x': 554, 'y': 70, 'z': -189}}]}
+[2026-08-22 20:47:25] [WARNING] [ren.agent]: [SUBTASK FAIL] build_structure (build_step_3) attempt 1/3: Expected wood increase, but delta was 0 (total: 0)
+[2026-08-22 20:47:26] [INFO] [ren.agent]: [EXECUTING SUBTASK] build_structure (build_step_3) with {'structure_name': 'small_house', 'width': 4, 'length': 4, 'height': 4, 'blocks': [{'x': 552, 'y': 69, 'z': -191, 'type': 'oak_planks'}, {'x': 552, 'y': 69, 'z': -190, 'type': 'oak_planks'}, {'x': 552, 'y': 69, 'z': -189, 'type': 'oak_planks'}, {'x': 552, 'y': 69, 'z': -188, 'type': 'oak_planks'}, {'x': 553, 'y': 69, 'z': -191, 'type': 'oak_planks'}, {'x': 553, 'y': 69, 'z': -190, 'type': 'oak_planks'}, {'x': 553, 'y': 69, 'z': -189, 'type': 'oak_planks'}, {'x': 553, 'y': 69, 'z': -188, 'type': 'oak_planks'}, {'x': 554, 'y': 69, 'z': -191, 'type': 'oak_planks'}, {'x': 554, 'y': 69, 'z': -190, 'type': 'oak_planks'}, {'x': 554, 'y': 69, 'z': -189, 'type': 'oak_planks'}, {'x': 554, 'y': 69, 'z': -188, 'type': 'oak_planks'}, {'x': 555, 'y': 69, 'z': -191, 'type': 'oak_planks'}, {'x': 555, 'y': 69, 'z': -190, 'type': 'oak_planks'}, {'x': 555, 'y': 69, 'z': -189, 'type': 'oak_planks'}, {'x': 555, 'y': 69, 'z': -188, 'type': 'oak_planks'}, {'x': 552, 'y': 70, 'z': -191, 'type': 'oak_planks'}, {'x': 552, 'y': 70, 'z': -190, 'type': 'oak_planks'}, {'x': 552, 'y': 70, 'z': -189, 'type': 'oak_planks'}, {'x': 552, 'y': 70, 'z': -188, 'type': 'oak_planks'}, {'x': 553, 'y': 70, 'z': -188, 'type': 'oak_planks'}, {'x': 554, 'y': 70, 'z': -191, 'type': 'oak_planks'}, {'x': 554, 'y': 70, 'z': -188, 'type': 'oak_planks'}, {'x': 555, 'y': 70, 'z': -191, 'type': 'oak_planks'}, {'x': 555, 'y': 70, 'z': -190, 'type': 'oak_planks'}, {'x': 555, 'y': 70, 'z': -189, 'type': 'oak_planks'}, {'x': 555, 'y': 70, 'z': -188, 'type': 'oak_planks'}, {'x': 552, 'y': 71, 'z': -191, 'type': 'oak_planks'}, {'x': 552, 'y': 71, 'z': -190, 'type': 'oak_planks'}, {'x': 552, 'y': 71, 'z': -189, 'type': 'oak_planks'}, {'x': 552, 'y': 71, 'z': -188, 'type': 'oak_planks'}, {'x': 553, 'y': 71, 'z': -188, 'type': 'oak_planks'}, {'x': 554, 'y': 71, 'z': -191, 'type': 'oak_planks'}, {'x': 554, 'y': 71, 'z': -188, 'type': 'oak_planks'}, {'x': 555, 'y': 71, 'z': -191, 'type': 'oak_planks'}, {'x': 555, 'y': 71, 'z': -190, 'type': 'oak_planks'}, {'x': 555, 'y': 71, 'z': -189, 'type': 'oak_planks'}, {'x': 555, 'y': 71, 'z': -188, 'type': 'oak_planks'}, {'x': 552, 'y': 72, 'z': -191, 'type': 'oak_planks'}, {'x': 552, 'y': 72, 'z': -190, 'type': 'oak_planks'}, {'x': 552, 'y': 72, 'z': -189, 'type': 'oak_planks'}, {'x': 552, 'y': 72, 'z': -188, 'type': 'oak_planks'}, {'x': 553, 'y': 72, 'z': -191, 'type': 'oak_planks'}, {'x': 553, 'y': 72, 'z': -190, 'type': 'oak_planks'}, {'x': 553, 'y': 72, 'z': -189, 'type': 'oak_planks'}, {'x': 553, 'y': 72, 'z': -188, 'type': 'oak_planks'}, {'x': 554, 'y': 72, 'z': -191, 'type': 'oak_planks'}, {'x': 554, 'y': 72, 'z': -190, 'type': 'oak_planks'}, {'x': 554, 'y': 72, 'z': -189, 'type': 'oak_planks'}, {'x': 554, 'y': 72, 'z': -188, 'type': 'oak_planks'}, {'x': 555, 'y': 72, 'z': -191, 'type': 'oak_planks'}, {'x': 555, 'y': 72, 'z': -190, 'type': 'oak_planks'}, {'x': 555, 'y': 72, 'z': -189, 'type': 'oak_planks'}, {'x': 555, 'y': 72, 'z': -188, 'type': 'oak_planks'}], 'interior': [{'feature': 'torch', 'pos': {'x': 554, 'y': 71, 'z': -190}}, {'feature': 'crafting_table', 'pos': {'x': 553, 'y': 70, 'z': -189}}, {'feature': 'furnace', 'pos': {'x': 554, 'y': 70, 'z': -189}}]}
+[2026-08-22 20:47:56] [INFO] [ren.agent]: [SUBTASK OK] build_structure (build_step_3) completed! Progress: 100.0%
+[2026-08-22 20:47:56] [INFO] [ren.agent]: [TASK COMPLETED] 'Build Small House' successfully finished! (100%)
+[2026-08-22 20:48:13] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 20:48:13] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 20:49:09] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 20:49:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 20:49:28] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'survive'
+[2026-08-22 20:49:36] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'auto mode'
+[2026-08-22 20:49:36] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-22 20:49:38] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: craft | Rationale: Crafting wooden pickaxe
+[2026-08-22 20:49:42] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: craft | Rationale: Crafting wooden pickaxe
+[2026-08-22 20:49:44] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SURVIVE, Params: {}
+[2026-08-22 20:49:44] [INFO] [ren.agent]: [TASK CREATED] 'SURVIVE' with 1 subtasks. Progress: 0%
+[2026-08-22 20:49:44] [INFO] [ren.agent]: [EXECUTING SUBTASK] survive (step_1) with {}
+[2026-08-22 20:49:44] [INFO] [ren.agent]: [SUBTASK OK] survive (step_1) completed! Progress: 100.0%
+[2026-08-22 20:49:44] [INFO] [ren.agent]: [TASK COMPLETED] 'SURVIVE' successfully finished! (100%)
+[2026-08-22 20:49:59] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'auto mode'
+[2026-08-22 20:49:59] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-22 20:50:00] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: craft | Rationale: Crafting wooden pickaxe
+[2026-08-22 20:50:03] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: craft | Rationale: Crafting wooden pickaxe
+[2026-08-22 20:50:06] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:50:33] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:51:09] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'go survive'
+[2026-08-22 20:51:58] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'auto mode'
+[2026-08-22 20:52:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-22 20:52:12] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:12] [INFO] [ren.agent]: [INTENT PARSED] GoalType: FOLLOW_PLAYER, Params: {'target': 'CyanCode'}
+[2026-08-22 20:52:12] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-22 20:52:12] [INFO] [ren.agent]: [EXECUTING SUBTASK] follow (step_1) with {'player': 'CyanCode'}
+[2026-08-22 20:52:13] [INFO] [ren.agent]: [SUBTASK OK] follow (step_1) completed! Progress: 100.0%
+[2026-08-22 20:52:13] [INFO] [ren.agent]: [TASK COMPLETED] 'Follow CyanCode' successfully finished! (100%)
+[2026-08-22 20:52:25] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'auto mode'
+[2026-08-22 20:52:25] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-22 20:52:27] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:30] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:33] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:36] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:39] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:42] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:45] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:48] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:51] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:54] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:52:57] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:00] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:03] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:06] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:09] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:12] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:15] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:18] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:21] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:24] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:27] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:30] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:33] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:36] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:39] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:42] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:45] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:48] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:51] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:54] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:53:57] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: skeleton
+[2026-08-22 20:54:00] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: witch
+[2026-08-22 20:54:03] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: witch
+[2026-08-22 20:54:06] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: witch
+[2026-08-22 20:54:09] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: witch
+[2026-08-22 20:54:12] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: witch
+[2026-08-22 20:54:15] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: witch
+[2026-08-22 20:54:18] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Engaging close hostile: witch
+[2026-08-22 20:54:19] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 20:54:21] [INFO] [ren.agent]: Bot took damage! Current HP: 19
+[2026-08-22 20:54:21] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Engaging close hostile: witch
+[2026-08-22 20:54:21] [INFO] [ren.agent]: Bot took damage! Current HP: 18
+[2026-08-22 20:54:23] [INFO] [ren.agent]: Bot took damage! Current HP: 17
+[2026-08-22 20:54:24] [INFO] [ren.agent]: Bot took damage! Current HP: 17
+[2026-08-22 20:54:24] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Engaging close hostile: witch
+[2026-08-22 20:54:25] [INFO] [ren.agent]: Bot took damage! Current HP: 16
+[2026-08-22 20:54:26] [INFO] [ren.agent]: Bot took damage! Current HP: 15
+[2026-08-22 20:54:27] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: witch
+[2026-08-22 20:54:28] [INFO] [ren.agent]: Bot took damage! Current HP: 14
+[2026-08-22 20:54:32] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: witch
+[2026-08-22 20:54:32] [INFO] [ren.agent]: Bot took damage! Current HP: 13
+[2026-08-22 20:54:32] [INFO] [ren.agent]: Bot took damage! Current HP: 12
+[2026-08-22 20:54:32] [INFO] [ren.agent]: Bot took damage! Current HP: 11
+[2026-08-22 20:54:33] [INFO] [ren.agent]: Bot took damage! Current HP: 10
+[2026-08-22 20:54:34] [INFO] [ren.agent]: Bot took damage! Current HP: 9
+[2026-08-22 20:54:36] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Engaging close hostile: witch
+[2026-08-22 20:54:36] [INFO] [ren.agent]: Bot took damage! Current HP: 8
+[2026-08-22 20:54:36] [INFO] [ren.agent]: Bot took damage! Current HP: 7
+[2026-08-22 20:54:38] [INFO] [ren.agent]: Bot took damage! Current HP: 6
+[2026-08-22 20:54:39] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:54:39] [INFO] [ren.agent]: Bot took damage! Current HP: 5
+[2026-08-22 20:54:40] [INFO] [ren.agent]: Bot took damage! Current HP: 4
+[2026-08-22 20:54:41] [INFO] [ren.agent]: Bot took damage! Current HP: 3
+[2026-08-22 20:54:43] [INFO] [ren.agent]: Bot took damage! Current HP: 2
+[2026-08-22 20:55:08] [INFO] [ren.agent]: Bot took damage! Current HP: 1
+[2026-08-22 20:55:08] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 20:55:09] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:55:12] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:55:13] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 20:55:14] [INFO] [ren.agent]: Bot took damage! Current HP: 19.5
+[2026-08-22 20:55:15] [INFO] [ren.agent]: Bot took damage! Current HP: 18.33333396911621
+[2026-08-22 20:55:16] [INFO] [ren.agent]: Bot took damage! Current HP: 16.83333396911621
+[2026-08-22 20:55:17] [INFO] [ren.agent]: Bot took damage! Current HP: 15.166667938232422
+[2026-08-22 20:55:18] [INFO] [ren.agent]: Bot took damage! Current HP: 13.333334922790527
+[2026-08-22 20:55:19] [INFO] [ren.agent]: Bot took damage! Current HP: 11.333334922790527
+[2026-08-22 20:55:20] [INFO] [ren.agent]: Bot took damage! Current HP: 9.333334922790527
+[2026-08-22 20:55:21] [INFO] [ren.agent]: Bot took damage! Current HP: 7.333334922790527
+[2026-08-22 20:55:22] [INFO] [ren.agent]: Bot took damage! Current HP: 6.333334922790527
+[2026-08-22 20:55:23] [INFO] [ren.agent]: Bot took damage! Current HP: 4.333334922790527
+[2026-08-22 20:55:24] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Fleeing from danger due to critical HP
+[2026-08-22 20:55:24] [INFO] [ren.agent]: Bot took damage! Current HP: 2.3333349227905273
+[2026-08-22 20:55:25] [INFO] [ren.agent]: Bot took damage! Current HP: 0.33333492279052734
+[2026-08-22 20:55:25] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 20:55:27] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:55:38] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 20:55:39] [INFO] [ren.agent]: Bot took damage! Current HP: 19.5
+[2026-08-22 20:55:40] [INFO] [ren.agent]: Bot took damage! Current HP: 18.33333396911621
+[2026-08-22 20:55:41] [INFO] [ren.agent]: Bot took damage! Current HP: 16.83333396911621
+[2026-08-22 20:55:42] [INFO] [ren.agent]: Bot took damage! Current HP: 15.166667938232422
+[2026-08-22 20:55:43] [INFO] [ren.agent]: Bot took damage! Current HP: 13.333334922790527
+[2026-08-22 20:55:44] [INFO] [ren.agent]: Bot took damage! Current HP: 11.333334922790527
+[2026-08-22 20:55:45] [INFO] [ren.agent]: Bot took damage! Current HP: 9.333334922790527
+[2026-08-22 20:55:46] [INFO] [ren.agent]: Bot took damage! Current HP: 7.333334922790527
+[2026-08-22 20:55:47] [INFO] [ren.agent]: Bot took damage! Current HP: 6.333334922790527
+[2026-08-22 20:55:48] [INFO] [ren.agent]: Bot took damage! Current HP: 4.333334922790527
+[2026-08-22 20:55:49] [INFO] [ren.agent]: Bot took damage! Current HP: 2.3333349227905273
+[2026-08-22 20:55:50] [INFO] [ren.agent]: Bot took damage! Current HP: 0.33333492279052734
+[2026-08-22 20:55:50] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 20:55:51] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:55:54] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:56:06] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 20:56:09] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 20:56:12] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 20:56:15] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Engaging close hostile: spider
+[2026-08-22 20:56:18] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 20:56:21] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Engaging close hostile: spider
+[2026-08-22 20:56:24] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:27] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:30] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:33] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:36] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:39] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:42] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:45] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:48] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:51] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:54] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:56:57] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:00] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:04] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:07] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:10] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:13] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:16] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:19] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:22] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:25] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:28] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:31] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:34] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:37] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:40] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:43] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:46] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:49] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:52] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:55] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:57:58] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:01] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:04] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 20:58:07] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:10] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:13] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:16] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:19] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:22] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 20:58:25] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 20:58:28] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:31] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:34] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:37] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:40] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:43] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:46] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:49] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:52] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:56] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:58:59] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:59:02] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:59:05] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:59:08] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:59:11] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:59:14] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 20:59:17] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-22 20:59:45] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 20:59:46] [INFO] [ren.agent]: Bot took damage! Current HP: 19.16666603088379
+[2026-08-22 20:59:47] [INFO] [ren.agent]: Bot took damage! Current HP: 17.83333396911621
+[2026-08-22 20:59:48] [INFO] [ren.agent]: Bot took damage! Current HP: 16.16666603088379
+[2026-08-22 20:59:49] [INFO] [ren.agent]: Bot took damage! Current HP: 14.333333015441895
+[2026-08-22 20:59:50] [INFO] [ren.agent]: Bot took damage! Current HP: 12.333333015441895
+[2026-08-22 20:59:51] [INFO] [ren.agent]: Bot took damage! Current HP: 10.333333015441895
+[2026-08-22 20:59:52] [INFO] [ren.agent]: Bot took damage! Current HP: 8.333333015441895
+[2026-08-22 20:59:53] [INFO] [ren.agent]: Bot took damage! Current HP: 7.3333330154418945
+[2026-08-22 20:59:54] [INFO] [ren.agent]: Bot took damage! Current HP: 5.3333330154418945
+[2026-08-22 21:00:03] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 45s.
+[2026-08-22 21:00:06] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 48s.
+[2026-08-22 21:00:09] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 31 states, 240 steps, eps=0.060
+[2026-08-22 21:00:09] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 21:00:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:00:09] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 21:00:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 21:00:09] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:00:09] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 21:00:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 21:00:09] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 21:00:09] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:00:09] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 51s.
+[2026-08-22 21:00:12] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 54s.
+[2026-08-22 21:00:13] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:00:15] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 58s.
+[2026-08-22 21:00:19] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 61s.
+[2026-08-22 21:00:22] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:23] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:00:23] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:00:23] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:00:23] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:00:25] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:28] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:00:28] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 31 states, 240 steps, eps=0.060
+[2026-08-22 21:00:28] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:31] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:32] [INFO] [ren.agent]: Bot took damage! Current HP: 4.3333330154418945
+[2026-08-22 21:00:32] [INFO] [ren.agent]: Bot took damage! Current HP: 2.3333330154418945
+[2026-08-22 21:00:33] [INFO] [ren.agent]: Bot took damage! Current HP: 0.33333301544189453
+[2026-08-22 21:00:33] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:00:35] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:41] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:44] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:47] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:50] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:53] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:00:56] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Consecutive failure limit reached (5 failures).
+[2026-08-22 21:00:59] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:02] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:05] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:08] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:11] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:14] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:17] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:20] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:20] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:01:20] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:01:20] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:01:20] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:01:21] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:01:21] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 31 states, 240 steps, eps=0.060
+[2026-08-22 21:01:21] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 21:01:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:01:21] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': Switched to speedrun
+[2026-08-22 21:01:21] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 21:01:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 21:01:21] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:01:21] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 21:01:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 21:01:21] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 21:01:21] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:01:23] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:01:23] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 31 states, 240 steps, eps=0.060
+[2026-08-22 21:01:23] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:26] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:29] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Consecutive failure limit reached (15 failures).
+[2026-08-22 21:01:32] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:35] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:01:38] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'come here'
+[2026-08-22 21:01:38] [INFO] [ren.agent]: [INTENT PARSED] GoalType: FOLLOW_PLAYER, Params: {'player': 'CyanCode'}
+[2026-08-22 21:01:38] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-22 21:01:38] [INFO] [ren.agent]: [EXECUTING SUBTASK] follow (step_1) with {'player': 'CyanCode'}
+[2026-08-22 21:01:38] [INFO] [ren.agent]: [SUBTASK OK] follow (step_1) completed! Progress: 100.0%
+[2026-08-22 21:01:38] [INFO] [ren.agent]: [TASK COMPLETED] 'Follow CyanCode' successfully finished! (100%)
+[2026-08-22 21:01:59] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'kill these animals'
+[2026-08-22 21:01:59] [INFO] [ren.agent]: [INTENT PARSED] GoalType: HUNT_FOOD, Params: {'animal_name': 'animal', 'count': 2}
+[2026-08-22 21:01:59] [INFO] [ren.agent]: [TASK CREATED] 'Hunt animal' with 1 subtasks. Progress: 0%
+[2026-08-22 21:01:59] [INFO] [ren.agent]: [EXECUTING SUBTASK] hunt (step_1) with {'animal_name': 'animal', 'count': 2}
+[2026-08-22 21:01:59] [INFO] [ren.agent]: [SUBTASK OK] hunt (step_1) completed! Progress: 100.0%
+[2026-08-22 21:01:59] [INFO] [ren.agent]: [TASK COMPLETED] 'Hunt animal' successfully finished! (100%)
+[2026-08-22 21:02:34] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'hunt more animals get food and then smelt them in furnace'
+[2026-08-22 21:02:34] [INFO] [ren.agent]: [INTENT PARSED] GoalType: COLLECT_RESOURCE, Params: {'resource': 'wood', 'amount': 4}
+[2026-08-22 21:02:34] [INFO] [ren.agent]: [TASK CREATED] 'Collect 4x wood' with 1 subtasks. Progress: 0%
+[2026-08-22 21:02:34] [INFO] [ren.agent]: [EXECUTING SUBTASK] gather (step_1) with {'block_type': 'wood', 'count': 4}
+[2026-08-22 21:02:34] [INFO] [ren.agent]: [SUBTASK OK] gather (step_1) completed! Progress: 100.0%
+[2026-08-22 21:02:34] [INFO] [ren.agent]: [TASK COMPLETED] 'Collect 4x wood' successfully finished! (100%)
+[2026-08-22 21:03:13] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:03:13] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:04:22] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 21:04:26] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 34 states, 251 steps, eps=0.057
+[2026-08-22 21:04:26] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 21:04:30] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-22 21:04:33] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:04:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:07:11] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'make a shelter'
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_SHELTER, Params: {'structure_type': 'shelter', 'size': 'compact'}
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [TASK CREATED] 'Build Survival Shelter' with 3 subtasks. Progress: 0%
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [EXECUTING SUBTASK] craft (build_step_2) with {'item_name': 'oak_planks', 'count': 6}
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [EXECUTING SUBTASK] craft (build_step_2) with {'item_name': 'oak_planks', 'count': 6}
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [EXECUTING SUBTASK] build_structure (build_step_3) with {'structure_name': 'quick_shelter', 'width': 3, 'length': 3, 'height': 3, 'blocks': [{'x': 551, 'y': 72, 'z': -188, 'type': 'dirt'}, {'x': 551, 'y': 72, 'z': -187, 'type': 'dirt'}, {'x': 551, 'y': 72, 'z': -186, 'type': 'dirt'}, {'x': 552, 'y': 72, 'z': -186, 'type': 'dirt'}, {'x': 553, 'y': 72, 'z': -188, 'type': 'dirt'}, {'x': 553, 'y': 72, 'z': -187, 'type': 'dirt'}, {'x': 553, 'y': 72, 'z': -186, 'type': 'dirt'}, {'x': 551, 'y': 73, 'z': -188, 'type': 'dirt'}, {'x': 551, 'y': 73, 'z': -187, 'type': 'dirt'}, {'x': 551, 'y': 73, 'z': -186, 'type': 'dirt'}, {'x': 552, 'y': 73, 'z': -186, 'type': 'dirt'}, {'x': 553, 'y': 73, 'z': -188, 'type': 'dirt'}, {'x': 553, 'y': 73, 'z': -187, 'type': 'dirt'}, {'x': 553, 'y': 73, 'z': -186, 'type': 'dirt'}, {'x': 551, 'y': 74, 'z': -188, 'type': 'dirt'}, {'x': 551, 'y': 74, 'z': -187, 'type': 'dirt'}, {'x': 551, 'y': 74, 'z': -186, 'type': 'dirt'}, {'x': 552, 'y': 74, 'z': -188, 'type': 'dirt'}, {'x': 552, 'y': 74, 'z': -187, 'type': 'dirt'}, {'x': 552, 'y': 74, 'z': -186, 'type': 'dirt'}, {'x': 553, 'y': 74, 'z': -188, 'type': 'dirt'}, {'x': 553, 'y': 74, 'z': -187, 'type': 'dirt'}, {'x': 553, 'y': 74, 'z': -186, 'type': 'dirt'}], 'interior': []}
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [SUBTASK OK] build_structure (build_step_3) completed! Progress: 100.0%
+[2026-08-22 21:07:11] [INFO] [ren.agent]: [TASK COMPLETED] 'Build Survival Shelter' successfully finished! (100%)
+[2026-08-22 21:07:21] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:07:23] [INFO] [ren.agent]: Bot took damage! Current HP: 19.83333396911621
+[2026-08-22 21:07:24] [INFO] [ren.agent]: Bot took damage! Current HP: 18.5
+[2026-08-22 21:07:24] [INFO] [ren.agent]: Bot took damage! Current HP: 17.16666603088379
+[2026-08-22 21:07:25] [INFO] [ren.agent]: Bot took damage! Current HP: 15.666665077209473
+[2026-08-22 21:07:25] [INFO] [ren.agent]: Bot took damage! Current HP: 14.818665504455566
+[2026-08-22 21:07:26] [INFO] [ren.agent]: Bot took damage! Current HP: 13.97066593170166
+[2026-08-22 21:07:27] [INFO] [ren.agent]: Bot took damage! Current HP: 13.122666358947754
+[2026-08-22 21:07:51] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'give all materials you have'
+[2026-08-22 21:07:51] [INFO] [ren.agent]: [INTENT PARSED] GoalType: DROP_ALL, Params: {'player': 'CyanCode'}
+[2026-08-22 21:07:51] [INFO] [ren.agent]: [TASK CREATED] 'Drop All Items' with 1 subtasks. Progress: 0%
+[2026-08-22 21:07:51] [INFO] [ren.agent]: [EXECUTING SUBTASK] drop_all (step_1) with {'player': 'CyanCode'}
+[2026-08-22 21:07:51] [INFO] [ren.agent]: [SUBTASK OK] drop_all (step_1) completed! Progress: 100.0%
+[2026-08-22 21:07:52] [INFO] [ren.agent]: [TASK COMPLETED] 'Drop All Items' successfully finished! (100%)
+[2026-08-22 21:08:02] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-22 21:08:02] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-22 21:08:04] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Created session 'New Conversation' (ID: cabff98c) for user 'default'
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: c337f379) for user 'default'
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 88362061) for user 'default'
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Created session 'Session 1' (ID: d643085e) for user 'default'
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Created session 'Session 2' (ID: 0ff6fb24) for user 'default'
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Created session 'New Conversation' (ID: a74983b8) for user 'default'
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Created session 'Long Session' (ID: bbbb8ee9) for user 'default'
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Compacting session bbbb8ee9 (count: 12)...
+[2026-08-22 21:08:07] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-22 21:08:16] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun with these oak planks as wood'
+[2026-08-22 21:08:16] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:08:26] [INFO] [ren.agent]: Bot took damage! Current HP: 14.53066635131836
+[2026-08-22 21:08:54] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'auto mode'
+[2026-08-22 21:08:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-22 21:08:55] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:08:58] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:09:01] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:09:04] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:09:07] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:09:10] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:09:13] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:09:16] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:09:23] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Consecutive failure limit reached (7 failures).
+[2026-08-22 21:09:26] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:09:29] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Consecutive failure limit reached (8 failures).
+[2026-08-22 21:09:33] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:10:54] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 36 states, 251 steps, eps=0.057
+[2026-08-22 21:10:54] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 21:11:03] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-22 21:11:09] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:11:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:12:08] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:16:46] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 45s.
+[2026-08-22 21:16:49] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 48s.
+[2026-08-22 21:16:52] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 51s.
+[2026-08-22 21:16:55] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 54s.
+[2026-08-22 21:16:58] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 57s.
+[2026-08-22 21:17:01] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 60s.
+[2026-08-22 21:17:05] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 63s.
+[2026-08-22 21:17:08] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 66s.
+[2026-08-22 21:17:11] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 69s.
+[2026-08-22 21:17:14] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 72s.
+[2026-08-22 21:17:17] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 75s.
+[2026-08-22 21:17:20] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 78s.
+[2026-08-22 21:17:23] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 81s.
+[2026-08-22 21:17:26] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 84s.
+[2026-08-22 21:17:29] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 87s.
+[2026-08-22 21:17:32] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 90s.
+[2026-08-22 21:17:35] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 93s.
+[2026-08-22 21:17:38] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 96s.
+[2026-08-22 21:17:41] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 99s.
+[2026-08-22 21:17:44] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 102s.
+[2026-08-22 21:17:47] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 105s.
+[2026-08-22 21:17:50] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 108s.
+[2026-08-22 21:17:53] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 111s.
+[2026-08-22 21:17:56] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 114s.
+[2026-08-22 21:17:59] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'gather' timed out after 117s.
+[2026-08-22 21:18:08] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:18:08] [INFO] [ren.agent]: Bot took damage! Current HP: 19.16666603088379
+[2026-08-22 21:18:09] [INFO] [ren.agent]: Bot took damage! Current HP: 18.333332061767578
+[2026-08-22 21:18:09] [INFO] [ren.agent]: Bot took damage! Current HP: 17.499998092651367
+[2026-08-22 21:18:10] [INFO] [ren.agent]: Bot took damage! Current HP: 16.499998092651367
+[2026-08-22 21:18:10] [INFO] [ren.agent]: Bot took damage! Current HP: 15.499998092651367
+[2026-08-22 21:18:11] [INFO] [ren.agent]: Bot took damage! Current HP: 14.499998092651367
+[2026-08-22 21:18:11] [INFO] [ren.agent]: Bot took damage! Current HP: 13.499998092651367
+[2026-08-22 21:18:12] [INFO] [ren.agent]: Bot took damage! Current HP: 12.499998092651367
+[2026-08-22 21:18:12] [INFO] [ren.agent]: Bot took damage! Current HP: 11.499998092651367
+[2026-08-22 21:18:13] [INFO] [ren.agent]: Bot took damage! Current HP: 10.499998092651367
+[2026-08-22 21:18:13] [INFO] [ren.agent]: Bot took damage! Current HP: 10.499998092651367
+[2026-08-22 21:18:14] [INFO] [ren.agent]: Bot took damage! Current HP: 9.499998092651367
+[2026-08-22 21:18:14] [INFO] [ren.agent]: Bot took damage! Current HP: 8.499998092651367
+[2026-08-22 21:18:15] [INFO] [ren.agent]: Bot took damage! Current HP: 7.499998092651367
+[2026-08-22 21:18:15] [INFO] [ren.agent]: Bot took damage! Current HP: 6.499998092651367
+[2026-08-22 21:18:16] [INFO] [ren.agent]: Bot took damage! Current HP: 5.499998092651367
+[2026-08-22 21:18:16] [INFO] [ren.agent]: Bot took damage! Current HP: 4.499998092651367
+[2026-08-22 21:18:17] [INFO] [ren.agent]: Bot took damage! Current HP: 3.499998092651367
+[2026-08-22 21:18:17] [INFO] [ren.agent]: Bot took damage! Current HP: 3.499998092651367
+[2026-08-22 21:18:18] [INFO] [ren.agent]: Bot took damage! Current HP: 2.499998092651367
+[2026-08-22 21:18:18] [INFO] [ren.agent]: Bot took damage! Current HP: 1.4999980926513672
+[2026-08-22 21:18:19] [INFO] [ren.agent]: Bot took damage! Current HP: 0.4999980926513672
+[2026-08-22 21:18:19] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:21:21] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:21:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:22:02] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:22:15] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'its night make a shelter to survive'
+[2026-08-22 21:22:15] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_SHELTER, Params: {'structure_type': 'shelter', 'size': 'compact'}
+[2026-08-22 21:22:15] [INFO] [ren.agent]: [TASK CREATED] 'Build Survival Shelter' with 1 subtasks. Progress: 0%
+[2026-08-22 21:22:15] [INFO] [ren.agent]: [EXECUTING SUBTASK] build_structure (build_step_1) with {'structure_name': 'quick_shelter', 'width': 3, 'length': 3, 'height': 3, 'blocks': [{'x': -21, 'y': 86, 'z': 100, 'type': 'dirt'}, {'x': -21, 'y': 86, 'z': 101, 'type': 'dirt'}, {'x': -21, 'y': 86, 'z': 102, 'type': 'dirt'}, {'x': -20, 'y': 86, 'z': 102, 'type': 'dirt'}, {'x': -19, 'y': 86, 'z': 100, 'type': 'dirt'}, {'x': -19, 'y': 86, 'z': 101, 'type': 'dirt'}, {'x': -19, 'y': 86, 'z': 102, 'type': 'dirt'}, {'x': -21, 'y': 87, 'z': 100, 'type': 'dirt'}, {'x': -21, 'y': 87, 'z': 101, 'type': 'dirt'}, {'x': -21, 'y': 87, 'z': 102, 'type': 'dirt'}, {'x': -20, 'y': 87, 'z': 102, 'type': 'dirt'}, {'x': -19, 'y': 87, 'z': 100, 'type': 'dirt'}, {'x': -19, 'y': 87, 'z': 101, 'type': 'dirt'}, {'x': -19, 'y': 87, 'z': 102, 'type': 'dirt'}, {'x': -21, 'y': 88, 'z': 100, 'type': 'dirt'}, {'x': -21, 'y': 88, 'z': 101, 'type': 'dirt'}, {'x': -21, 'y': 88, 'z': 102, 'type': 'dirt'}, {'x': -20, 'y': 88, 'z': 100, 'type': 'dirt'}, {'x': -20, 'y': 88, 'z': 101, 'type': 'dirt'}, {'x': -20, 'y': 88, 'z': 102, 'type': 'dirt'}, {'x': -19, 'y': 88, 'z': 100, 'type': 'dirt'}, {'x': -19, 'y': 88, 'z': 101, 'type': 'dirt'}, {'x': -19, 'y': 88, 'z': 102, 'type': 'dirt'}], 'interior': []}
+[2026-08-22 21:22:15] [INFO] [ren.agent]: [SUBTASK OK] build_structure (build_step_1) completed! Progress: 100.0%
+[2026-08-22 21:22:15] [INFO] [ren.agent]: [TASK COMPLETED] 'Build Survival Shelter' successfully finished! (100%)
+[2026-08-22 21:22:24] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speeedrun'
+[2026-08-22 21:22:35] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'survive'
+[2026-08-22 21:23:00] [INFO] [ren.agent]: [INTENT PARSED] GoalType: CHAT, Params: {'message': 'speeedrun'}
+[2026-08-22 21:23:00] [INFO] [ren.agent]: [TASK CREATED] 'CHAT' with 1 subtasks. Progress: 0%
+[2026-08-22 21:23:00] [INFO] [ren.agent]: [EXECUTING SUBTASK] chat (step_1) with {'message': 'speeedrun'}
+[2026-08-22 21:23:00] [INFO] [ren.agent]: [SUBTASK OK] chat (step_1) completed! Progress: 100.0%
+[2026-08-22 21:23:00] [INFO] [ren.agent]: [TASK COMPLETED] 'CHAT' successfully finished! (100%)
+[2026-08-22 21:23:04] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SURVIVE, Params: {}
+[2026-08-22 21:23:04] [INFO] [ren.agent]: [TASK CREATED] 'SURVIVE' with 1 subtasks. Progress: 0%
+[2026-08-22 21:23:04] [INFO] [ren.agent]: [EXECUTING SUBTASK] survive (step_1) with {}
+[2026-08-22 21:23:04] [INFO] [ren.agent]: [SUBTASK OK] survive (step_1) completed! Progress: 100.0%
+[2026-08-22 21:23:04] [INFO] [ren.agent]: [TASK COMPLETED] 'SURVIVE' successfully finished! (100%)
+[2026-08-22 21:23:09] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:23:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:23:40] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:23:41] [INFO] [ren.agent]: Bot took damage! Current HP: 19.5
+[2026-08-22 21:23:41] [INFO] [ren.agent]: Bot took damage! Current HP: 18.985334396362305
+[2026-08-22 21:23:42] [INFO] [ren.agent]: Bot took damage! Current HP: 18.47066879272461
+[2026-08-22 21:23:42] [INFO] [ren.agent]: Bot took damage! Current HP: 18.04533576965332
+[2026-08-22 21:23:43] [INFO] [ren.agent]: Bot took damage! Current HP: 17.364002227783203
+[2026-08-22 21:23:43] [INFO] [ren.agent]: Bot took damage! Current HP: 16.772003173828125
+[2026-08-22 21:23:44] [INFO] [ren.agent]: Bot took damage! Current HP: 15.924004554748535
+[2026-08-22 21:23:47] [INFO] [ren.agent]: Bot took damage! Current HP: 16.33200454711914
+[2026-08-22 21:23:48] [INFO] [ren.agent]: Bot took damage! Current HP: 15.33200454711914
+[2026-08-22 21:23:48] [INFO] [ren.agent]: Bot took damage! Current HP: 14.484004974365234
+[2026-08-22 21:23:49] [INFO] [ren.agent]: Bot took damage! Current HP: 13.636005401611328
+[2026-08-22 21:23:49] [INFO] [ren.agent]: Bot took damage! Current HP: 12.788005828857422
+[2026-08-22 21:23:50] [INFO] [ren.agent]: Bot took damage! Current HP: 11.940006256103516
+[2026-08-22 21:23:50] [INFO] [ren.agent]: Bot took damage! Current HP: 11.09200668334961
+[2026-08-22 21:23:51] [INFO] [ren.agent]: Bot took damage! Current HP: 10.244007110595703
+[2026-08-22 21:23:51] [INFO] [ren.agent]: Bot took damage! Current HP: 10.396007537841797
+[2026-08-22 21:23:52] [INFO] [ren.agent]: Bot took damage! Current HP: 9.804007530212402
+[2026-08-22 21:24:00] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'get food'
+[2026-08-22 21:24:03] [INFO] [ren.agent]: [INTENT PARSED] GoalType: EAT_FOOD, Params: {}
+[2026-08-22 21:24:03] [INFO] [ren.agent]: [TASK CREATED] 'Eat Food' with 1 subtasks. Progress: 0%
+[2026-08-22 21:24:03] [INFO] [ren.agent]: [EXECUTING SUBTASK] eat (step_1) with {}
+[2026-08-22 21:24:03] [INFO] [ren.agent]: [SUBTASK OK] eat (step_1) completed! Progress: 100.0%
+[2026-08-22 21:24:03] [INFO] [ren.agent]: [TASK COMPLETED] 'Eat Food' successfully finished! (100%)
+[2026-08-22 21:24:10] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'follow me'
+[2026-08-22 21:24:10] [INFO] [ren.agent]: [INTENT PARSED] GoalType: FOLLOW_PLAYER, Params: {'player': 'CyanCode'}
+[2026-08-22 21:24:10] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-22 21:24:10] [INFO] [ren.agent]: [EXECUTING SUBTASK] follow (step_1) with {'player': 'CyanCode'}
+[2026-08-22 21:24:10] [INFO] [ren.agent]: [SUBTASK OK] follow (step_1) completed! Progress: 100.0%
+[2026-08-22 21:24:10] [INFO] [ren.agent]: [TASK COMPLETED] 'Follow CyanCode' successfully finished! (100%)
+[2026-08-22 21:24:37] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'auto mode'
+[2026-08-22 21:24:37] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-22 21:24:37] [INFO] [ren.agent]: Bot took damage! Current HP: 8.804007530212402
+[2026-08-22 21:24:38] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:24:40] [INFO] [ren.agent]: Bot took damage! Current HP: 5.804007530212402
+[2026-08-22 21:24:41] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:24:43] [INFO] [ren.agent]: Bot took damage! Current HP: 1.8040075302124023
+[2026-08-22 21:24:43] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:24:44] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:25:08] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Movement stalled: position unchanged for 13s.
+[2026-08-22 21:25:17] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from spider (low HP/unarmed)
+[2026-08-22 21:25:20] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from spider (low HP/unarmed)
+[2026-08-22 21:25:23] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 21:25:26] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 21:25:28] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:25:29] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 21:25:32] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:25:32] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 21:25:33] [INFO] [ren.agent]: Bot took damage! Current HP: 18.66666603088379
+[2026-08-22 21:25:34] [INFO] [ren.agent]: Bot took damage! Current HP: 16.833332061767578
+[2026-08-22 21:25:35] [INFO] [ren.agent]: Bot took damage! Current HP: 13.833332061767578
+[2026-08-22 21:25:35] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: spider
+[2026-08-22 21:25:37] [INFO] [ren.agent]: Bot took damage! Current HP: 10.833332061767578
+[2026-08-22 21:25:38] [INFO] [ren.agent]: Bot took damage! Current HP: 7.833332061767578
+[2026-08-22 21:25:38] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 21:25:39] [INFO] [ren.agent]: Bot took damage! Current HP: 5.833332061767578
+[2026-08-22 21:25:41] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:25:44] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:25:44] [INFO] [ren.agent]: Bot took damage! Current HP: 3.833332061767578
+[2026-08-22 21:25:45] [INFO] [ren.agent]: Bot took damage! Current HP: 0.8333320617675781
+[2026-08-22 21:25:45] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:25:47] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Chopping wood for initial tools
+[2026-08-22 21:26:05] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Movement stalled: position unchanged for 12s.
+[2026-08-22 21:26:08] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Movement stalled: position unchanged for 16s.
+[2026-08-22 21:26:17] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:26:20] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:23] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:26] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:29] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:32] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:35] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:38] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:41] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:44] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:47] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:50] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:54] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:26:57] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:00] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:03] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:27:06] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:09] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:12] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:27:15] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:27:18] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:21] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:24] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:27] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:27:30] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:33] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:36] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:39] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:27:42] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:27:45] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:27:48] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:27:51] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:27:54] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:27:57] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from skeleton (low HP/unarmed)
+[2026-08-22 21:28:00] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:01] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:28:02] [INFO] [ren.agent]: Bot took damage! Current HP: 18.33333396911621
+[2026-08-22 21:28:03] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 21:28:03] [INFO] [ren.agent]: Bot took damage! Current HP: 16.166667938232422
+[2026-08-22 21:28:04] [INFO] [ren.agent]: Bot took damage! Current HP: 13.500001907348633
+[2026-08-22 21:28:05] [INFO] [ren.agent]: Bot took damage! Current HP: 10.666668891906738
+[2026-08-22 21:28:06] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:06] [INFO] [ren.agent]: Bot took damage! Current HP: 7.666668891906738
+[2026-08-22 21:28:07] [INFO] [ren.agent]: Bot took damage! Current HP: 4.666668891906738
+[2026-08-22 21:28:08] [INFO] [ren.agent]: Bot took damage! Current HP: 1.6666688919067383
+[2026-08-22 21:28:08] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:28:09] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:12] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:15] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:18] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:19] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:28:20] [INFO] [ren.agent]: Bot took damage! Current HP: 18.5
+[2026-08-22 21:28:21] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 21:28:24] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:26] [INFO] [ren.agent]: Bot took damage! Current HP: 17.16666603088379
+[2026-08-22 21:28:27] [INFO] [ren.agent]: Bot took damage! Current HP: 14.166666030883789
+[2026-08-22 21:28:27] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 21:28:29] [INFO] [ren.agent]: Bot took damage! Current HP: 12.166666030883789
+[2026-08-22 21:28:30] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:32] [INFO] [ren.agent]: Bot took damage! Current HP: 10.166666030883789
+[2026-08-22 21:28:33] [INFO] [ren.agent]: Bot took damage! Current HP: 7.166666030883789
+[2026-08-22 21:28:33] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-22 21:28:36] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-22 21:28:39] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:28:42] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:28:45] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:28:48] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:28:50] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:28:50] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:29:14] [INFO] [ren.agent]: Bot took damage! Current HP: 4.166666030883789
+[2026-08-22 21:30:53] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:30:53] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:30:53] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:30:53] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:30:54] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 43 states, 280 steps, eps=0.050
+[2026-08-22 21:30:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 21:30:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:30:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 21:30:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 21:30:54] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:30:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 21:30:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 21:30:54] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 21:30:54] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:30:55] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:30:55] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 43 states, 280 steps, eps=0.050
+[2026-08-22 21:31:56] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:31:56] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 21:32:00] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-22 21:32:03] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:32:03] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:32:19] [INFO] [ren.agent]: Bot took damage! Current HP: 3.166666030883789
+[2026-08-22 21:32:20] [INFO] [ren.agent]: Bot took damage! Current HP: 2.166666030883789
+[2026-08-22 21:32:21] [INFO] [ren.agent]: Bot took damage! Current HP: 1.3186661005020142
+[2026-08-22 21:32:22] [INFO] [ren.agent]: Bot took damage! Current HP: 0.31866610050201416
+[2026-08-22 21:32:22] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:34:11] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 21:34:57] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:34:57] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 21:34:57] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:34:57] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 21:34:57] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 21:34:57] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:34:57] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 21:34:57] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 21:34:57] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 21:34:57] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:34:58] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:34:58] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:35:32] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:35:32] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:35:32] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:35:32] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:35:33] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:35:33] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:35:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 21:35:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:35:33] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': Switched to speedrun
+[2026-08-22 21:35:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 21:35:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 21:35:33] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:35:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 21:35:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 21:35:33] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 21:35:33] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:35:35] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:35:35] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:36:55] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:36:55] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:36:55] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 21:36:57] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-22 21:36:57] [INFO] [ren.agent]: [SUBTASK OK] give (step_1) completed! Progress: 100.0%
+[2026-08-22 21:36:57] [INFO] [ren.agent]: [TASK COMPLETED] 'Give mace to Superiorx80' successfully finished! (100%)
+[2026-08-22 21:37:02] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:37:02] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:37:50] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:37:51] [INFO] [ren.agent]: Bot took damage! Current HP: 19.83333396911621
+[2026-08-22 21:37:52] [INFO] [ren.agent]: Bot took damage! Current HP: 19.5
+[2026-08-22 21:37:52] [INFO] [ren.agent]: Bot took damage! Current HP: 19
+[2026-08-22 21:37:53] [INFO] [ren.agent]: Bot took damage! Current HP: 18.485334396362305
+[2026-08-22 21:37:53] [INFO] [ren.agent]: Bot took damage! Current HP: 17.97066879272461
+[2026-08-22 21:37:54] [INFO] [ren.agent]: Bot took damage! Current HP: 17.289335250854492
+[2026-08-22 21:37:54] [INFO] [ren.agent]: Bot took damage! Current HP: 16.86400032043457
+[2026-08-22 21:37:55] [INFO] [ren.agent]: Bot took damage! Current HP: 16.182666778564453
+[2026-08-22 21:37:55] [INFO] [ren.agent]: Bot took damage! Current HP: 15.334667205810547
+[2026-08-22 21:37:56] [INFO] [ren.agent]: Bot took damage! Current HP: 14.48666763305664
+[2026-08-22 21:37:57] [INFO] [ren.agent]: Bot took damage! Current HP: 13.638668060302734
+[2026-08-22 21:37:57] [INFO] [ren.agent]: Bot took damage! Current HP: 12.790668487548828
+[2026-08-22 21:37:58] [INFO] [ren.agent]: Bot took damage! Current HP: 11.942668914794922
+[2026-08-22 21:37:58] [INFO] [ren.agent]: Bot took damage! Current HP: 11.350668907165527
+[2026-08-22 21:37:59] [INFO] [ren.agent]: Bot took damage! Current HP: 11.502669334411621
+[2026-08-22 21:38:07] [INFO] [ren.agent]: Bot took damage! Current HP: 11.910669326782227
+[2026-08-22 21:38:08] [INFO] [ren.agent]: Bot took damage! Current HP: 8.580109596252441
+[2026-08-22 21:38:09] [INFO] [ren.agent]: Bot took damage! Current HP: 6.150669574737549
+[2026-08-22 21:38:09] [INFO] [ren.agent]: Bot took damage! Current HP: 3.7212295532226562
+[2026-08-22 21:38:10] [INFO] [ren.agent]: Bot took damage! Current HP: 1.2917895317077637
+[2026-08-22 21:38:10] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:39:53] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:39:53] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:39:53] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:39:53] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:39:54] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:39:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 21:39:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:39:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 21:39:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 21:39:54] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:39:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 21:39:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 21:39:54] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 21:39:54] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:39:55] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:39:55] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:41:51] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-22 21:41:53] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:41:53] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 21:42:00] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-22 21:42:09] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:42:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:42:29] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:42:29] [INFO] [ren.agent]: Bot took damage! Current HP: 19.83333396911621
+[2026-08-22 21:42:30] [INFO] [ren.agent]: Bot took damage! Current HP: 19.652000427246094
+[2026-08-22 21:42:31] [INFO] [ren.agent]: Bot took damage! Current HP: 19.304000854492188
+[2026-08-22 21:42:31] [INFO] [ren.agent]: Bot took damage! Current HP: 18.789335250854492
+[2026-08-22 21:42:32] [INFO] [ren.agent]: Bot took damage! Current HP: 18.274667739868164
+[2026-08-22 21:42:32] [INFO] [ren.agent]: Bot took damage! Current HP: 17.593332290649414
+[2026-08-22 21:42:33] [INFO] [ren.agent]: Bot took damage! Current HP: 16.911996841430664
+[2026-08-22 21:42:42] [INFO] [ren.agent]: Bot took damage! Current HP: 18.063995361328125
+[2026-08-22 21:42:43] [INFO] [ren.agent]: Bot took damage! Current HP: 10.063995361328125
+[2026-08-22 21:42:43] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:44:50] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'craft' timed out after 45s.
+[2026-08-22 21:44:53] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'craft' timed out after 48s.
+[2026-08-22 21:44:56] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'craft' timed out after 51s.
+[2026-08-22 21:44:59] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'craft' timed out after 54s.
+[2026-08-22 21:45:01] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:45:01] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:45:01] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:45:01] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:45:02] [WARNING] [ren.agent]: [WATCHDOG TRIGGERED] Action 'craft' timed out after 57s.
+[2026-08-22 21:45:04] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:45:17] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:45:17] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:45:17] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:45:17] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:45:19] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:45:19] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:45:19] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 21:45:29] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-22 21:45:32] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:45:32] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:45:32] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:45:32] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:45:33] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:45:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 21:45:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:45:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 21:45:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 21:45:33] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:45:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 21:45:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 21:45:33] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 21:45:33] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:45:34] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'auto mode'
+[2026-08-22 21:45:34] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-22 21:45:35] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:45:35] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:45:37] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:45:40] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:45:43] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:45:46] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:45:48] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-22 21:45:48] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-22 21:45:48] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-22 21:45:48] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-22 21:45:49] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:45:49] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:45:49] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-22 21:45:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:45:49] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': Switched to speedrun
+[2026-08-22 21:45:49] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-22 21:45:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-22 21:45:49] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:45:49] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-22 21:45:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-22 21:45:49] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-22 21:45:49] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-22 21:45:49] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:45:50] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-22 21:45:50] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 282 steps, eps=0.050
+[2026-08-22 21:45:52] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:45:55] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from creeper (low HP/unarmed)
+[2026-08-22 21:45:57] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:45:57] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:46:02] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:46:03] [INFO] [ren.agent]: Bot took damage! Current HP: 19.33333396911621
+[2026-08-22 21:46:04] [INFO] [ren.agent]: Bot took damage! Current HP: 18.5
+[2026-08-22 21:46:04] [INFO] [ren.agent]: Bot took damage! Current HP: 18.152000427246094
+[2026-08-22 21:46:05] [INFO] [ren.agent]: Bot took damage! Current HP: 17.6373348236084
+[2026-08-22 21:46:05] [INFO] [ren.agent]: Bot took damage! Current HP: 16.95600128173828
+[2026-08-22 21:46:07] [INFO] [ren.agent]: Bot took damage! Current HP: 16.45599937438965
+[2026-08-22 21:46:07] [INFO] [ren.agent]: Bot took damage! Current HP: 11.896639823913574
+[2026-08-22 21:46:08] [INFO] [ren.agent]: Bot took damage! Current HP: 9.467199325561523
+[2026-08-22 21:46:08] [INFO] [ren.agent]: Bot took damage! Current HP: 7.037759304046631
+[2026-08-22 21:46:09] [INFO] [ren.agent]: Bot took damage! Current HP: 4.608319282531738
+[2026-08-22 21:46:09] [INFO] [ren.agent]: Bot took damage! Current HP: 2.1788792610168457
+[2026-08-22 21:46:09] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-22 21:46:59] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-22 21:46:59] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-22 21:47:02] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-22 21:47:05] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-22 21:47:05] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-22 21:47:20] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:47:23] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-22 21:47:23] [INFO] [ren.agent]: Bot took damage! Current HP: 19.16666603088379
+[2026-08-22 21:47:25] [INFO] [ren.agent]: Bot took damage! Current HP: 18.666664123535156
+[2026-08-22 21:47:25] [INFO] [ren.agent]: Bot took damage! Current HP: 14.107304573059082
+[2026-08-22 21:47:26] [INFO] [ren.agent]: Bot took damage! Current HP: 11.677864074707031
+[2026-08-22 21:47:27] [INFO] [ren.agent]: Bot took damage! Current HP: 9.576104164123535
+[2026-08-22 21:47:28] [INFO] [ren.agent]: Bot took damage! Current HP: 7.146664142608643
+[2026-08-22 21:47:28] [INFO] [ren.agent]: Bot took damage! Current HP: 4.71722412109375
+[2026-08-22 21:47:29] [INFO] [ren.agent]: Bot took damage! Current HP: 2.2877840995788574
+[2026-08-22 21:47:29] [INFO] [ren.agent]: Bot took damage! Current HP: 0.8583440780639648
+[2026-08-22 21:47:29] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-24 02:34:31] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:34:31] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-24 02:34:31] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-24 02:34:31] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-24 02:34:33] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:34:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-24 02:34:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:34:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-24 02:34:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-24 02:34:33] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:34:33] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:34:33] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-24 02:34:33] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-24 02:34:33] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-24 02:34:33] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:34:33] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:34:36] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:34:36] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:35:37] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:35:39] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:35:39] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:35:39] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, build me a house'
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': New player directive
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 54}
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-24 02:35:39] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, survive on your own'
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [TASK CANCELLED] 'Build Small House': Switched to autonomous survival
+[2026-08-24 02:35:39] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-24 02:35:42] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:35:42] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-24 02:35:42] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-24 02:35:42] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-24 02:35:43] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:35:43] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-24 02:35:43] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:35:43] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-24 02:35:43] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-24 02:35:43] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:35:43] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:35:43] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-24 02:35:43] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-24 02:35:43] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-24 02:35:43] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:35:43] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:35:46] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:35:46] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:36:20] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:36:21] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:36:21] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:36:21] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, build me a house'
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': New player directive
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 54}
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-24 02:36:21] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, survive on your own'
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [TASK CANCELLED] 'Build Small House': Switched to autonomous survival
+[2026-08-24 02:36:21] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=None
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:36:21] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'run self test'
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SELF_TEST, Params: {}
+[2026-08-24 02:36:21] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:36:21] [INFO] [ren.agent]: 
+================================================================
+ 🤖 REN-AI MINECRAFT EMBODIED SELF-TEST REPORT
+================================================================
+ ✅ PASS | WorldState & Perception        |   0.0ms | Compact Obs: [HP:18/20|FD:16/20|Time:day|Threat:SAFE] Pos:(10,64,-20) Inv:[oak_planks:16, stone_pickaxe:1] Hostiles:[none] Player:[none] Task:[IDLE:NONE 0%]
+ ✅ PASS | Skill Registry                 |   0.0ms | 22 skills registered across 7 categories
+ ✅ PASS | Intent Parsing                 |   1.0ms | Parsed House(BUILD_HOUSE), Speedrun(SPEEDRUN), Survival(AUTONOMOUS_SURVIVAL)
+ ✅ PASS | 3D Construction Engine         |   0.0ms | Blueprint small_house: 54 blocks, 3 subtasks
+ ✅ PASS | Action Verifier                |   1.0ms | Verified gather delta (+4 logs): True
+ ✅ PASS | Stuck Watchdog & Recovery      |   0.0ms | Detected: Action 'gather' timed out after 60s. | Recovery steps: 2
+ ✅ PASS | Persistent Multi-Store Memory  |   3.0ms | Spatial base stored at {'x': 100.0, 'y': 64.0, 'z': -100.0}, Episodic count: 3
+ ✅ PASS | Priority Event Bus             |   0.0ms | Handled CRITICAL event: True
+ ✅ PASS | Autonomous Survival FSM        |   0.0ms | Decided: {'cmd': 'eat', 'args': {}} (Priority: CRITICAL, Critical hunger/healing required)
+ ✅ PASS | Model Provider Interface       |   0.0ms | Active Provider: qwen2.5-coder:1.5b
+================================================================
+ OVERALL: PASSED (100%) | Total Time: 5.0ms
+================================================================
+[2026-08-24 02:36:23] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:36:23] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-24 02:36:23] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-24 02:36:23] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-24 02:36:24] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:36:24] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-24 02:36:24] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:36:24] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-24 02:36:24] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-24 02:36:24] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:36:24] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:36:24] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-24 02:36:24] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-24 02:36:24] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-24 02:36:24] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:36:24] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:36:26] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:36:26] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:36:50] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:36:51] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:36:51] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:36:51] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, build me a house'
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': New player directive
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 54}
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-24 02:36:51] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, survive on your own'
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [TASK CANCELLED] 'Build Small House': Switched to autonomous survival
+[2026-08-24 02:36:51] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=None
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:36:51] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'run self test'
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SELF_TEST, Params: {}
+[2026-08-24 02:36:51] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:36:51] [INFO] [ren.agent]: 
+================================================================
+ [*] REN-AI MINECRAFT EMBODIED SELF-TEST REPORT
+================================================================
+ [PASS] | WorldState & Perception        |   0.0ms | Compact Obs: [HP:18/20|FD:16/20|Time:day|Threat:SAFE] Pos:(10,64,-20) Inv:[oak_planks:16, stone_pickaxe:1] Hostiles:[none] Player:[none] Task:[IDLE:NONE 0%]
+ [PASS] | Skill Registry                 |   0.0ms | 22 skills registered across 7 categories
+ [PASS] | Intent Parsing                 |   1.0ms | Parsed House(BUILD_HOUSE), Speedrun(SPEEDRUN), Survival(AUTONOMOUS_SURVIVAL)
+ [PASS] | 3D Construction Engine         |   0.0ms | Blueprint small_house: 54 blocks, 3 subtasks
+ [PASS] | Action Verifier                |   0.0ms | Verified gather delta (+4 logs): True
+ [PASS] | Stuck Watchdog & Recovery      |   1.0ms | Detected: Action 'gather' timed out after 60s. | Recovery steps: 2
+ [PASS] | Persistent Multi-Store Memory  |   2.0ms | Spatial base stored at {'x': 100.0, 'y': 64.0, 'z': -100.0}, Episodic count: 5
+ [PASS] | Priority Event Bus             |   0.0ms | Handled CRITICAL event: True
+ [PASS] | Autonomous Survival FSM        |   0.0ms | Decided: {'cmd': 'eat', 'args': {}} (Priority: CRITICAL, Critical hunger/healing required)
+ [PASS] | Model Provider Interface       |   0.0ms | Active Provider: qwen2.5-coder:1.5b
+================================================================
+ OVERALL: PASSED (100%) | Total Time: 4.0ms
+================================================================
+[2026-08-24 02:36:53] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:36:53] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-24 02:36:53] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-24 02:36:53] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-24 02:36:54] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:36:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-24 02:36:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:36:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-24 02:36:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-24 02:36:54] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:36:54] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:36:54] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-24 02:36:54] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-24 02:36:54] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-24 02:36:54] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:36:54] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:36:56] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:36:56] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:37:36] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-24 02:37:36] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-24 02:37:38] [INFO] [ren.agent]: Compacting session 8437338a (count: 14)...
+[2026-08-24 02:37:38] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-24 02:37:38] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 70ee8bff) for user 'default'
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: 9d08d755) for user 'default'
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Created session 'New Conversation' (ID: b7f5a494) for user 'default'
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Created session 'Session 1' (ID: c53457af) for user 'default'
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Created session 'Session 2' (ID: 514a079d) for user 'default'
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 978cc4a1) for user 'default'
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Created session 'Long Session' (ID: 90b110ee) for user 'default'
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Compacting session 90b110ee (count: 12)...
+[2026-08-24 02:37:43] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-24 02:38:00] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:38:00] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-24 02:38:02] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-24 02:38:02] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:38:02] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:38:02] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, build me a house'
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': New player directive
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 54}
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-24 02:38:02] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, survive on your own'
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [TASK CANCELLED] 'Build Small House': Switched to autonomous survival
+[2026-08-24 02:38:02] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=None
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:38:02] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'run self test'
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SELF_TEST, Params: {}
+[2026-08-24 02:38:02] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:38:02] [INFO] [ren.agent]: 
+================================================================
+ [*] REN-AI MINECRAFT EMBODIED SELF-TEST REPORT
+================================================================
+ [PASS] | WorldState & Perception        |   0.0ms | Compact Obs: [HP:18/20|FD:16/20|Time:day|Threat:SAFE] Pos:(10,64,-20) Inv:[oak_planks:16, stone_pickaxe:1] Hostiles:[none] Player:[none] Task:[IDLE:NONE 0%]
+ [PASS] | Skill Registry                 |   0.0ms | 22 skills registered across 7 categories
+ [PASS] | Intent Parsing                 |   0.0ms | Parsed House(BUILD_HOUSE), Speedrun(SPEEDRUN), Survival(AUTONOMOUS_SURVIVAL)
+ [PASS] | 3D Construction Engine         |   0.0ms | Blueprint small_house: 54 blocks, 3 subtasks
+ [PASS] | Action Verifier                |   0.0ms | Verified gather delta (+4 logs): True
+ [PASS] | Stuck Watchdog & Recovery      |   0.0ms | Detected: Action 'gather' timed out after 60s. | Recovery steps: 2
+ [PASS] | Persistent Multi-Store Memory  |   3.0ms | Spatial base stored at {'x': 100.0, 'y': 64.0, 'z': -100.0}, Episodic count: 6
+ [PASS] | Priority Event Bus             |   0.0ms | Handled CRITICAL event: True
+ [PASS] | Autonomous Survival FSM        |   0.0ms | Decided: {'cmd': 'eat', 'args': {}} (Priority: CRITICAL, Critical hunger/healing required)
+ [PASS] | Model Provider Interface       |   0.0ms | Active Provider: qwen2.5-coder:1.5b
+================================================================
+ OVERALL: PASSED (100%) | Total Time: 3.0ms
+================================================================
+[2026-08-24 02:38:06] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:38:07] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:38:07] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-24 02:38:07] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:38:07] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-24 02:38:07] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-24 02:38:07] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:38:07] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:38:07] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-24 02:38:07] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-24 02:38:07] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-24 02:38:07] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:38:07] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:38:16] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-24 02:38:16] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-24 02:38:17] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-24 02:38:18] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:38:18] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:38:19] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:38:19] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-24 02:38:19] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-24 02:38:19] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-24 02:38:20] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:38:20] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:38:20] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, build me a house'
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': New player directive
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 54}
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-24 02:38:20] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, survive on your own'
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [TASK CANCELLED] 'Build Small House': Switched to autonomous survival
+[2026-08-24 02:38:20] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=None
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:38:20] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'run self test'
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SELF_TEST, Params: {}
+[2026-08-24 02:38:20] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:38:20] [INFO] [ren.agent]: 
+================================================================
+ [*] REN-AI MINECRAFT EMBODIED SELF-TEST REPORT
+================================================================
+ [PASS] | WorldState & Perception        |   0.0ms | Compact Obs: [HP:18/20|FD:16/20|Time:day|Threat:SAFE] Pos:(10,64,-20) Inv:[oak_planks:16, stone_pickaxe:1] Hostiles:[none] Player:[none] Task:[IDLE:NONE 0%]
+ [PASS] | Skill Registry                 |   0.0ms | 22 skills registered across 7 categories
+ [PASS] | Intent Parsing                 |   0.0ms | Parsed House(BUILD_HOUSE), Speedrun(SPEEDRUN), Survival(AUTONOMOUS_SURVIVAL)
+ [PASS] | 3D Construction Engine         |   0.0ms | Blueprint small_house: 54 blocks, 3 subtasks
+ [PASS] | Action Verifier                |   0.0ms | Verified gather delta (+4 logs): True
+ [PASS] | Stuck Watchdog & Recovery      |   0.0ms | Detected: Action 'gather' timed out after 60s. | Recovery steps: 2
+ [PASS] | Persistent Multi-Store Memory  |   1.0ms | Spatial base stored at {'x': 100.0, 'y': 64.0, 'z': -100.0}, Episodic count: 8
+ [PASS] | Priority Event Bus             |   0.0ms | Handled CRITICAL event: True
+ [PASS] | Autonomous Survival FSM        |   0.0ms | Decided: {'cmd': 'eat', 'args': {}} (Priority: CRITICAL, Critical hunger/healing required)
+ [PASS] | Model Provider Interface       |   0.0ms | Active Provider: qwen2.5-coder:1.5b
+================================================================
+ OVERALL: PASSED (100%) | Total Time: 1.0ms
+================================================================
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 85a9b8c0) for user 'default'
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: 1d4db4af) for user 'default'
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 6f01bf79) for user 'default'
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Created session 'Session 1' (ID: ce4725b8) for user 'default'
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Created session 'Session 2' (ID: b02620b1) for user 'default'
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Created session 'New Conversation' (ID: e36ad1b3) for user 'default'
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Created session 'Long Session' (ID: 41eace05) for user 'default'
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Compacting session 41eace05 (count: 12)...
+[2026-08-24 02:38:21] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:38:23] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:38:23] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:38:23] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:38:23] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:38:23] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:38:31] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-24 02:38:31] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-24 02:38:32] [INFO] [ren.agent]: Compacting session 8437338a (count: 12)...
+[2026-08-24 02:38:32] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-24 02:38:32] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Created session 'New Conversation' (ID: d4f638f0) for user 'default'
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: 207a5c0c) for user 'default'
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 36d37754) for user 'default'
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Created session 'Session 1' (ID: 924a461c) for user 'default'
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Created session 'Session 2' (ID: a6381b4f) for user 'default'
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 1253cc80) for user 'default'
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Created session 'Long Session' (ID: 9fdd4664) for user 'default'
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Compacting session 9fdd4664 (count: 12)...
+[2026-08-24 02:38:36] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-24 02:39:37] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:39:37] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:39:37] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-24 02:39:51] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-24 02:40:07] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'come here'
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [INTENT PARSED] GoalType: FOLLOW_PLAYER, Params: {'player': 'CyanCode'}
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': New player directive
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [GOAL] Follow CyanCode
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [ACTION] follow (step_1) with {'player': 'CyanCode'}
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [VERIFY] Action=follow Success=True Details={}
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [SUBTASK OK] follow (step_1) completed! Progress: 100.0%
+[2026-08-24 02:40:07] [INFO] [ren.agent]: [TASK COMPLETED] 'Follow CyanCode' successfully finished! (100%)
+[2026-08-24 02:40:07] [WARNING] [ren.agent]: Error in Minecraft stdout reader: 'NoneType' object has no attribute 'name'
+[2026-08-24 02:40:53] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:40:53] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-24 02:40:56] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-24 02:41:09] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'hello'
+[2026-08-24 02:41:11] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-24 02:41:28] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'follow me'
+[2026-08-24 02:41:28] [INFO] [ren.agent]: [INTENT PARSED] GoalType: FOLLOW_PLAYER, Params: {'player': 'CyanCode'}
+[2026-08-24 02:41:28] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-24 02:41:28] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-24 02:41:28] [INFO] [ren.agent]: [GOAL] Follow CyanCode
+[2026-08-24 02:41:28] [INFO] [ren.agent]: [ACTION] follow (step_1) with {'player': 'CyanCode'}
+[2026-08-24 02:41:28] [INFO] [ren.agent]: [VERIFY] Action=follow Success=True Details={}
+[2026-08-24 02:41:28] [INFO] [ren.agent]: [SUBTASK OK] follow (step_1) completed! Progress: 100.0%
+[2026-08-24 02:41:28] [INFO] [ren.agent]: [TASK COMPLETED] 'Follow CyanCode' successfully finished! (100%)
+[2026-08-24 02:41:28] [WARNING] [ren.agent]: Error in Minecraft stdout reader: 'NoneType' object has no attribute 'name'
+[2026-08-24 02:41:30] [INFO] [ren.agent]: [INTENT PARSED] GoalType: CHAT, Params: {'message': 'hello'}
+[2026-08-24 02:41:30] [INFO] [ren.agent]: [TASK CREATED] 'CHAT' with 1 subtasks. Progress: 0%
+[2026-08-24 02:41:30] [INFO] [ren.agent]: [TASK CREATED] 'CHAT' with 1 subtasks. Progress: 0%
+[2026-08-24 02:41:30] [INFO] [ren.agent]: [GOAL] CHAT
+[2026-08-24 02:41:30] [INFO] [ren.agent]: [ACTION] chat (step_1) with {'message': 'hello'}
+[2026-08-24 02:42:04] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-24 02:42:06] [INFO] [ren.agent]: Resumed persistent task 'CHAT' at step 1
+[2026-08-24 02:42:06] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:42:06] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-24 02:42:08] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-24 02:42:11] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'follow me'
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [INTENT PARSED] GoalType: FOLLOW_PLAYER, Params: {'player': 'CyanCode'}
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [TASK CANCELLED] 'CHAT': New player directive
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [TASK CREATED] 'Follow CyanCode' with 1 subtasks. Progress: 0%
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [GOAL] Follow CyanCode
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [ACTION] follow (step_1) with {'player': 'CyanCode'}
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [VERIFY] Action=follow Success=True Details={}
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [SUBTASK OK] follow (step_1) completed! Progress: 100.0%
+[2026-08-24 02:42:11] [INFO] [ren.agent]: [TASK COMPLETED] 'Follow CyanCode' successfully finished! (100%)
+[2026-08-24 02:42:11] [WARNING] [ren.agent]: Error in Minecraft stdout reader: 'NoneType' object has no attribute 'name'
+[2026-08-24 02:42:57] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-24 02:47:47] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:47:48] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:47:48] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-24 02:47:48] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-24 02:47:48] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-24 02:47:49] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:47:49] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, build me a house'
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 54}
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-24 02:47:49] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, survive on your own'
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [TASK CANCELLED] 'Build Small House': Switched to autonomous survival
+[2026-08-24 02:47:49] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=None
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:47:49] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'run self test'
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SELF_TEST, Params: {}
+[2026-08-24 02:47:49] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:47:49] [INFO] [ren.agent]: 
+================================================================
+ [*] REN-AI MINECRAFT EMBODIED SELF-TEST REPORT
+================================================================
+ [PASS] | WorldState & Perception        |   0.0ms | Compact Obs: [HP:18/20|FD:16/20|Time:day|Threat:SAFE] Pos:(10,64,-20) Inv:[oak_planks:16, stone_pickaxe:1] Hostiles:[none] Player:[none] Task:[IDLE:NONE 0%]
+ [PASS] | Skill Registry                 |   0.0ms | 22 skills registered across 7 categories
+ [PASS] | Intent Parsing                 |   0.0ms | Parsed House(BUILD_HOUSE), Speedrun(SPEEDRUN), Survival(AUTONOMOUS_SURVIVAL)
+ [PASS] | 3D Construction Engine         |   0.5ms | Blueprint small_house: 54 blocks, 3 subtasks
+ [PASS] | Action Verifier                |   0.0ms | Verified gather delta (+4 logs): True
+ [PASS] | Stuck Watchdog & Recovery      |   0.0ms | Detected: Action 'gather' timed out after 60s. | Recovery steps: 2
+ [PASS] | Persistent Multi-Store Memory  |   3.0ms | Spatial base stored at {'x': 100.0, 'y': 64.0, 'z': -100.0}, Episodic count: 10
+ [PASS] | Priority Event Bus             |   0.0ms | Handled CRITICAL event: True
+ [PASS] | Autonomous Survival FSM        |   1.0ms | Decided: {'cmd': 'eat', 'args': {}} (Priority: CRITICAL, Critical hunger/healing required)
+ [PASS] | Model Provider Interface       |   0.0ms | Active Provider: qwen2.5-coder:1.5b
+================================================================
+ OVERALL: PASSED (100%) | Total Time: 4.5ms
+================================================================
+[2026-08-24 02:47:51] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:47:52] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:47:52] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-24 02:47:52] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:47:52] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-24 02:47:52] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-24 02:47:52] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:47:52] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:47:52] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-24 02:47:52] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-24 02:47:52] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-24 02:47:52] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:47:52] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:47:55] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-24 02:47:55] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-24 02:47:57] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 06cf91cc) for user 'default'
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: 6557bd98) for user 'default'
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 11184d6e) for user 'default'
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Created session 'Session 1' (ID: 64df1ef4) for user 'default'
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Created session 'Session 2' (ID: 55f701ea) for user 'default'
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 9368d1ce) for user 'default'
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Created session 'Long Session' (ID: 87536b98) for user 'default'
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Compacting session 87536b98 (count: 12)...
+[2026-08-24 02:48:00] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-24 02:48:45] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:48:45] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:48:46] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:48:46] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-24 02:48:46] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-24 02:48:46] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-24 02:48:47] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:48:47] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:48:47] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, build me a house'
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': New player directive
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 54}
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-24 02:48:47] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, survive on your own'
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [TASK CANCELLED] 'Build Small House': Switched to autonomous survival
+[2026-08-24 02:48:47] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=None
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:48:47] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'run self test'
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SELF_TEST, Params: {}
+[2026-08-24 02:48:47] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:48:47] [INFO] [ren.agent]: 
+================================================================
+ [*] REN-AI MINECRAFT EMBODIED SELF-TEST REPORT
+================================================================
+ [PASS] | WorldState & Perception        |   0.0ms | Compact Obs: [HP:18/20|FD:16/20|Time:day|Threat:SAFE] Pos:(10,64,-20) Inv:[oak_planks:16, stone_pickaxe:1] Hostiles:[none] Player:[none] Task:[IDLE:NONE 0%]
+ [PASS] | Skill Registry                 |   0.0ms | 22 skills registered across 7 categories
+ [PASS] | Intent Parsing                 |   0.0ms | Parsed House(BUILD_HOUSE), Speedrun(SPEEDRUN), Survival(AUTONOMOUS_SURVIVAL)
+ [PASS] | 3D Construction Engine         |   0.5ms | Blueprint small_house: 54 blocks, 3 subtasks
+ [PASS] | Action Verifier                |   0.0ms | Verified gather delta (+4 logs): True
+ [PASS] | Stuck Watchdog & Recovery      |   0.0ms | Detected: Action 'gather' timed out after 60s. | Recovery steps: 2
+ [PASS] | Persistent Multi-Store Memory  |   1.0ms | Spatial base stored at {'x': 100.0, 'y': 64.0, 'z': -100.0}, Episodic count: 12
+ [PASS] | Priority Event Bus             |   0.0ms | Handled CRITICAL event: True
+ [PASS] | Autonomous Survival FSM        |   0.0ms | Decided: {'cmd': 'eat', 'args': {}} (Priority: CRITICAL, Critical hunger/healing required)
+ [PASS] | Model Provider Interface       |   0.0ms | Active Provider: qwen2.5-coder:1.5b
+================================================================
+ OVERALL: PASSED (100%) | Total Time: 1.5ms
+================================================================
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-24 02:48:49] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:48:49] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:48:49] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:48:49] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:48:49] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-24 02:48:51] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-24 02:48:51] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-24 02:48:52] [INFO] [ren.agent]: Compacting session 8437338a (count: 12)...
+[2026-08-24 02:48:52] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-24 02:48:52] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-24 02:48:54] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 77c530ae) for user 'default'
+[2026-08-24 02:48:54] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: 71b43d44) for user 'default'
+[2026-08-24 02:48:55] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 244430fb) for user 'default'
+[2026-08-24 02:48:55] [INFO] [ren.agent]: Created session 'Session 1' (ID: 2f24e554) for user 'default'
+[2026-08-24 02:48:55] [INFO] [ren.agent]: Created session 'Session 2' (ID: 4730014c) for user 'default'
+[2026-08-24 02:48:55] [INFO] [ren.agent]: Created session 'New Conversation' (ID: a542dcd2) for user 'default'
+[2026-08-24 02:48:55] [INFO] [ren.agent]: Created session 'Long Session' (ID: c2abe7b2) for user 'default'
+[2026-08-24 02:48:55] [INFO] [ren.agent]: Compacting session c2abe7b2 (count: 12)...
+[2026-08-24 02:48:55] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-24 02:50:53] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-24 02:50:53] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 295 steps, eps=0.050
+[2026-08-24 02:50:53] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-24 02:50:57] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-24 02:51:09] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'survive'
+[2026-08-24 02:51:09] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:51:09] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': Switched to autonomous survival
+[2026-08-24 02:51:11] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:11] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:14] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:14] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:17] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:17] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:20] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:20] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:23] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:23] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:26] [INFO] [ren.agent]: Bot took damage! Current HP: 16.666667938232422
+[2026-08-24 02:51:26] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:26] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:29] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:29] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:32] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:32] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:35] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:35] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:38] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:38] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:41] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:41] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:44] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from enderman (low HP/unarmed)
+[2026-08-24 02:51:44] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:47] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:51:47] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:50] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:51:50] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:53] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:51:53] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:51:54] [INFO] [ren.agent]: Bot took damage! Current HP: 15.666667938232422
+[2026-08-24 02:51:55] [INFO] [ren.agent]: Bot took damage! Current HP: 12.666667938232422
+[2026-08-24 02:51:56] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-24 02:51:56] [INFO] [ren.agent]: [VERIFY] Action=attack Success=True Details={}
+[2026-08-24 02:51:56] [INFO] [ren.agent]: Bot took damage! Current HP: 9.666667938232422
+[2026-08-24 02:51:57] [INFO] [ren.agent]: Bot took damage! Current HP: 6.666667938232422
+[2026-08-24 02:51:59] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:51:59] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': 8.7, 'y': 83, 'z': 83.4}, 'distance_sq': 7031.25}
+[2026-08-24 02:52:00] [INFO] [ren.agent]: Bot took damage! Current HP: 3.666667938232422
+[2026-08-24 02:52:01] [INFO] [ren.agent]: Bot took damage! Current HP: 0.6666679382324219
+[2026-08-24 02:52:01] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-24 02:52:02] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: gather | Rationale: Gathering blocks for emergency shelter
+[2026-08-24 02:52:15] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-24 02:52:16] [INFO] [ren.agent]: Bot took damage! Current HP: 18.5
+[2026-08-24 02:52:16] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=Expected wood increase, but delta was 0 (total: 0)
+[2026-08-24 02:52:17] [INFO] [ren.agent]: Bot took damage! Current HP: 16.33333396911621
+[2026-08-24 02:52:17] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: attack | Rationale: Eliminating nearby hostile: zombie
+[2026-08-24 02:52:17] [INFO] [ren.agent]: [VERIFY] Action=attack Success=True Details={}
+[2026-08-24 02:52:18] [INFO] [ren.agent]: Bot took damage! Current HP: 13.833333969116211
+[2026-08-24 02:52:19] [INFO] [ren.agent]: Bot took damage! Current HP: 11.166667938232422
+[2026-08-24 02:52:20] [INFO] [ren.agent]: Bot took damage! Current HP: 8.166667938232422
+[2026-08-24 02:52:20] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:52:20] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -10.5, 'y': 87, 'z': 93.5}, 'distance_sq': 8852.5}
+[2026-08-24 02:52:21] [INFO] [ren.agent]: Bot took damage! Current HP: 5.166667938232422
+[2026-08-24 02:52:22] [INFO] [ren.agent]: Bot took damage! Current HP: 2.166667938232422
+[2026-08-24 02:52:22] [WARNING] [ren.agent]: Bot died in Minecraft world! Applying RL death penalty.
+[2026-08-24 02:52:23] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:52:23] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -10.5, 'y': 87, 'z': 93.5}, 'distance_sq': 8852.5}
+[2026-08-24 02:52:26] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:52:26] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -7.5, 'y': 98, 'z': 102.5}, 'distance_sq': 10562.5}
+[2026-08-24 02:52:29] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:52:29] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -7.5, 'y': 98, 'z': 102.5}, 'distance_sq': 10562.5}
+[2026-08-24 02:52:31] [INFO] [ren.agent]: Bot took damage! Current HP: 20
+[2026-08-24 02:52:32] [INFO] [ren.agent]: Bot took damage! Current HP: 19.83333396911621
+[2026-08-24 02:52:32] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:52:32] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -7.5, 'y': 98, 'z': 102.5}, 'distance_sq': 10562.5}
+[2026-08-24 02:52:32] [INFO] [ren.agent]: Bot took damage! Current HP: 19.5
+[2026-08-24 02:52:33] [INFO] [ren.agent]: Bot took damage! Current HP: 19.485334396362305
+[2026-08-24 02:52:34] [INFO] [ren.agent]: Bot took damage! Current HP: 18.97066879272461
+[2026-08-24 02:52:34] [INFO] [ren.agent]: Bot took damage! Current HP: 18.1373348236084
+[2026-08-24 02:52:35] [INFO] [ren.agent]: Bot took damage! Current HP: 17.45600128173828
+[2026-08-24 02:52:35] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:52:35] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -7.5, 'y': 98, 'z': 102.5}, 'distance_sq': 10562.5}
+[2026-08-24 02:52:38] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:52:38] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -7.5, 'y': 98, 'z': 102.5}, 'distance_sq': 10562.5}
+[2026-08-24 02:52:41] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:52:46] [INFO] [ren.agent]: Bot took damage! Current HP: 18.941333770751953
+[2026-08-24 02:53:19] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -7.5, 'y': 95, 'z': 102.5}, 'distance_sq': 10562.5}
+[2026-08-24 02:53:22] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:53:22] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -7.5, 'y': 95, 'z': 102.5}, 'distance_sq': 10562.5}
+[2026-08-24 02:53:25] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:53:25] [INFO] [ren.agent]: [VERIFY] Action=goTo Success=True Details={'current_pos': {'x': -7.5, 'y': 95, 'z': 102.5}, 'distance_sq': 10562.5}
+[2026-08-24 02:53:28] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: CRITICAL | Action: goTo | Rationale: Tactical retreat from zombie (low HP/unarmed)
+[2026-08-24 02:53:28] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-24 02:53:49] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 320 steps, eps=0.050
+[2026-08-24 02:53:49] [INFO] [ren.agent]: Starting Minecraft Bridge: node D:\Coding projects\REN-AI-main (1)\REN-AI-main\ren\minecraft\bridge\bot.js --host localhost --port 1234 --username RenAI --auth offline
+[2026-08-24 02:53:52] [INFO] [ren.agent]: Minecraft bot 'RenAI' connected to localhost:1234!
+[2026-08-24 02:53:55] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-24 02:53:55] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:54:08] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 2, 'expected': 1}
+[2026-08-24 02:54:10] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:13] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:16] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:20] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:23] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:26] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:29] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:32] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:35] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:38] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:41] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:44] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:47] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:50] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:53] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:56] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:54:59] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:02] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:05] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:08] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:11] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:14] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:17] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:20] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:23] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:26] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:29] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:32] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:35] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:38] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:41] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:44] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:47] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:50] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:53] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:56] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:55:59] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:02] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:05] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:08] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:11] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:14] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:17] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:20] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:23] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:26] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:29] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:31] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'speedrun'
+[2026-08-24 02:56:31] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-24 02:56:32] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:34] [INFO] [ren.agent]: Bot took damage! Current HP: 17.941333770751953
+[2026-08-24 02:56:35] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:38] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:41] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:44] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:47] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'make a home'
+[2026-08-24 02:56:47] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:50] [INFO] [ren.agent]: Bot took damage! Current HP: 16.941333770751953
+[2026-08-24 02:56:50] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:53] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:54] [INFO] [ren.agent]: Bot took damage! Current HP: 15.941333770751953
+[2026-08-24 02:56:56] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:56:59] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:57:03] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:57:04] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'home_type': 'custom'}
+[2026-08-24 02:57:04] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:57:04] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-24 02:57:04] [INFO] [ren.agent]: [GOAL] Build Small House
+[2026-08-24 02:57:04] [INFO] [ren.agent]: [ACTION] gather (build_step_1) with {'block_type': 'wood', 'count': 13}
+[2026-08-24 02:57:19] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=None
+[2026-08-24 02:57:19] [WARNING] [ren.agent]: [SUBTASK FAIL] gather (build_step_1) attempt 1/3: Verification failed
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [GOAL] Build Small House
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [ACTION] gather (build_step_1) with {'block_type': 'wood', 'count': 13}
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 6, 'expected': 1}
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [GOAL] Build Small House
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [ACTION] craft (build_step_2) with {'item_name': 'oak_planks', 'count': 13}
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 6, 'item': ''}
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [GOAL] Build Small House
+[2026-08-24 02:57:20] [INFO] [ren.agent]: [ACTION] build_structure (build_step_3) with {'structure_name': 'small_house', 'width': 4, 'length': 4, 'height': 4, 'blocks': [{'x': -3, 'y': 89, 'z': 102, 'type': 'oak_planks'}, {'x': -3, 'y': 89, 'z': 103, 'type': 'oak_planks'}, {'x': -3, 'y': 89, 'z': 104, 'type': 'oak_planks'}, {'x': -3, 'y': 89, 'z': 105, 'type': 'oak_planks'}, {'x': -2, 'y': 89, 'z': 102, 'type': 'oak_planks'}, {'x': -2, 'y': 89, 'z': 103, 'type': 'oak_planks'}, {'x': -2, 'y': 89, 'z': 104, 'type': 'oak_planks'}, {'x': -2, 'y': 89, 'z': 105, 'type': 'oak_planks'}, {'x': -1, 'y': 89, 'z': 102, 'type': 'oak_planks'}, {'x': -1, 'y': 89, 'z': 103, 'type': 'oak_planks'}, {'x': -1, 'y': 89, 'z': 104, 'type': 'oak_planks'}, {'x': -1, 'y': 89, 'z': 105, 'type': 'oak_planks'}, {'x': 0, 'y': 89, 'z': 102, 'type': 'oak_planks'}, {'x': 0, 'y': 89, 'z': 103, 'type': 'oak_planks'}, {'x': 0, 'y': 89, 'z': 104, 'type': 'oak_planks'}, {'x': 0, 'y': 89, 'z': 105, 'type': 'oak_planks'}, {'x': -3, 'y': 90, 'z': 102, 'type': 'oak_planks'}, {'x': -3, 'y': 90, 'z': 103, 'type': 'oak_planks'}, {'x': -3, 'y': 90, 'z': 104, 'type': 'oak_planks'}, {'x': -3, 'y': 90, 'z': 105, 'type': 'oak_planks'}, {'x': -2, 'y': 90, 'z': 105, 'type': 'oak_planks'}, {'x': -1, 'y': 90, 'z': 102, 'type': 'oak_planks'}, {'x': -1, 'y': 90, 'z': 105, 'type': 'oak_planks'}, {'x': 0, 'y': 90, 'z': 102, 'type': 'oak_planks'}, {'x': 0, 'y': 90, 'z': 103, 'type': 'oak_planks'}, {'x': 0, 'y': 90, 'z': 104, 'type': 'oak_planks'}, {'x': 0, 'y': 90, 'z': 105, 'type': 'oak_planks'}, {'x': -3, 'y': 91, 'z': 102, 'type': 'oak_planks'}, {'x': -3, 'y': 91, 'z': 103, 'type': 'oak_planks'}, {'x': -3, 'y': 91, 'z': 104, 'type': 'oak_planks'}, {'x': -3, 'y': 91, 'z': 105, 'type': 'oak_planks'}, {'x': -2, 'y': 91, 'z': 105, 'type': 'oak_planks'}, {'x': -1, 'y': 91, 'z': 102, 'type': 'oak_planks'}, {'x': -1, 'y': 91, 'z': 105, 'type': 'oak_planks'}, {'x': 0, 'y': 91, 'z': 102, 'type': 'oak_planks'}, {'x': 0, 'y': 91, 'z': 103, 'type': 'oak_planks'}, {'x': 0, 'y': 91, 'z': 104, 'type': 'oak_planks'}, {'x': 0, 'y': 91, 'z': 105, 'type': 'oak_planks'}, {'x': -3, 'y': 92, 'z': 102, 'type': 'oak_planks'}, {'x': -3, 'y': 92, 'z': 103, 'type': 'oak_planks'}, {'x': -3, 'y': 92, 'z': 104, 'type': 'oak_planks'}, {'x': -3, 'y': 92, 'z': 105, 'type': 'oak_planks'}, {'x': -2, 'y': 92, 'z': 102, 'type': 'oak_planks'}, {'x': -2, 'y': 92, 'z': 103, 'type': 'oak_planks'}, {'x': -2, 'y': 92, 'z': 104, 'type': 'oak_planks'}, {'x': -2, 'y': 92, 'z': 105, 'type': 'oak_planks'}, {'x': -1, 'y': 92, 'z': 102, 'type': 'oak_planks'}, {'x': -1, 'y': 92, 'z': 103, 'type': 'oak_planks'}, {'x': -1, 'y': 92, 'z': 104, 'type': 'oak_planks'}, {'x': -1, 'y': 92, 'z': 105, 'type': 'oak_planks'}, {'x': 0, 'y': 92, 'z': 102, 'type': 'oak_planks'}, {'x': 0, 'y': 92, 'z': 103, 'type': 'oak_planks'}, {'x': 0, 'y': 92, 'z': 104, 'type': 'oak_planks'}, {'x': 0, 'y': 92, 'z': 105, 'type': 'oak_planks'}], 'interior': [{'feature': 'torch', 'pos': {'x': -1, 'y': 91, 'z': 103}}, {'feature': 'crafting_table', 'pos': {'x': -2, 'y': 90, 'z': 104}}, {'feature': 'furnace', 'pos': {'x': -1, 'y': 90, 'z': 104}}]}
+[2026-08-24 02:57:24] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 4}
+[2026-08-24 02:57:24] [INFO] [ren.agent]: [SUBTASK OK] build_structure (build_step_3) completed! Progress: 100.0%
+[2026-08-24 02:57:24] [INFO] [ren.agent]: [TASK COMPLETED] 'Build Small House' successfully finished! (100%)
+[2026-08-24 02:59:07] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'auto mode'
+[2026-08-24 02:59:07] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-24 02:59:09] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: craft | Rationale: Crafting wood planks
+[2026-08-24 02:59:09] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:59:12] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: craft | Rationale: Crafting wood planks
+[2026-08-24 02:59:12] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:59:15] [INFO] [ren.agent]: [AUTONOMOUS SURVIVAL] Priority: HIGH | Action: craft | Rationale: Crafting wood planks
+[2026-08-24 02:59:15] [INFO] [ren.agent]: [VERIFY] Action=craft Success=True Details={'delta': 3, 'item': ''}
+[2026-08-24 02:59:17] [WARNING] [ren.agent]: Failed sending command to Minecraft bot: [Errno 22] Invalid argument
+[2026-08-25 01:53:20] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-25 01:53:22] [INFO] [ren.agent]: Processing input (user='benchmark_usr', session='benchmark_session_1'): 'Give a concise 2-sentence summary of the Python GIL.'
+[2026-08-25 01:53:22] [INFO] [ren.agent]: Created session 'Give a concise 2-sentence summ' (ID: 2043ce7c) for user 'benchmark_usr'
+[2026-08-25 01:53:22] [INFO] [ren.agent]: Starting Agent Loop for request: 'Give a concise 2-sentence summary of the Python GIL.'
+[2026-08-25 01:58:09] [INFO] [ren.agent]: Cloudflare tunnel established: https://rna-expense-packets-with.trycloudflare.com
+[2026-08-25 01:58:10] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-25 01:59:42] [INFO] [ren.agent]: Created session 'New Conversation' (ID: e52532d1) for user 'usr_2dfd5efa1a03824b0de'
+[2026-08-25 02:00:39] [INFO] [ren.agent]: Processing input (user='usr_2dfd5efa1a03824b0de', session='e52532d1'): 'What is today's gold price?'
+[2026-08-25 02:00:39] [INFO] [ren.agent]: Starting Agent Loop for request: 'What is today's gold price?'
+[2026-08-25 02:00:59] [INFO] [ren.agent]: Processing input (user='usr_2dfd5efa1a03824b0de', session='e52532d1'): 'hello'
+[2026-08-25 02:00:59] [INFO] [ren.agent]: Starting Agent Loop for request: 'hello'
+[2026-08-25 02:01:12] [INFO] [ren.agent]: Processing input (user='usr_2dfd5efa1a03824b0de', session='e52532d1'): 'who is the prime minister of india'
+[2026-08-25 02:01:12] [INFO] [ren.agent]: Starting Agent Loop for request: 'who is the prime minister of india'
+[2026-08-25 02:01:28] [INFO] [ren.agent]: Processing input (user='usr_2dfd5efa1a03824b0de', session='e52532d1'): 'hey i asked you something'
+[2026-08-25 02:01:28] [INFO] [ren.agent]: Starting Agent Loop for request: 'hey i asked you something'
+[2026-08-25 02:01:48] [INFO] [ren.agent]: Processing input (user='usr_2dfd5efa1a03824b0de', session='e52532d1'): 'create a skill to talk'
+[2026-08-25 02:01:48] [INFO] [ren.agent]: Starting Agent Loop for request: 'create a skill to talk'
+[2026-08-25 02:02:05] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-25 02:07:14] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-25 02:07:41] [INFO] [ren.agent]: Created session 'New Conversation' (ID: dfd36663) for user 'usr_2dfd5efa1a03824b0de'
+[2026-08-25 02:07:44] [INFO] [ren.agent]: Processing input (user='usr_2dfd5efa1a03824b0de', session='dfd36663'): 'Check system status'
+[2026-08-25 02:07:44] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check system status'
+[2026-08-25 02:07:44] [WARNING] [ren.agent]: Model 'qwen2.5-coder:2.5b' not found in Ollama.
+[2026-08-25 02:08:02] [INFO] [ren.agent]: Ollama memory adaptation: Answered using lighter model 'qwen2.5-coder:1.5b'
+[2026-08-25 02:08:18] [INFO] [ren.agent]: Processing input (user='usr_2dfd5efa1a03824b0de', session='dfd36663'): 'who is the prime minister of india'
+[2026-08-25 02:08:18] [INFO] [ren.agent]: Starting Agent Loop for request: 'who is the prime minister of india'
+[2026-08-25 02:11:43] [INFO] [ren.agent]: REN API Server shutting down...

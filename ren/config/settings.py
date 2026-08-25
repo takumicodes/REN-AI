@@ -63,26 +63,26 @@ class ModelSettings:
     PROVIDER: str = os.getenv("REN_MODEL_PROVIDER", "ollama")
     OLLAMA_HOST: str = os.getenv("REN_OLLAMA_HOST", "http://localhost:11434")
     OLLAMA_GENERATE_ENDPOINT: str = os.getenv("REN_OLLAMA_ENDPOINT", "http://localhost:11434/api/generate")
-    MODEL_NAME: str = os.getenv("REN_MODEL_NAME", "qwen2.5-coder:1.5b")
-    DEFAULT_TEMPERATURE: float = float(os.getenv("REN_TEMPERATURE", "0.4"))
-    MAX_TOKENS_SIMPLE: int = int(os.getenv("REN_MAX_TOKENS_SIMPLE", "96"))
-    MAX_TOKENS_AGENT: int = int(os.getenv("REN_MAX_TOKENS_AGENT", "192"))
-    MAX_TOKENS_PLANNING: int = int(os.getenv("REN_MAX_TOKENS_PLANNING", "128"))
-    NUM_CTX: int = int(os.getenv("REN_NUM_CTX", "1024"))
-    TIMEOUT_SECONDS: int = int(os.getenv("REN_LLM_TIMEOUT", "60"))
+    MODEL_NAME: str = os.getenv("REN_MODEL_NAME", "qwen2.5-coder:2.5b")
+    DEFAULT_TEMPERATURE: float = float(os.getenv("REN_TEMPERATURE", "0.3"))
+    MAX_TOKENS_SIMPLE: int = int(os.getenv("REN_MAX_TOKENS_SIMPLE", "300"))
+    MAX_TOKENS_AGENT: int = int(os.getenv("REN_MAX_TOKENS_AGENT", "500"))
+    MAX_TOKENS_PLANNING: int = int(os.getenv("REN_MAX_TOKENS_PLANNING", "300"))
+    NUM_CTX: int = int(os.getenv("REN_NUM_CTX", "3042"))
+    TIMEOUT_SECONDS: int = int(os.getenv("REN_LLM_TIMEOUT", "120"))
 
 
 @dataclass
 class AgentSettings:
     """Autonomous agent loop and context settings."""
-    MAX_LOOP_ITERATIONS: int = int(os.getenv("REN_MAX_LOOP_STEPS", "6"))
-    STEP_TIMEOUT_SECONDS: int = int(os.getenv("REN_STEP_TIMEOUT", "45"))
+    MAX_LOOP_ITERATIONS: int = int(os.getenv("REN_MAX_LOOP_STEPS", "10"))
+    STEP_TIMEOUT_SECONDS: int = int(os.getenv("REN_STEP_TIMEOUT", "60"))
     MAX_REPEATED_FAILURES: int = 2
     LOOP_DETECTION_WINDOW: int = 3
-    CONTEXT_BUDGET_TOKENS: int = int(os.getenv("REN_CONTEXT_BUDGET", "800"))
-    MEMORY_BUDGET_TOKENS: int = int(os.getenv("REN_MEMORY_BUDGET", "200"))
-    SKILLS_BUDGET_TOKENS: int = int(os.getenv("REN_SKILLS_BUDGET", "200"))
-    HISTORY_BUDGET_TOKENS: int = int(os.getenv("REN_HISTORY_BUDGET", "300"))
+    CONTEXT_BUDGET_TOKENS: int = int(os.getenv("REN_CONTEXT_BUDGET", "1000"))
+    MEMORY_BUDGET_TOKENS: int = int(os.getenv("REN_MEMORY_BUDGET", "400"))
+    SKILLS_BUDGET_TOKENS: int = int(os.getenv("REN_SKILLS_BUDGET", "400"))
+    HISTORY_BUDGET_TOKENS: int = int(os.getenv("REN_HISTORY_BUDGET", "500"))
     ENABLE_SELF_HEALING: bool = True
     ENABLE_DRY_RUN: bool = False
 
@@ -93,7 +93,7 @@ class SecuritySettings:
     AUTO_APPROVE_SAFE: bool = True
     REQUIRE_CONFIRMATION_FOR_MODIFICATIONS: bool = True
     ALLOW_SHELL_COMMANDS: bool = True
-    ALLOW_ARBITRARY_PYTHON: bool = False  # Prefer structured tools & validated skills
+    ALLOW_ARBITRARY_PYTHON: bool = True  # Prefer structured tools & validated skills
     RESTRICT_TO_WORKSPACE: bool = False
     BLOCKED_COMMANDS: List[str] = field(default_factory=lambda: [
         "rmdir /s /q c:\\",
@@ -120,7 +120,7 @@ class SystemSettings:
     ASSISTANT_NAME: str = "Ren"
     CREATOR_NAME: str = "Sadiq"
     CREATOR_NICKNAME: str = "Cyan Code"
-    VERSION: str = "2.5.0"
+    VERSION: str = "1.0.0"
     LOG_LEVEL: str = os.getenv("REN_LOG_LEVEL", "INFO")
     PATHS: PathSettings = field(default_factory=PathSettings)
     MODEL: ModelSettings = field(default_factory=ModelSettings)

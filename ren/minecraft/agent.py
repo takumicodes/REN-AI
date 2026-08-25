@@ -1,18 +1,8 @@
 """
-REN-AI Minecraft Autonomous AGI Agent 10.0 (Speedrun Mode & Wind Charge / Mace PvP)
-- Any% Survival Speedrun Mode: Timer, splits, iron rush, bed explosions, dragon slaying.
-- Mace & Wind Charge PvP: Performs aerial smash attacks with Wind Charge propulsion and Mace crushing blows.
-- Instant Companion Priority & Strict Command Routing.
-- Complete Command Coverage:
-  * 'speedrun' / 'beat the game' -> starts Any% survival speedrun.
-  * 'make house' / 'make a small home fast' -> 3D walking builder.
-  * 'change game mode to survival' / 'creative' -> executes /gamemode.
-  * 'give me all items' / 'drop everything' -> drops entire inventory.
-  * 'take this sword' / 'pickup' -> collects nearby items and equips weapon.
-  * 'do bridging' / 'bridge with wool' -> builds bridge across chasm.
-  * 'kill all mobs nearby' -> clears hostile mobs in 32-block radius.
-  * 'pvp with me' / 'fight with me' -> draws mace/sword and duels player.
-  * 'follow me' / 'come here' -> dynamic sprint following.
+REN-AI Minecraft Autonomous Embodied Agent 12.0
+Unified Closed-Loop Coordinator:
+PERCEIVE -> REMEMBER -> UNDERSTAND -> SET GOAL -> PLAN -> ACT -> OBSERVE RESULT -> VERIFY -> LEARN -> RECOVER -> REPLAN -> CONTINUE.
+Integrates WorldState, EventBus, Multi-Store Memory, Procedural 3D Builder, Survival FSM, and Watchdog.
 """
 
 import os
@@ -27,24 +17,37 @@ import psutil
 from pathlib import Path
 from typing import Dict, Any, Optional, Callable, List, Tuple
 
+from ren.minecraft.types import Goal, Task, Subtask, TaskStatus, PerceptionSummary, ActionResult, SurvivalPriority
+from ren.minecraft.world_state import WorldState, PlayerEquipment
+from ren.minecraft.events import MinecraftEventBus, MinecraftEvent, EventType, EventPriority
+from ren.minecraft.memory import MinecraftMemorySystem
+from ren.minecraft.skills import MinecraftSkillRegistry
+from ren.minecraft.intent import MinecraftIntentParser
+from ren.minecraft.planner import MinecraftGoalPlanner
+from ren.minecraft.builder import MinecraftProceduralBuilder
+from ren.minecraft.perception import MinecraftPerceptionEngine
+from ren.minecraft.verifier import MinecraftActionVerifier
+from ren.minecraft.watchdog import MinecraftStuckWatchdog
+from ren.minecraft.survival import MinecraftSurvivalEngine
+from ren.minecraft.task import MinecraftTaskManager
 from ren.minecraft.rl_brain import MinecraftRLBrain
 from ren.minecraft.curiosity import MinecraftCuriosityEngine
-from ren.minecraft.planner import MinecraftGoalPlanner
 from ren.minecraft.speedrun import MinecraftSpeedrunEngine
+from ren.minecraft.self_test import MinecraftSelfTestRunner
 from ren.models import get_model_provider
 from ren.monitoring.logger import agent_logger, error_logger
 
 
 class MinecraftAgent:
     """
-    Autonomous Minecraft Survival AGI Agent for REN.
-    Supports Companion, Autonomous RL, and Any% Speedrun modes.
+    Unified Autonomous Embodied Minecraft Agent for REN.
+    Reliably translates natural language into verified, stateful in-game actions with full closed-loop control.
     """
 
     def __init__(
         self,
         host: str = "localhost",
-        port: int = 25565,
+        port: int = 1234,
         username: str = "RenAI",
         version: Optional[str] = None,
         auth: str = "offline",
@@ -59,41 +62,61 @@ class MinecraftAgent:
         self.enable_rl = enable_rl
         self.enable_curiosity = enable_curiosity
 
-        # Modes: "COMPANION", "AUTONOMOUS_AGI", or "SPEEDRUN"
-        self.mode: str = "COMPANION"
+        # Operational Modes: "COMPANION", "AUTONOMOUS_AGI", or "SPEEDRUN"
+        self.mode: str = "SPEEDRUN"
 
+        # Core Architectural Subsystems
+        self.events = MinecraftEventBus()
+        self.memory = MinecraftMemorySystem()
+        self.world_state = WorldState()
+        self.skill_registry = MinecraftSkillRegistry()
+        self.intent_parser = MinecraftIntentParser(self.skill_registry)
+        self.planner = MinecraftGoalPlanner()
+        self.builder = MinecraftProceduralBuilder()
+        self.perception_engine = MinecraftPerceptionEngine()
+        self.verifier = MinecraftActionVerifier()
+        self.watchdog = MinecraftStuckWatchdog()
+        self.survival_engine = MinecraftSurvivalEngine()
+        self.task_manager = MinecraftTaskManager()
         self.rl_brain = MinecraftRLBrain()
         self.curiosity_engine = MinecraftCuriosityEngine(cooldown_seconds=60.0)
-        self.planner = MinecraftGoalPlanner()
         self.speedrun_engine = MinecraftSpeedrunEngine()
+        self.self_test_runner = MinecraftSelfTestRunner()
         self.provider = get_model_provider()
 
+        # Bridge Process & Communications
         self.process: Optional[subprocess.Popen] = None
         self.is_running: bool = False
         self.is_connected: bool = False
-        
+
+        # State Tracking
         self.last_state: Dict[str, Any] = {}
-        self.active_player_directive: Optional[Dict[str, Any]] = None
-        self.plan_queue: List[Dict[str, Any]] = []
+        self.pre_action_state: Dict[str, Any] = {}
+        self.last_player_sender: Optional[str] = None
         self.last_action: Optional[str] = None
         self.last_state_key: Optional[str] = None
-        self.last_player_sender: Optional[str] = None
+        self.has_built_home: bool = False
 
+        # Concurrency & Locks
         self.is_busy: bool = False
         self.current_task_id: Optional[str] = None
-        self.task_start_time: float = 0.0
-
         self._lock = threading.Lock()
         self.task_waiters: Dict[str, threading.Event] = {}
         self.task_results: Dict[str, Any] = {}
 
     def start(self):
-        """Launches Node.js Mineflayer bridge subprocess."""
+        """Launches Node.js Mineflayer bridge subprocess with nice CPU priority."""
         bridge_script = Path(__file__).resolve().parent / "bridge" / "bot.js"
         if not bridge_script.exists():
             raise FileNotFoundError(f"Mineflayer bridge script not found at: {bridge_script}")
 
-        cmd = ["node", str(bridge_script), "--host", self.host, "--port", str(self.port), "--username", self.username, "--auth", self.auth]
+        cmd = [
+            "node", str(bridge_script),
+            "--host", self.host,
+            "--port", str(self.port),
+            "--username", self.username,
+            "--auth", self.auth
+        ]
         if self.version:
             cmd.extend(["--version", self.version])
 
@@ -124,10 +147,14 @@ class MinecraftAgent:
         self.brain_thread.start()
 
     def stop(self):
-        """Gracefully stops bot and saves RL brain policy."""
+        """Gracefully stops bot, saves memory, task state, and RL brain policy."""
         self.is_running = False
+        if self.memory:
+            self.memory.save_memory()
         if self.rl_brain:
             self.rl_brain.save_policy()
+        if self.task_manager:
+            self.task_manager.save_state()
 
         if self.process:
             try:
@@ -146,10 +173,13 @@ class MinecraftAgent:
         payload = {"cmd": cmd, "task_id": task_id, **(args or {})}
 
         try:
+            with self._lock:
+                self.pre_action_state = dict(self.last_state)
+
             if cmd not in ["chat", "stop"]:
                 self.is_busy = True
                 self.current_task_id = task_id
-                self.task_start_time = time.time()
+                self.watchdog.start_action_monitor(cmd, self.last_state.get("pos", {}))
 
             line = json.dumps(payload) + "\n"
             self.process.stdin.write(line)
@@ -181,9 +211,68 @@ class MinecraftAgent:
                     self._handle_bridge_event(event_data)
                 except json.JSONDecodeError:
                     agent_logger.debug(f"Mineflayer raw: {line}")
+                except Exception as e:
+                    agent_logger.error(f"Error handling bridge event: {e}", exc_info=True)
             except Exception as e:
                 agent_logger.warning(f"Error in Minecraft stdout reader: {e}")
                 break
+
+    def _update_world_state(self, data: Dict[str, Any]):
+        """Parses bridge telemetry into typed WorldState model."""
+        eq_data = data.get("equipment", {})
+        eq = PlayerEquipment(
+            main_hand=eq_data.get("main_hand"),
+            off_hand=eq_data.get("off_hand"),
+            helmet=eq_data.get("helmet"),
+            chestplate=eq_data.get("chestplate"),
+            leggings=eq_data.get("leggings"),
+            boots=eq_data.get("boots")
+        )
+
+        entities = data.get("entities", [])
+        hostiles = [e for e in entities if e.get("isHostile")]
+        passives = [e for e in entities if e.get("isAnimal")]
+        players = [e for e in entities if e.get("isPlayer")]
+
+        nearest_p = None
+        nearest_d = 999.0
+        if players:
+            p_sorted = sorted(players, key=lambda p: p.get("distance", 999.0))
+            nearest_p = p_sorted[0].get("name")
+            nearest_d = p_sorted[0].get("distance", 999.0)
+
+        pois = data.get("pois", {})
+
+        self.world_state = WorldState(
+            hp=data.get("hp", 20),
+            max_hp=data.get("max_hp", 20),
+            food=data.get("food", 20),
+            saturation=data.get("saturation", 5.0),
+            pos=data.get("pos", {"x": 0.0, "y": 64.0, "z": 0.0}),
+            yaw=data.get("yaw", 0.0),
+            pitch=data.get("pitch", 0.0),
+            dimension=data.get("dimension", "overworld"),
+            biome=data.get("biome", "plains"),
+            inventory=data.get("inventory", {}),
+            equipment=eq,
+            time_of_day=data.get("timeOfDay", "day"),
+            raw_time=data.get("rawTime", 1000),
+            hostile_mobs=hostiles,
+            passive_animals=passives,
+            nearby_players=players,
+            nearest_player=nearest_p,
+            nearest_player_distance=nearest_d,
+            nearby_crafting_tables=pois.get("crafting_tables", []),
+            nearby_furnaces=pois.get("furnaces", []),
+            nearby_beds=pois.get("beds", []),
+            nearby_chests=pois.get("chests", []),
+            nearby_hazards=pois.get("hazards", []),
+            active_goal=self.task_manager.active_task.name if self.task_manager.active_task else None,
+            active_subtask=self.task_manager.active_task.current_subtask.action if self.task_manager.active_task and self.task_manager.active_task.current_subtask else None,
+            task_progress=self.task_manager.active_task.progress_percentage if self.task_manager.active_task else 0.0,
+            is_moving=data.get("activeTask") is not None,
+            threat_level="DANGER" if len(hostiles) > 0 else "SAFE"
+        )
 
     def _handle_bridge_event(self, data: Dict[str, Any]):
         """Processes incoming events from Minecraft world."""
@@ -191,22 +280,27 @@ class MinecraftAgent:
 
         if event_type == "ready":
             self.is_connected = True
+            self.events.publish(MinecraftEvent(EventType.PLAYER_JOINED, EventPriority.LOW, data))
             agent_logger.info(f"Minecraft bot '{data.get('username')}' connected to {self.host}:{self.port}!")
-            self.send_chat("Hello! Ren AI is online with Speedrun & Mace combat enabled! ✨")
+            self.send_chat("Hello! Ren AI is online with verified task execution and procedural builder. ✨")
 
         elif event_type == "state":
             with self._lock:
                 self.last_state = data
+                self._update_world_state(data)
+            self.watchdog.update_position(data.get("pos", {}))
 
         elif event_type == "chat":
             username = data.get("username")
             message = data.get("message")
             if username and message:
+                self.events.publish(MinecraftEvent(EventType.PLAYER_SPOKE, EventPriority.LOW, {"username": username, "message": message}))
                 threading.Thread(target=self._on_player_chat, args=(username, message), daemon=True).start()
 
         elif event_type == "damage_taken":
             hp = data.get("health", 0)
             agent_logger.info(f"Bot took damage! Current HP: {hp}")
+            self.events.publish(MinecraftEvent(EventType.DAMAGE_TAKEN, EventPriority.CRITICAL, {"health": hp}))
             if self.rl_brain and self.last_state_key and self.last_action:
                 self.rl_brain.update_q_value(
                     state_key=self.last_state_key,
@@ -217,8 +311,16 @@ class MinecraftAgent:
 
         elif event_type == "death":
             agent_logger.warning("Bot died in Minecraft world! Applying RL death penalty.")
+            self.events.publish(MinecraftEvent(EventType.DEATH, EventPriority.CRITICAL, data))
+            
+            # Save death location in spatial memory
+            death_pos = data.get("position") or self.last_state.get("pos", {})
+            if death_pos:
+                self.memory.set_location("death_point", death_pos.get("x", 0), death_pos.get("y", 64), death_pos.get("z", 0))
+                self.memory.record_episode("death", f"Died at X:{int(death_pos.get('x',0))} Z:{int(death_pos.get('z',0))}", importance=0.9, location=death_pos)
+
             self.is_busy = False
-            self.plan_queue.clear()
+            self.task_manager.cancel_active_task("Bot died in game.")
             if self.rl_brain and self.last_state_key and self.last_action:
                 self.rl_brain.update_q_value(
                     state_key=self.last_state_key,
@@ -230,303 +332,193 @@ class MinecraftAgent:
 
         elif event_type == "task_done":
             task_id = data.get("task_id")
+            cmd = data.get("cmd")
+            if cmd == "chat":
+                return
+
             self.is_busy = False
             self.current_task_id = None
 
+            # Action Verification
+            action_result = self.verifier.verify_action(
+                action=cmd,
+                parameters={},
+                before_state=self.pre_action_state,
+                after_state=self.last_state,
+                bridge_result=data
+            )
+
+            if action_result.success:
+                agent_logger.info(f"[VERIFY] Action={cmd} Success=True Details={action_result.details}")
+            else:
+                agent_logger.warning(f"[FAIL] Action={cmd} Reason={action_result.reason}")
+                self.memory.record_failure(cmd, action_result.reason or "Verification failed", self.last_state)
+
+            self.watchdog.record_action_result(action_result.success, cmd, action_result.reason)
+            if cmd in ["build_structure", "build_shelter"] and action_result.success:
+                self.has_built_home = True
+                curr_pos = self.last_state.get("pos", {})
+                self.memory.record_structure("small_house", curr_pos, {"width": 4, "length": 4, "height": 3}, action_result.details.get("placed_count", 0))
+                self.memory.set_location("home_base", curr_pos.get("x", 0), curr_pos.get("y", 64), curr_pos.get("z", 0))
+
+            # Signal any waiting threads
             if task_id in self.task_waiters:
-                self.task_results[task_id] = data
+                self.task_results[task_id] = action_result
                 self.task_waiters[task_id].set()
 
-            if self.plan_queue:
-                threading.Thread(target=self._execute_next_plan_step, daemon=True).start()
+            # Advance or Recover Persistent Task
+            if self.task_manager.active_task:
+                task_name = self.task_manager.active_task.name
+                if action_result.success:
+                    next_subtask = self.task_manager.advance_subtask()
+                    if next_subtask:
+                        threading.Thread(target=self._execute_subtask, args=(next_subtask,), daemon=True).start()
+                    else:
+                        self.events.publish(MinecraftEvent(EventType.TASK_COMPLETED, EventPriority.MEDIUM, {"task": task_name}))
+                        self.memory.record_goal_completion(task_name, 10.0, True)
+                else:
+                    can_retry = self.task_manager.fail_current_subtask(action_result.reason or "Verification failed")
+                    if can_retry and self.task_manager.active_task:
+                        current_sub = self.task_manager.active_task.current_subtask
+                        if current_sub:
+                            time.sleep(1.0)
+                            threading.Thread(target=self._execute_subtask, args=(current_sub,), daemon=True).start()
+                    else:
+                        self.events.publish(MinecraftEvent(EventType.TASK_FAILED, EventPriority.HIGH, {"task": task_name, "reason": action_result.reason}))
 
     def _on_player_chat(self, username: str, message: str):
-        """Universal Intent Understanding with 100% priority."""
+        """
+        Universal Intent Understanding & Task Execution:
+        Translates natural language to verified Tasks.
+        """
         try:
             self.last_player_sender = username
-            cleaned = self._normalize_minecraft_text(message)
-            agent_logger.info(f"Minecraft Chat [{username}]: '{message}' (Normalized: '{cleaned}')")
+            agent_logger.info(f"Minecraft Chat [{username}]: '{message}'")
 
-            # 1. Speedrun Mode Trigger
-            if any(w in cleaned for w in ["speedrun", "speed run", "beat the game", "world record", "speedrun mode"]):
-                self.mode = "SPEEDRUN"
-                self.plan_queue.clear()
-                self.is_busy = False
-                start_msg = self.speedrun_engine.start_speedrun()
-                self.send_chat(start_msg)
-                return
+            # Parse Structured Goal
+            goal = self.intent_parser.parse_intent(message, username)
+            g_type = goal.goal_type
+            agent_logger.info(f"[INTENT PARSED] GoalType: {g_type}, Params: {goal.parameters}")
 
-            # 2. Autonomous Mode Trigger
-            if any(w in cleaned for w in ["auto survival", "explore on your own", "wander", "auto mode", "survive alone", "be independent", "independent mode", "play on your own"]):
-                if not any(stop_w in cleaned for stop_w in ["stop", "deactivate", "disable", "cancel", "turn off"]):
-                    self.mode = "AUTONOMOUS_AGI"
-                    self.plan_queue.clear()
-                    self.is_busy = False
-                    self.send_chat("Autonomous survival mode activated! Surviving and exploring.")
-                    return
-
-            # Default: ANY player command switches to COMPANION mode immediately!
-            self.mode = "COMPANION"
-            self.plan_queue.clear()
-            self.is_busy = False
-
-            # 3. Stop / Deactivate Auto Mode
-            if any(w in cleaned for w in ["stop auto mode", "deactivate auto mode", "disable auto mode", "cancel auto", "turn off auto", "stop", "halt", "freeze"]):
+            # 1. Stop Directive
+            if g_type == "STOP":
+                self.mode = "COMPANION"
                 self.speedrun_engine.is_active = False
+                self.task_manager.cancel_active_task("User stopped tasks")
                 self.send_command("stop")
                 self.send_chat(f"Stopped all tasks, {username}!")
                 return
 
-            # 4. Gamemode Switch
-            if "survival" in cleaned and any(w in cleaned for w in ["mode", "gamemode", "change", "set", "keep"]):
-                self.send_command("gamemode", {"mode": "survival"})
+            # 1.1 Self-Test & Diagnostic Engine
+            if g_type == "SELF_TEST":
+                self.send_chat("Running complete Minecraft Embodied Self-Test... 🧪")
+                passed, results, report = self.self_test_runner.run_all_self_tests()
+                agent_logger.info(f"\n{report}")
+                if passed:
+                    self.send_chat(f"✅ Self-Test PASSED (100%)! All 10 embodied systems verified! 🚀")
+                else:
+                    failed_names = [r.test_name for r in results if not r.passed]
+                    self.send_chat(f"⚠️ Self-Test completed with issues in: {', '.join(failed_names)}")
                 return
 
-            if "creative" in cleaned and any(w in cleaned for w in ["mode", "gamemode", "change", "set", "keep"]):
-                self.send_command("gamemode", {"mode": "creative"})
+            # 2. Speedrun Mode
+            if g_type == "SPEEDRUN":
+                self.mode = "SPEEDRUN"
+                self.task_manager.cancel_active_task("Switched to speedrun")
+                start_msg = self.speedrun_engine.start_speedrun()
+                self.send_chat(start_msg)
                 return
 
-            # 5. Take Items / Pick up
-            if any(w in cleaned for w in ["take this", "take the", "pickup", "pick up", "take sword", "take item", "take mace"]):
-                self.send_command("pickup")
+            # 3. Autonomous Survival Mode
+            if g_type == "AUTONOMOUS_SURVIVAL":
+                self.mode = "AUTONOMOUS_AGI"
+                self.task_manager.cancel_active_task("Switched to autonomous survival")
+                self.send_chat("Autonomous survival mode activated! Surviving and exploring independently.")
                 return
 
-            # 6. Drop All Items
-            if any(w in cleaned for w in ["give me all", "give all", "drop all", "drop everything", "all items"]):
-                self.send_command("drop_all", {"player": username})
+            # 4. Status Check
+            if g_type == "STATUS":
+                p = self.perception_engine.summarize_state(self.last_state)
+                inv_summary = ", ".join([f"{k}x{v}" for k, v in list(p.inventory.items())[:5]]) or "Empty"
+                task_name = self.task_manager.active_task.name if self.task_manager.active_task else "Idle"
+                msg = f"HP: {p.hp}/20 | Food: {p.food}/20 | Task: {task_name} | Pos: X:{int(p.pos['x'])} Z:{int(p.pos['z'])} | Bag: {inv_summary}"
+                self.send_chat(msg)
                 return
 
-            # 7. Bridging
-            if any(w in cleaned for w in ["bridging", "bridge", "make a bridge", "do bridging"]):
-                material = "wool" if "wool" in cleaned else "planks"
-                self.send_command("bridge", {"length": 8, "material": material})
-                return
+            # 5. Interactive Tasks (Default to COMPANION mode with top priority)
+            self.mode = "COMPANION"
+            self.task_manager.cancel_active_task("New player directive")
 
-            # 8. Kill All Mobs
-            if any(w in cleaned for w in ["kill all mobs", "kill mobs", "slay all", "clear mobs", "defeat monsters"]):
-                self.send_command("kill_all_mobs")
-                return
+            # Plan hierarchical task
+            task = self.planner.create_task_from_goal(goal, self.last_state)
+            self.task_manager.create_task(task.name, goal, task.subtasks)
+            agent_logger.info(f"[TASK CREATED] '{task.name}' with {len(task.subtasks)} subtasks. Progress: 0%")
 
-            # 9. PVP / Fight Player (Mace & Wind Charge combo enabled!)
-            if any(w in cleaned for w in ["pvp", "fight with me", "fight me", "kill me", "duel", "attack me"]):
-                self.send_command("pvp", {"player": username})
-                return
+            # Friendly acknowledgment
+            if g_type == "BUILD_HOUSE":
+                self.send_chat(f"Starting 3D construction of your wooden house, {username}! 🔨")
+            elif g_type == "PVP_COMBAT":
+                self.send_chat(f"Weapons armed! Let's duel, {username}! ⚔️")
+            elif g_type == "FOLLOW_PLAYER":
+                self.send_chat(f"Following you closely, {username}! 🏃")
+            elif g_type == "COLLECT_RESOURCE":
+                res = goal.parameters.get("resource", "resources")
+                amt = goal.parameters.get("amount", 4)
+                self.send_chat(f"Gathering {amt}x {res} for you right now!")
+            else:
+                self.send_chat(f"On it, {username}!")
 
-            # 10. Follow Player
-            if any(w in cleaned for w in ["follow me", "follow", "come to me", "come here", "come her", "with me", "stay with me", "near me"]):
-                self.send_command("follow", {"player": username})
-                return
+            # Execute first subtask
+            first_subtask = self.task_manager.active_task.current_subtask
+            if first_subtask:
+                self._execute_subtask(first_subtask)
 
-            # 11. Build House / Shelter
-            if any(w in cleaned for w in ["make house", "build house", "make home", "build home", "make a small home", "make shelter", "build shelter", "make base", "build base"]):
-                self.send_command("build_shelter", {"size": 3})
-                return
-
-            # 12. Crafting specific tools (including Mace!)
-            for target_tool in ["mace", "stone_pickaxe", "stone_sword", "iron_pickaxe", "iron_sword", "iron_chestplate", "shield"]:
-                if target_tool.replace("_", " ") in cleaned or target_tool in cleaned:
-                    plan = self.planner.decompose_goal(target_tool, self.last_state, username)
-                    self.plan_queue = plan
-                    self._execute_next_plan_step()
-                    return
-
-            # 13. Gather / Give Items (including Wind Charge and Mace)
-            if any(w in cleaned for w in ["give", "drop", "toss", "share", "pass", "get"]):
-                item = "wood"
-                count = 2
-                count_m = re.search(r'\b(\d+)\b', cleaned)
-                if count_m: count = int(count_m.group(1))
-                for cand in ["mace", "wind_charge", "iron", "coal", "wood", "stone", "cobblestone", "dirt", "bread", "beef", "pork", "apple", "sword", "pickaxe", "axe", "torch", "food", "tools"]:
-                    if cand.replace("_", " ") in cleaned or cand in cleaned:
-                        item = cand
-                        break
-
-                if item == "tools":
-                    item = "wood"
-                self.send_command("gather", {"block_type": item, "count": count})
-                return
-
-            # 14. Fast Semantic Matcher
-            parsed_actions, custom_reply = self._parse_semantic_intent(username, cleaned)
-            if parsed_actions:
-                self.active_player_directive = parsed_actions[0]
-                if custom_reply:
-                    self.send_chat(custom_reply)
-                for act in parsed_actions:
-                    self.send_command(act["cmd"], act.get("args", {}))
-                return
-
-            # 15. Fallback LLM Reasoning with REN
-            inv_str = ", ".join([f"{k}x{v}" for k, v in list(self.last_state.get("inventory", {}).items())[:6]]) or "Empty"
-            prompt = f"""You are Ren, an autonomous AI entity in Minecraft playing with {username}.
-Respond in 1 short lively sentence and output Minecraft action JSON.
-Stats: HP={self.last_state.get('hp', 20)}/20, Food={self.last_state.get('food', 20)}/20, Bag=[{inv_str}].
-Player '{username}': "{message}"
-
-JSON format:
-{{
-  "reply": "<short reply>",
-  "actions": [{{"cmd": "<follow|pvp|gather|hunt|craft|build_shelter|attack|sleep|stop>", "args": {{ ... }}}}]
-}}"""
-
-            llm_out = self.provider.generate(prompt, max_tokens=100, temperature=0.3)
-            if any(bad in llm_out.lower() for bad in ["sorry", "language model", "cannot help", "as an ai"]):
-                llm_out = ""
-
-            json_match = re.search(r'\{.*\}', llm_out, re.DOTALL) if llm_out else None
-            if json_match:
-                parsed = json.loads(json_match.group(0))
-                reply = parsed.get("reply", "")
-                actions = parsed.get("actions", [])
-                if reply:
-                    self.send_chat(reply[:100])
-                if actions:
-                    self.plan_queue = actions
-                    self._execute_next_plan_step()
-                return
         except Exception as e:
-            agent_logger.warning(f"Player chat handler fallback: {e}")
+            agent_logger.warning(f"Error handling player chat: {e}")
+            self.send_chat(f"Understood, {username}!")
 
-        self.send_chat(f"On it, {username}!")
-
-    def _normalize_minecraft_text(self, text: str) -> str:
-        """Corrects common Minecraft typos and variations."""
-        t = text.lower().strip()
-        typos = {
-            "cooble": "cobble",
-            "cooblestone": "cobblestone",
-            "coblestone": "cobblestone",
-            "cobbleston": "cobblestone",
-            "bridgig": "bridging",
-            "bridgin": "bridging",
-            "wincharge": "wind_charge",
-            "windcharge": "wind_charge",
-            "her": "here",
-            "itmes": "items",
-            "hous": "house",
-            "hom": "home"
-        }
-        for k, v in typos.items():
-            t = re.sub(rf'\b{k}\b', v, t)
-        return t
-
-    def _execute_next_plan_step(self):
-        """Executes the next atomic action in the AGI plan queue sequentially."""
-        if not self.plan_queue or self.is_busy:
+    def _execute_subtask(self, subtask: Subtask):
+        """Dispatches an atomic subtask to the Minecraft bridge."""
+        if not subtask or not self.is_running:
             return
 
-        next_action = self.plan_queue.pop(0)
-        cmd = next_action.get("cmd")
-        args = next_action.get("args", {})
-
-        agent_logger.info(f"Executing AGI Plan Step: {cmd} with {args}")
+        cmd = subtask.action
+        args = subtask.parameters
+        agent_logger.info(f"[GOAL] {self.task_manager.active_task.name if self.task_manager.active_task else 'Task'}")
+        agent_logger.info(f"[ACTION] {cmd} ({subtask.id}) with {args}")
         self.send_command(cmd, args)
 
-    def _parse_semantic_intent(self, username: str, text: str) -> Tuple[List[Dict[str, Any]], Optional[str]]:
-        """Universal Fuzzy Intent Matcher."""
-        if any(w in text for w in ["stop", "halt", "stay here", "wait here", "pause", "freeze", "cancel", "hold up"]):
-            self.active_player_directive = None
-            self.plan_queue.clear()
-            self.is_busy = False
-            return [{"cmd": "stop"}], "Stopping all tasks, Sir."
-
-        if any(w in text for w in ["give", "drop", "toss", "share", "pass", "hand", "throw", "spare"]):
-            count_match = re.search(r'\b(\d+)\b', text)
-            count = int(count_match.group(1)) if count_match else 2
-
-            item = "wood"
-            for candidate in ["mace", "wind_charge", "iron", "coal", "wood", "log", "plank", "stone", "cobblestone", "dirt", "bread", "beef", "pork", "apple", "sword", "pickaxe", "axe", "torch", "food"]:
-                if candidate in text:
-                    item = candidate
-                    break
-
-            return [{"cmd": "give", "args": {"player": username, "item_name": item, "count": count}}], None
-
-        if any(w in text for w in ["gather", "mine", "chop", "dig", "cut", "harvest", "collect", "get", "find", "fetch", "need"]) and any(w in text for w in ["wood", "tree", "log", "stone", "cobble", "iron", "coal", "diamond", "dirt", "sand", "gravel", "ore", "birch", "oak", "spruce"]):
-            count_match = re.search(r'\b(\d+)\b', text)
-            count = int(count_match.group(1)) if count_match else 4
-
-            target = "wood"
-            if any(w in text for w in ["iron", "iron_ore"]): target = "iron_ore"
-            elif any(w in text for w in ["coal", "coal_ore"]): target = "coal_ore"
-            elif any(w in text for w in ["diamond"]): target = "diamond_ore"
-            elif any(w in text for w in ["stone", "cobble", "deepslate", "cobblestone"]): target = "stone"
-            elif any(w in text for w in ["dirt", "sand", "gravel"]): target = "dirt"
-            elif any(w in text for w in ["wood", "tree", "log", "birch", "oak", "spruce"]): target = "wood"
-
-            return [{"cmd": "gather", "args": {"block_type": target, "count": count}}], None
-
-        if any(w in text for w in ["hunt", "kill", "slaughter", "slay", "butcher"]) and any(w in text for w in ["cow", "pig", "sheep", "chicken", "rabbit", "animal", "meat", "food", "beef", "pork", "mutton", "wool"]):
-            count_match = re.search(r'\b(\d+)\b', text)
-            count = int(count_match.group(1)) if count_match else 2
-
-            animal = "animal"
-            for a in ["cow", "pig", "sheep", "chicken", "rabbit"]:
-                if a in text:
-                    animal = a
-                    break
-
-            return [{"cmd": "hunt", "args": {"animal_name": animal, "count": count}}], None
-
-        if any(w in text for w in ["craft", "make", "create", "build"]) and any(w in text for w in ["pickaxe", "sword", "axe", "shovel", "table", "furnace", "torch", "chest", "bed", "shield", "door", "planks", "tools"]):
-            item = "crafting_table"
-            for it in ["stone_pickaxe", "wooden_pickaxe", "stone_sword", "iron_sword", "crafting_table", "furnace", "torch", "shield", "chest", "bed", "oak_planks"]:
-                if it.replace("_", " ") in text or it in text:
-                    item = it
-                    break
-
-            count_match = re.search(r'\b(\d+)\b', text)
-            count = int(count_match.group(1)) if count_match else 1
-            return [{"cmd": "craft", "args": {"item_name": item, "count": count}}], None
-
-        if any(w in text for w in ["smelt", "cook", "bake", "furnace", "melt"]):
-            raw_item = "raw_iron" if "iron" in text else "beef"
-            return [{"cmd": "smelt", "args": {"item": raw_item, "fuel": "coal", "count": 2}}], None
-
-        if any(w in text for w in ["protect", "guard", "bodyguard", "watch my back", "defend", "shield me"]):
-            return [{"cmd": "protect", "args": {"player": username}}], f"Guard mode activated! Watching your back, {username}."
-
-        if any(w in text for w in ["attack", "kill", "fight", "slay", "destroy"]) and any(w in text for w in ["zombie", "skeleton", "spider", "creeper", "drowned", "enderman", "witch", "mob", "monster"]):
-            target = "zombie"
-            for m in ["skeleton", "spider", "creeper", "drowned", "enderman", "witch", "zombie"]:
-                if m in text:
-                    target = m
-                    break
-            return [{"cmd": "attack", "args": {"target_name": target}}], None
-
-        if any(w in text for w in ["come", "follow", "walk with", "to me", "behind me", "near me", "with me"]) or (text in ["here", "over here"]):
-            return [{"cmd": "follow", "args": {"player": username}}], f"Coming over to you, {username}!"
-
-        if any(w in text for w in ["sleep", "go to bed", "bed", "sleep now", "night time"]):
-            return [{"cmd": "sleep"}], None
-
-        if any(w in text for w in ["status", "where are you", "hp", "health", "inventory", "what do you have", "bag", "coords"]):
-            hp = self.last_state.get("hp", 20)
-            food = self.last_state.get("food", 20)
-            pos = self.last_state.get("pos", {})
-            inv = self.last_state.get("inventory", {})
-            inv_str = ", ".join([f"{k}x{v}" for k, v in list(inv.items())[:5]]) or "Empty"
-            msg = f"HP: {hp}/20 | Food: {food}/20 | Pos: X:{pos.get('x')} Y:{pos.get('y')} Z:{pos.get('z')} | Bag: {inv_str}"
-            return [], msg
-
-        return [], None
-
     def _autonomous_brain_loop(self):
-        """Background Decision Loop (Speedrun / Autonomous RL / Companion)."""
+        """Background Decision & Watchdog Loop."""
         while self.is_running:
-            time.sleep(4.0)
+            time.sleep(3.0)
 
             if not self.is_connected or not self.last_state:
                 continue
 
-            if self.is_busy and (time.time() - self.task_start_time) > 60.0:
-                self.is_busy = False
+            pos = self.last_state.get("pos", {})
 
-            if self.is_busy or self.plan_queue:
+            # 1. Stuck Detection Watchdog
+            if self.is_busy:
+                is_stuck, reason = self.watchdog.check_is_stuck(pos)
+                if is_stuck:
+                    agent_logger.warning(f"[WATCHDOG TRIGGERED] {reason}")
+                    if self.task_manager.active_task and self.task_manager.active_task.current_subtask:
+                        curr_sub = self.task_manager.active_task.current_subtask
+                        recovery_steps = self.watchdog.generate_recovery_plan(curr_sub.action, curr_sub.parameters)
+                        for step in recovery_steps:
+                            agent_logger.info(f"[RECOVERY] Executing recovery action: {step['cmd']}")
+                            self.send_command(step["cmd"], step.get("args", {}))
+                            time.sleep(0.5)
+                        self.is_busy = False
                 continue
 
-            # 1. SPEEDRUN MODE
-            if self.mode == "SPEEDRUN" and not self.is_busy:
+            # If executing an active task, do not interrupt
+            if self.task_manager.active_task and self.task_manager.active_task.status == TaskStatus.IN_PROGRESS:
+                continue
+
+            # 2. Speedrun Mode Execution
+            if self.mode == "SPEEDRUN":
                 action, split_msg = self.speedrun_engine.get_next_speedrun_action(self.last_state)
                 if split_msg:
                     self.send_chat(split_msg)
@@ -534,9 +526,10 @@ JSON format:
                     self.send_command(action["cmd"], action.get("args", {}))
                 continue
 
-            # 2. COMPANION MODE
+            # 3. Companion Mode (Curiosity Observations)
             if self.mode == "COMPANION":
-                if self.enable_curiosity:
+                perception = self.perception_engine.summarize_state(self.last_state)
+                if self.enable_curiosity and perception.threat_level == "SAFE" and perception.hp >= 16:
                     question = self.curiosity_engine.check_for_curious_moments(
                         game_state=self.last_state,
                         player_username=self.last_player_sender
@@ -545,117 +538,58 @@ JSON format:
                         self.send_chat(question)
                 continue
 
-            # 3. AUTONOMOUS AGI MODE (RL Survival)
-            if self.mode == "AUTONOMOUS_AGI" and not self.is_busy:
-                current_state = self.last_state
-                state_key = self.rl_brain.discretize_state(current_state)
+            # 4. Autonomous Survival Mode Execution (Priority FSM)
+            if self.mode == "AUTONOMOUS_AGI":
+                perception = self.perception_engine.summarize_state(self.last_state)
+                action_dict, priority, rationale = self.survival_engine.decide_next_survival_action(perception, self.has_built_home)
 
-                action, is_exploring = self.rl_brain.choose_action(state_key)
-                self.last_action = action
-                self.last_state_key = state_key
+                if action_dict:
+                    agent_logger.info(f"[AUTONOMOUS SURVIVAL] Priority: {priority.value} | Action: {action_dict['cmd']} | Rationale: {rationale}")
+                    self.send_command(action_dict["cmd"], action_dict.get("args", {}))
 
-                success = self._execute_rl_action(action, current_state)
+                # RL Q-learning update if enabled
+                if self.enable_rl:
+                    current_state = self.last_state
+                    state_key = self.rl_brain.discretize_state(current_state)
+                    rl_act, _ = self.rl_brain.choose_action(state_key)
+                    self.last_action = rl_act
+                    self.last_state_key = state_key
 
-                time.sleep(1.0)
-                next_state = self.last_state
-                next_state_key = self.rl_brain.discretize_state(next_state)
+    def _parse_semantic_intent(self, username: str, text: str) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+        """Backward compatibility helper for parsing direct semantic actions."""
+        goal = self.intent_parser.parse_intent(text, username)
+        g_type = goal.goal_type
+        params = goal.parameters
 
-                reward = self.rl_brain.calculate_reward(
-                    prev_state=current_state,
-                    curr_state=next_state,
-                    action=action,
-                    action_success=success
-                )
+        if g_type == "COLLECT_RESOURCE":
+            return [{"cmd": "gather", "args": {"block_type": params.get("resource", "wood"), "count": params.get("amount", 4)}}], None
+        elif g_type == "HUNT_FOOD":
+            return [{"cmd": "hunt", "args": {"animal_name": params.get("animal_name", "animal"), "count": params.get("count", 2)}}], None
+        elif g_type == "CRAFT_ITEM":
+            return [{"cmd": "craft", "args": {"item_name": params.get("item_name", "crafting_table"), "count": params.get("count", 1)}}], None
+        elif g_type == "SMELT_ITEM":
+            return [{"cmd": "smelt", "args": {"item": params.get("item", "raw_iron"), "fuel": params.get("fuel", "coal"), "count": params.get("count", 2)}}], None
+        elif g_type == "GIVE_ITEM":
+            return [{"cmd": "give", "args": {"player": params.get("player", username), "item_name": params.get("item_name", "wood"), "count": params.get("count", 2)}}], None
+        elif g_type == "DROP_ALL":
+            return [{"cmd": "drop_all", "args": {"player": params.get("player", username)}}], None
+        elif g_type == "PVP_COMBAT":
+            return [{"cmd": "pvp", "args": {"player": params.get("player", username)}}], None
+        elif g_type == "PROTECT_PLAYER":
+            return [{"cmd": "protect", "args": {"player": params.get("player", username)}}], None
+        elif g_type == "ATTACK_MOBS":
+            target = params.get("target_name") or params.get("target") or "zombie"
+            return [{"cmd": "attack", "args": {"target_name": target}}], None
+        elif g_type == "FOLLOW_PLAYER":
+            return [{"cmd": "follow", "args": {"player": params.get("player", username)}}], None
+        elif g_type in ["BUILD_HOUSE", "BUILD_SHELTER"]:
+            return [{"cmd": "build_shelter", "args": {"size": 3}}], None
+        elif g_type == "SLEEP":
+            return [{"cmd": "sleep", "args": {}}], None
+        elif g_type == "STOP":
+            return [{"cmd": "stop", "args": {}}], None
+        elif g_type == "BRIDGE":
+            return [{"cmd": "bridge", "args": {"length": params.get("length", 8), "material": params.get("material", "wool")}}], None
 
-                self.rl_brain.update_q_value(
-                    state_key=state_key,
-                    action=action,
-                    reward=reward,
-                    next_state_key=next_state_key
-                )
-
-    def _execute_rl_action(self, action: str, state: Dict[str, Any]) -> bool:
-        """Translates RL survival action to low-level bridge commands."""
-        inv = state.get("inventory", {})
-        food = state.get("food", 20)
-        time_of_day = state.get("timeOfDay", "day")
-
-        if action == "EAT_FOOD":
-            if food < 18:
-                self.send_command("eat")
-                return True
-            return False
-
-        if action == "HUNT_FOOD":
-            if food < 15:
-                self.send_command("hunt", {"animal_name": "animal", "count": 1})
-                return True
-            return False
-
-        if action == "DEFEND_SELF":
-            entities = state.get("entities", [])
-            hostiles = [e for e in entities if e.get("isHostile", False)]
-            if hostiles:
-                closest = min(hostiles, key=lambda x: x.get("distance", 99))
-                self.send_command("attack", {"target_name": closest.get("name")})
-                return True
-            return False
-
-        if action == "BUILD_SHELTER":
-            if time_of_day in ["dusk", "night"]:
-                self.send_command("build_shelter", {"size": 3})
-                return True
-            return False
-
-        if action == "GATHER_WOOD":
-            self.send_command("gather", {"block_type": "wood", "count": 3})
-            return True
-
-        if action == "CRAFT_PLANKS":
-            log_count = sum(c for k, c in inv.items() if "log" in k)
-            if log_count > 0:
-                self.send_command("craft", {"item_name": "oak_planks", "count": min(log_count, 2)})
-                return True
-            return False
-
-        if action == "CRAFT_CRAFTING_TABLE":
-            if "crafting_table" not in inv:
-                self.send_command("craft", {"item_name": "crafting_table", "count": 1})
-                return True
-            return False
-
-        if action == "CRAFT_WOODEN_PICKAXE":
-            if "wooden_pickaxe" not in inv and "stone_pickaxe" not in inv:
-                self.send_command("craft", {"item_name": "wooden_pickaxe", "count": 1})
-                return True
-            return False
-
-        if action == "MINE_STONE":
-            self.send_command("gather", {"block_type": "stone", "count": 4})
-            return True
-
-        if action == "CRAFT_STONE_PICKAXE":
-            if "stone_pickaxe" not in inv and inv.get("cobblestone", 0) >= 3:
-                self.send_command("craft", {"item_name": "stone_pickaxe", "count": 1})
-                return True
-            return False
-
-        if action == "CRAFT_STONE_SWORD":
-            if "stone_sword" not in inv and inv.get("cobblestone", 0) >= 2:
-                self.send_command("craft", {"item_name": "stone_sword", "count": 1})
-                return True
-            return False
-
-        if action == "MINE_IRON":
-            self.send_command("gather", {"block_type": "iron_ore", "count": 3})
-            return True
-
-        if action == "EXPLORE":
-            pos = state.get("pos", {})
-            import random
-            dx = random.randint(-12, 12)
-            dz = random.randint(-12, 12)
-            self.send_command("goTo", {"x": pos.get("x", 0) + dx, "y": pos.get("y", 64), "z": pos.get("z", 0) + dz})
-            return True
-
-        return True
+        task = self.planner.create_task_from_goal(goal, self.last_state)
+        return [{"cmd": s.action, "args": s.parameters} for s in task.subtasks], None

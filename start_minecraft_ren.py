@@ -35,7 +35,7 @@ def print_banner():
 def main():
     parser = argparse.ArgumentParser(description="REN-AI Minecraft Autonomous Survival Agent")
     parser.add_argument("--host", type=str, default="localhost", help="Minecraft server host (default: localhost)")
-    parser.add_argument("--port", type=int, default=25565, help="Minecraft server port (default: 25565)")
+    parser.add_argument("--port", type=int, default=1234, help="Minecraft server port (default: 1234)")
     parser.add_argument("--username", type=str, default="RenAI", help="Bot in-game username (default: RenAI)")
     parser.add_argument("--version", type=str, default=None, help="Minecraft version (e.g. 1.20.1, auto-detect if omitted)")
     parser.add_argument("--auth", type=str, default="offline", choices=["offline", "microsoft"], help="Authentication mode")

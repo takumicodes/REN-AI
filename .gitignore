@@ -20,3 +20,10 @@ cloudflared
 cert.pem
 logs/*.log
 *.log
+logs/agent.log
+logs/memory.log
+logs/performance.log
+logs/security.log
+logs/skills.log
+logs/tools.log
+logs/performance.log
