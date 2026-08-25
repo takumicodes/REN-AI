@@ -1,0 +1,94 @@
+{
+  "session_id": "8d56a0c1",
+  "user_id": "usr_ea4c4c181a038a3c85d",
+  "title": "Hello friend I am your",
+  "project": "default",
+  "created_at": "2026-08-25T11:17:35.736306",
+  "updated_at": "2026-08-25T11:20:38.172552",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello friend I am your creators friend I am the friend of Mohammad Sadiq Ibrahim which has created you so how are you",
+      "timestamp": "2026-08-25T11:18:20.411857",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "timestamp": "2026-08-25T11:18:20.411857",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Do you know who has created you and what is his name",
+      "timestamp": "2026-08-25T11:19:18.493395",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "timestamp": "2026-08-25T11:19:18.493395",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "I am giving you the information your owner name is Mohammed Sadiq Ibrahim",
+      "timestamp": "2026-08-25T11:20:14.229869",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "timestamp": "2026-08-25T11:20:14.229869",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Who has created you",
+      "timestamp": "2026-08-25T11:20:29.426178",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "timestamp": "2026-08-25T11:20:29.426178",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Who is the president of USA",
+      "timestamp": "2026-08-25T11:20:38.172552",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "The President of the United States is Donald Trump (the 47th President, who took office in January 2025).",
+      "timestamp": "2026-08-25T11:20:38.172552",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

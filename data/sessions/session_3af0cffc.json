@@ -1,0 +1,62 @@
+{
+  "session_id": "3af0cffc",
+  "user_id": "test_fast_accurate",
+  "title": "who created you",
+  "project": "default",
+  "created_at": "2026-08-25T09:33:51.243760",
+  "updated_at": "2026-08-25T09:35:01.620555",
+  "messages": [
+    {
+      "role": "user",
+      "content": "who created you",
+      "timestamp": "2026-08-25T09:34:04.867603",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I was created by Sadiq, also known as Cyan Code.",
+      "timestamp": "2026-08-25T09:34:04.867603",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "where is India",
+      "timestamp": "2026-08-25T09:34:47.052168",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "India, officially the Republic of India, is a country in South Asia. It is the world's seventh-largest country by area and the largest by population. Bounded by the Indian Ocean on the south, the Arabian Sea on the southwest, and the Bay of Bengal on the southeast, it shares land borders with Pakistan to the west; China, Nepal, and Bhutan to the north; and Bangladesh and Myanmar to the east. In the Indian Ocean, India is near Sri Lanka and the Maldives. Modern humans arrived on the Indian subcontinent from Africa by 55,000 years ago. Their long, isolated occupation as hunter-gatherers made the region highly diverse. Settled life emerged on the western margins of the Indus basin 9,000 years ago, evolving into the Indus Valley Civilisation by the third millennium BCE. By 1200 BCE, an archaic form of Sanskrit spread into India from the northwest, its hymns recording the early dawnings of Hinduism. Northern Dravidian languages were supplanted by the Indo-Aryan languages.",
+      "timestamp": "2026-08-25T09:34:47.052168",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "write a python function to check if a number is prime",
+      "timestamp": "2026-08-25T09:35:01.513143",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Error: Unable to allocate model buffer in local RAM. Consider running with a lighter model like qwen2.5-coder:1.5b.",
+      "timestamp": "2026-08-25T09:35:01.513143",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

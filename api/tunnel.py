@@ -10,10 +10,12 @@ import re
 import time
 import shutil
 import platform
+import threading
 import subprocess
 import urllib.request
+import urllib.error
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 
 import qrcode
 from ren.monitoring.logger import agent_logger, error_logger
@@ -64,22 +66,46 @@ def get_cloudflared_executable() -> Optional[Path]:
 
 
 class TunnelManager:
-    """Orchestrates secure public HTTPS tunnels."""
+    """Orchestrates secure public HTTPS tunnels with background stdout draining and firewall resilience."""
 
     def __init__(self, port: int = 8000, provider: str = "cloudflare"):
         self.port = port
         self.provider = provider.lower()
         self.process: Optional[subprocess.Popen] = None
         self.public_url: Optional[str] = None
+        self._drain_thread: Optional[threading.Thread] = None
+        self._is_running = False
 
-    def start(self, timeout: int = 25) -> Optional[str]:
+    def start(self, timeout: int = 30) -> Optional[str]:
         """Starts the public tunnel and returns the public HTTPS URL."""
         if self.provider == "ngrok":
             return self._start_ngrok()
         return self._start_cloudflare(timeout=timeout)
 
-    def _start_cloudflare(self, timeout: int = 25) -> Optional[str]:
-        """Launches Cloudflare Quick Tunnel (Free, zero-config HTTPS)."""
+    def _drain_output(self):
+        """
+        Continuously drains stdout/stderr from the cloudflared process.
+        Prevents the OS pipe buffer (4KB/64KB on Windows) from filling up and hanging the process.
+        """
+        while self._is_running and self.process and self.process.stdout:
+            try:
+                line = self.process.stdout.readline()
+                if not line:
+                    if self.process.poll() is not None:
+                        break
+                    time.sleep(0.1)
+                    continue
+                line_str = line.strip()
+                if "ERR" in line_str or "error" in line_str.lower():
+                    agent_logger.debug(f"[cloudflared] {line_str}")
+            except Exception:
+                break
+
+    def _start_cloudflare(self, timeout: int = 30) -> Optional[str]:
+        """
+        Launches Cloudflare Quick Tunnel with HTTP/2 protocol and host headers.
+        Uses HTTP/2 to bypass UDP/QUIC firewall blocks and dedicated pipe drain to prevent 522 timeouts.
+        """
         cf_bin = get_cloudflared_executable()
         if not cf_bin or not cf_bin.exists():
             print("Error: Could not obtain cloudflared binary.")
@@ -90,6 +116,10 @@ class TunnelManager:
             "tunnel",
             "--url",
             f"http://127.0.0.1:{self.port}",
+            "--protocol",
+            "http2",
+            "--http-host-header",
+            f"127.0.0.1:{self.port}",
             "--no-autoupdate",
         ]
 
@@ -104,6 +134,7 @@ class TunnelManager:
                 encoding="utf-8",
                 errors="replace",
             )
+            self._is_running = True
 
             start_t = time.time()
             url_pattern = re.compile(r"https://[a-zA-Z0-9-]+\.trycloudflare\.com")
@@ -120,6 +151,10 @@ class TunnelManager:
                 if match:
                     self.public_url = match.group(0)
                     agent_logger.info(f"Cloudflare tunnel established: {self.public_url}")
+
+                    # Spawn background drain thread so stdout never blocks on Windows
+                    self._drain_thread = threading.Thread(target=self._drain_output, daemon=True)
+                    self._drain_thread.start()
                     return self.public_url
 
             if not self.public_url:
@@ -148,7 +183,8 @@ class TunnelManager:
             return None
 
     def stop(self):
-        """Terminates active tunnel process."""
+        """Terminates active tunnel process and drains threads."""
+        self._is_running = False
         if self.process:
             try:
                 self.process.terminate()

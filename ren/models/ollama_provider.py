@@ -20,6 +20,11 @@ class OllamaProvider(ModelProvider):
 
     FALLBACK_MODELS = [
         "qwen2.5-coder:1.5b",
+        "qwen2.5-coder:3b",
+        "qwen2.5:1.5b",
+        "qwen2.5:3b",
+        "llama3.2:1b",
+        "llama3.2:3b",
     ]
 
     def __init__(
@@ -83,7 +88,7 @@ class OllamaProvider(ModelProvider):
 
     def _execute_request(self, model: str, prompt: str, ctx: int, num_predict: int, temp: float) -> Tuple[bool, str, int, str]:
         """
-        Sends raw generation request to Ollama.
+        Sends raw generation request to Ollama with retry and precision sampling.
         Returns: (success: bool, text_or_error: str, tokens_count: int, raw_error_text: str)
         """
         payload = {
@@ -94,21 +99,33 @@ class OllamaProvider(ModelProvider):
                 "num_predict": num_predict,
                 "num_ctx": ctx,
                 "temperature": temp,
+                "top_p": 0.9,
+                "top_k": 40,
+                "repeat_penalty": 1.1,
             },
         }
 
-        try:
-            response = requests.post(self.generate_url, json=payload, timeout=self.timeout)
-            if response.status_code == 200:
-                data = response.json()
-                text = data.get("response", "").strip()
-                tokens_count = data.get("eval_count", len(text.split()))
-                return True, text, tokens_count, ""
-            return False, f"HTTP {response.status_code}", 0, response.text
-        except requests.Timeout:
-            return False, "Timeout", 0, "Inference timed out"
-        except Exception as e:
-            return False, str(e), 0, str(e)
+        for attempt in range(2):
+            try:
+                response = requests.post(self.generate_url, json=payload, timeout=self.timeout)
+                if response.status_code == 200:
+                    data = response.json()
+                    text = data.get("response", "").strip()
+                    tokens_count = data.get("eval_count", len(text.split()))
+                    return True, text, tokens_count, ""
+                if attempt == 0 and ("forcibly closed" in response.text or "encountered while running" in response.text):
+                    time.sleep(0.8)
+                    continue
+                return False, f"HTTP {response.status_code}", 0, response.text
+            except requests.Timeout:
+                return False, "Timeout", 0, "Inference timed out"
+            except Exception as e:
+                if attempt == 0:
+                    time.sleep(0.8)
+                    continue
+                return False, str(e), 0, str(e)
+
+        return False, "Unknown inference failure", 0, ""
 
     def _execute_stream_request(
         self,
@@ -121,7 +138,7 @@ class OllamaProvider(ModelProvider):
         cancel_check: Optional[Callable[[], bool]] = None,
     ) -> Tuple[bool, str, int, str]:
         """
-        Sends streaming generation request to Ollama.
+        Sends streaming generation request to Ollama with retry and precision sampling.
         Calls token_callback(chunk_text) for each chunk.
         Returns: (success: bool, full_text_or_error: str, tokens_count: int, raw_error_text: str)
         """
@@ -133,41 +150,53 @@ class OllamaProvider(ModelProvider):
                 "num_predict": num_predict,
                 "num_ctx": ctx,
                 "temperature": temp,
+                "top_p": 0.9,
+                "top_k": 40,
+                "repeat_penalty": 1.1,
             },
         }
 
-        try:
-            response = requests.post(self.generate_url, json=payload, stream=True, timeout=self.timeout)
-            if response.status_code != 200:
-                return False, f"HTTP {response.status_code}", 0, response.text
-
-            accumulated_tokens = []
-            token_count = 0
-            for line in response.iter_lines():
-                if cancel_check and cancel_check():
-                    response.close()
-                    return True, "".join(accumulated_tokens).strip(), token_count, "Cancelled"
-                if line:
-                    try:
-                        chunk_json = json.loads(line.decode("utf-8"))
-                        text_part = chunk_json.get("response", "")
-                        if text_part:
-                            accumulated_tokens.append(text_part)
-                            token_count += 1
-                            if token_callback:
-                                token_callback(text_part)
-                        if chunk_json.get("done", False):
-                            eval_count = chunk_json.get("eval_count", token_count)
-                            return True, "".join(accumulated_tokens).strip(), eval_count, ""
-                    except json.JSONDecodeError:
+        for attempt in range(2):
+            try:
+                response = requests.post(self.generate_url, json=payload, stream=True, timeout=self.timeout)
+                if response.status_code != 200:
+                    if attempt == 0 and ("forcibly closed" in response.text or "encountered while running" in response.text):
+                        time.sleep(0.8)
                         continue
+                    return False, f"HTTP {response.status_code}", 0, response.text
 
-            full_text = "".join(accumulated_tokens).strip()
-            return True, full_text, token_count, ""
-        except requests.Timeout:
-            return False, "Timeout", 0, "Inference timed out"
-        except Exception as e:
-            return False, str(e), 0, str(e)
+                accumulated_tokens = []
+                token_count = 0
+                for line in response.iter_lines():
+                    if cancel_check and cancel_check():
+                        response.close()
+                        return True, "".join(accumulated_tokens).strip(), token_count, "Cancelled"
+                    if line:
+                        try:
+                            chunk_json = json.loads(line.decode("utf-8"))
+                            text_part = chunk_json.get("response", "")
+                            if text_part:
+                                accumulated_tokens.append(text_part)
+                                token_count += 1
+                                if token_callback:
+                                    token_callback(text_part)
+                            if chunk_json.get("done", False):
+                                eval_count = chunk_json.get("eval_count", token_count)
+                                return True, "".join(accumulated_tokens).strip(), eval_count, ""
+                        except json.JSONDecodeError:
+                            continue
+
+                full_text = "".join(accumulated_tokens).strip()
+                return True, full_text, token_count, ""
+            except requests.Timeout:
+                return False, "Timeout", 0, "Inference timed out"
+            except Exception as e:
+                if attempt == 0:
+                    time.sleep(0.8)
+                    continue
+                return False, str(e), 0, str(e)
+
+        return False, "Unknown inference failure", 0, ""
 
     def generate(
         self,
@@ -184,16 +213,12 @@ class OllamaProvider(ModelProvider):
         temp = temperature if temperature is not None else settings.MODEL.DEFAULT_TEMPERATURE
         ctx = num_ctx or settings.MODEL.NUM_CTX
 
-        
-
         # Enforce single primary inference to avoid thrashing CPU/RAM
         with perf_monitor.inference_lock:
             start_time = time.perf_counter()
 
-            # Context size steps to try
+            # Context size steps to try (preserving requested num_ctx)
             ctx_steps = [ctx]
-            
-            
 
             # Candidate models (primary target first, followed by installed fallbacks)
             installed = self.get_installed_models()
@@ -205,7 +230,7 @@ class OllamaProvider(ModelProvider):
             for target_model in candidate_models:
                 for attempt_ctx in ctx_steps:
                     agent_logger.debug(f"Ollama generating ({target_model}) ctx={attempt_ctx} predict={num_predict}...")
-                    
+
                     if token_callback or cancel_check:
                         success, result_text, tokens_count, raw_err = self._execute_stream_request(
                             model=target_model,
@@ -233,7 +258,7 @@ class OllamaProvider(ModelProvider):
                             model=target_model
                         )
                         if target_model != self.model_name:
-                            agent_logger.info(f"Ollama memory adaptation: Answered using lighter model '{target_model}'")
+                            agent_logger.info(f"Ollama auto-selected installed model '{target_model}'")
                             self.model_name = target_model
                         return result_text
 

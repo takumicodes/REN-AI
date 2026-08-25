@@ -30,6 +30,15 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 MOBILE_DIR = ROOT_DIR / "mobile"
 
 
+# Ensure UTF-8 console output on Windows
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+
 def get_local_ip() -> str:
     """Detects local LAN IP address for phone connectivity."""
     try:
@@ -50,11 +59,11 @@ async def lifespan(app: FastAPI):
     port = int(os.getenv("REN_SERVER_PORT", "8000"))
     
     print("\n" + "=" * 62)
-    print(" 🪐 REN-AI MOBILE & WEB SERVER ONLINE")
+    print(" [*] REN-AI MOBILE & WEB SERVER ONLINE")
     print("=" * 62)
-    print(f"  • Local Desktop Access : http://localhost:{port}")
-    print(f"  • Phone / Wi-Fi Access : http://{local_ip}:{port}")
-    print(f"  • API Documentation    : http://localhost:{port}/docs")
+    print(f"  - Local Desktop Access : http://localhost:{port}")
+    print(f"  - Phone / Wi-Fi Access : http://{local_ip}:{port}")
+    print(f"  - API Documentation    : http://localhost:{port}/docs")
     print("=" * 62 + "\n")
     
     agent_logger.info(f"REN API Server started on http://{local_ip}:{port}")

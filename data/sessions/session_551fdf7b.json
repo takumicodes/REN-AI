@@ -1,0 +1,30 @@
+{
+  "session_id": "551fdf7b",
+  "user_id": "test_colombia",
+  "title": "Who is the president of",
+  "project": "default",
+  "created_at": "2026-08-25T10:36:17.461208",
+  "updated_at": "2026-08-25T10:36:52.401092",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Who is the president of colombia at present",
+      "timestamp": "2026-08-25T10:36:51.752945",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "The president of Colombia at present is \u00c1lvaro Uribe V\u00e9lez. He has been in office since 2010 and has served as the head of state and head of government of Colombia. His presidency has been marked by significant political changes, including a shift towards democracy and human rights.",
+      "timestamp": "2026-08-25T10:36:51.752945",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

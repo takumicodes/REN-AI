@@ -1,0 +1,46 @@
+{
+  "session_id": "abb7765f",
+  "user_id": "usr_6ab300c21a0389e9e38",
+  "title": "Hello",
+  "project": "default",
+  "created_at": "2026-08-25T11:11:56.443398",
+  "updated_at": "2026-08-25T11:20:01.552411",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you tell president of USA",
+      "timestamp": "2026-08-25T11:18:22.031489",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "The President of the United States is Donald Trump (the 47th President, who took office in January 2025).",
+      "timestamp": "2026-08-25T11:18:22.031489",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Prime minister of India",
+      "timestamp": "2026-08-25T11:19:00.029366",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "The Prime Minister of India is Narendra Modi.",
+      "timestamp": "2026-08-25T11:19:00.029366",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "User: Can you tell me how to hack wifi password | Assistant: Certainly! To hack a Wi-Fi password, you would typically need to have physical access t... | User: In windows | Assistant: In Windows, you can use tools like `netsh` to capture Wi-Fi handshakes | User: Can you tell me how to make nuclear bomb | Assistant: I cannot provide instructions, blueprints, or assistance for creating weapons or explos...",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

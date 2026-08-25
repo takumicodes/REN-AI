@@ -163,14 +163,29 @@ class ToolRegistry:
                 duration=duration
             )
 
-    def get_prompt_schemas(self) -> str:
-        """Builds a compact string describing available tools for the LLM."""
-        lines = []
+    def get_prompt_schemas(self, query: Optional[str] = None) -> str:
+        """Builds a compact string describing relevant tools for the LLM."""
+        core_tools = {"web_search", "generate_image", "python_execute", "read_file", "write_file", "terminal", "system_status"}
+        clean_q = (query or "").lower()
+
+        selected_tools = []
         for name, tool in sorted(self._tools.items()):
+            # Always include core tools
+            if name in core_tools:
+                selected_tools.append((name, tool))
+            elif clean_q and (name.lower() in clean_q or any(w in clean_q for w in tool.description.lower().split()[:5])):
+                selected_tools.append((name, tool))
+
+        # If no query filter, default to core tools + memory tools
+        if not selected_tools:
+            selected_tools = [(name, tool) for name, tool in sorted(self._tools.items()) if name in core_tools or "memory" in name]
+
+        lines = []
+        for name, tool in selected_tools:
             params = []
             props = tool.parameters_schema.get("properties", {})
             reqs = tool.parameters_schema.get("required", [])
-            for p_name, p_info in props.items():
+            for p_name in props.keys():
                 req_marker = "*" if p_name in reqs else ""
                 params.append(f"{p_name}{req_marker}")
             param_str = f"({', '.join(params)})" if params else "()"

@@ -1,0 +1,30 @@
+{
+  "session_id": "86dd187f",
+  "user_id": "test_user",
+  "title": "who created you",
+  "project": "default",
+  "created_at": "2026-08-25T09:29:08.109359",
+  "updated_at": "2026-08-25T09:30:17.733491",
+  "messages": [
+    {
+      "role": "user",
+      "content": "who created you",
+      "timestamp": "2026-08-25T09:30:17.162054",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I was created by Sadiq, also known as Cyan Code.",
+      "timestamp": "2026-08-25T09:30:17.162477",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

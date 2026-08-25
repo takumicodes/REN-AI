@@ -1,0 +1,62 @@
+{
+  "session_id": "c0e6d7ac",
+  "user_id": "test_memory_user",
+  "title": "Who created you?",
+  "project": "default",
+  "created_at": "2026-08-25T10:46:29.798456",
+  "updated_at": "2026-08-25T10:48:09.049940",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Who created you?",
+      "timestamp": "2026-08-25T10:46:50.043524",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I was created by Sadiq, also known as Cyan Code.",
+      "timestamp": "2026-08-25T10:46:50.043524",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "What is your creator nickname and what projects are you working on?",
+      "timestamp": "2026-08-25T10:47:29.008167",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Sadiq is the creator of Ren AI and Cyan Code. Ren AI is a self-learning AI designed to assist users with various tasks, including programming, coding, and general knowledge. Cyan Code is a YouTube channel dedicated to sharing tutorials, projects, and insights related to artificial intelligence and technology.",
+      "timestamp": "2026-08-25T10:47:29.008167",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "What are the specs of your computer and what skills does Cyan Code have?",
+      "timestamp": "2026-08-25T10:48:08.982848",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I am a self-learning AI created by Sadiq, also known as Cyan Code. I was designed to assist users with various tasks, including programming, coding, and general knowledge. My current projects include Ren AI, Cyan Code YouTube Channel, and Cyanox. I have expertise in Python, ANN, Linux, CNN, Humanoid Robot learning, hardware engineer, and am always eager to learn new skills and technologies. I am currently running on a Windows 10 system with an AMD64 processor and 8GB of RAM. My battery is at 99% (Charging).",
+      "timestamp": "2026-08-25T10:48:08.982848",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

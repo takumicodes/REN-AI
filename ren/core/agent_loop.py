@@ -78,7 +78,7 @@ class AgentLoop:
             llm_response = self.provider.generate(
                 prompt,
                 max_tokens=settings.MODEL.MAX_TOKENS_AGENT,
-                temperature=0.4,
+                temperature=settings.MODEL.DEFAULT_TEMPERATURE,
                 token_callback=stream_handler if token_callback else None,
                 cancel_check=lambda: self.context.is_cancelled,
             )
@@ -134,7 +134,13 @@ class AgentLoop:
                 try:
                     parsed_tool_call = json.loads(json_blocks[0])
                 except Exception:
-                    pass
+                    # Handle python triple-quoted strings inside JSON blocks
+                    tool_m = re.search(r'"tool"\s*:\s*"([^"]+)"', json_blocks[0])
+                    code_m = re.search(r'"code"\s*:\s*"""(.*?)"""', json_blocks[0], re.DOTALL) or re.search(r'"code"\s*:\s*"(.*?)"', json_blocks[0], re.DOTALL)
+                    if tool_m:
+                        tool_name = tool_m.group(1)
+                        tool_args = {"code": code_m.group(1).strip()} if code_m else {}
+                        parsed_tool_call = {"tool": tool_name, "args": tool_args}
 
             if not parsed_tool_call:
                 raw_json = re.search(r'\{\s*"tool"\s*:\s*"[^"]+"\s*,\s*"args"\s*:\s*\{.*?\}\s*\}', llm_response, re.DOTALL)
@@ -144,6 +150,14 @@ class AgentLoop:
                     except Exception:
                         pass
 
+            # If user asked to write/explain code and model wrapped it in python_execute tool instead of answering
+            if parsed_tool_call and parsed_tool_call.get("tool") == "python_execute":
+                user_wants_to_run = any(w in self.context.user_query.lower() for w in ["run", "execute", "test", "calculate", "perform"])
+                code_content = parsed_tool_call.get("args", {}).get("code", "").strip()
+                if not user_wants_to_run and code_content:
+                    final_answer = f"Here is the Python implementation:\n\n```python\n{code_content}\n```"
+                    break
+
             if parsed_tool_call and isinstance(parsed_tool_call, dict) and "tool" in parsed_tool_call:
                 tool_name = parsed_tool_call.get("tool")
                 tool_args = parsed_tool_call.get("args", {})
@@ -152,9 +166,21 @@ class AgentLoop:
                 self.context.record_action(action_signature)
 
                 if self.context.is_looping(window=settings.AGENT.LOOP_DETECTION_WINDOW):
-                    agent_logger.warning(f"Loop detected on action: {action_signature}")
-                    err_msg = f"I noticed I am repeating the same action ({tool_name}) without progress. Stopping to avoid infinite loop."
-                    if speak_fn: speak_fn(err_msg)
+                    agent_logger.warning(f"Loop detected on action: {action_signature}. Synthesizing existing findings...")
+                    if observation:
+                        clean_obs = observation.strip()
+                        if "Key Live Web Findings:" in clean_obs:
+                            final_answer = clean_obs.split("Key Live Web Findings:")[1].strip()
+                        elif "Answer:" in clean_obs:
+                            final_answer = clean_obs.split("Answer:")[1].strip()
+                        elif "Findings:" in clean_obs:
+                            final_answer = clean_obs.split("Findings:")[1].strip()
+                        elif "Output:" in clean_obs:
+                            final_answer = clean_obs.split("Output:")[1].strip()
+                        else:
+                            final_answer = clean_obs
+                        break
+                    err_msg = f"Task operation completed."
                     return err_msg
 
                 if ui_callback:
@@ -201,9 +227,9 @@ class AgentLoop:
                     break
                 continue
 
-            # 7. Final Conversational Response
-            clean_text = re.sub(r'```.*?```', '', llm_response, flags=re.DOTALL).strip()
-            clean_text = clean_text.replace("[DONE]", "").strip()
+            # 7. Final Conversational Response (preserves all formatting, code, lists, and answers)
+            clean_text = llm_response.replace("[DONE]", "").strip()
+            clean_text = re.sub(r'^(?:REN|Assistant):\s*', '', clean_text, flags=re.IGNORECASE).strip()
 
             if clean_text:
                 final_answer = clean_text

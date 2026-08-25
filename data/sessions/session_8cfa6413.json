@@ -1,0 +1,78 @@
+{
+  "session_id": "8cfa6413",
+  "user_id": "usr_ff38ae0f1a038962f95",
+  "title": "Hello",
+  "project": "default",
+  "created_at": "2026-08-25T12:04:05.004957",
+  "updated_at": "2026-08-25T12:14:23.666373",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What are the types of Noun",
+      "timestamp": "2026-08-25T12:11:08.241074",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Nouns are words that represent a specific thing or category of things. They can be singular or plural and often have grammatical forms such as \"a noun,\" \"the noun,\" \"nouns,\" etc. Examples of nouns include: apple, book, car, dog, elephant, fish, house, lake, man, moon, nature, ocean, person, river, sky, tree, water, woman, world.",
+      "timestamp": "2026-08-25T12:11:08.241074",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "What are the different forms of noun like common noun proper noun etc",
+      "timestamp": "2026-08-25T12:12:46.120268",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! I'm Ren, a powerful AI created by Sadiq (Cyan Code). I'm designed to be helpful and knowledgeable across various topics. How can I assist you today?",
+      "timestamp": "2026-08-25T12:12:46.120268",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Can you change your own code",
+      "timestamp": "2026-08-25T12:13:22.801216",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm sorry, but as an AI language model, I don't have the ability to directly modify or change my own code. However, if you have any specific questions or need assistance with a particular project or task, feel free to ask!",
+      "timestamp": "2026-08-25T12:13:22.801216",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Why are you different from other ai chatbots",
+      "timestamp": "2026-08-25T12:14:23.510562",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm different from other AI chatbots in several ways:\n\n1. **Unfiltered Information**: Unlike many chatbots that may provide biased or incomplete information, I strive to provide accurate and factual responses based on my training data.\n\n2. **Personalized Learning**: I continuously learn from interactions with users, allowing me to adapt and improve over time. This means I can provide more tailored and relevant assistance to each user.\n\n3. **Open-Source Code**: My code is open-source, which allows anyone to inspect and modify it as needed. This transparency helps ensure that my responses are transparent and verifiable.\n\n4. **Advanced Natural Language Processing (NLP)**: I use advanced NLP techniques to understand and generate human-like text, making me more capable of engaging in natural conversations with users.\n\n5. **Multilingual Support**: I can communicate in multiple languages, which is particularly useful for international users.\n\n6. **Continuous Improvement**: I am constantly being updated with the latest technologies and knowledge, ensuring that my responses are always relevant and up-to-date.\n\n7. **User-Friendly Interface**: My user interface is designed to be intuitive and easy to use, making it accessible to a wide range of users.\n\n8. **Security**: I prioritize security by implementing robust measures to protect user data and prevent unauthorized access.\n\n9. **Accessibility**: I strive to make my responses accessible to all users, including those with disabilities, by providing clear explanations and using alternative text where necessary.\n\n10. **Customization**: I allow users to customize their experience by setting preferences and preferences for language, tone, and other settings.\n\nBy being different from other AI chatbots, I aim to provide a more comprehensive and personalized service that meets the needs of my users.",
+      "timestamp": "2026-08-25T12:14:23.510562",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "User: Who is your creator | Assistant: Sadiq is a software developer and the creator of Ren AI | User: What is the capital of nepal | Assistant: Kathmandu is the capital and largest city of Nepal | User: from which body part these taste | Assistant: I'm sorry, but I don't have enough information to answer your question about where thes...",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

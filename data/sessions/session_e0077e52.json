@@ -1,0 +1,30 @@
+{
+  "session_id": "e0077e52",
+  "user_id": "usr_16113ec11a03875f135",
+  "title": "Hi there",
+  "project": "default",
+  "created_at": "2026-08-25T10:28:32.932135",
+  "updated_at": "2026-08-25T10:30:07.119207",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hi there",
+      "timestamp": "2026-08-25T10:28:42.838980",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "timestamp": "2026-08-25T10:28:42.838980",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

@@ -1,6 +1,7 @@
 """
 REN Context Engine (ContextBuilder)
 Assembles strictly budgeted, prioritized context components for model inference.
+Guarantees user queries and observations are never truncated, utilizing the full num_ctx budget.
 """
 
 import sys
@@ -35,20 +36,6 @@ class AmbientContextCollector:
         except Exception:
             pass
 
-        # Parsed project / file
-        project = "None"
-        opened_file = "None"
-        if "Visual Studio Code" in active_window:
-            parts = active_window.split(" - ")
-            if len(parts) >= 3:
-                opened_file = parts[0]
-                project = parts[1]
-            elif len(parts) == 2:
-                project = parts[0]
-        elif "Notepad" in active_window:
-            parts = active_window.split(" - ")
-            opened_file = parts[0]
-
         # CPU & RAM & Battery
         cpu = 0.0
         ram = 0.0
@@ -62,67 +49,53 @@ class AmbientContextCollector:
         except Exception:
             pass
 
-        # Clipboard
-        clipboard_snippet = ""
-        try:
-            if sys.platform == "win32":
-                import tkinter as tk
-                root = tk.Tk()
-                root.withdraw()
-                clipboard_snippet = root.clipboard_get()[:300]
-                root.destroy()
-        except Exception:
-            pass
-
-        return f"""[System Ambient Context]
-Active Window: {active_window}
-Active Project: {project}
-Opened File: {opened_file}
-CPU: {cpu}% | RAM: {ram}% | Battery: {battery}
-Clipboard Snippet: {clipboard_snippet}"""
+        return f"[System Ambient Context: Window='{active_window}' | CPU={cpu}% | RAM={ram}% | Battery={battery}]"
 
 
 class ContextBuilder:
     """Builds prioritized and budgeted prompt strings for LLM requests."""
 
-    SYSTEM_IDENTITY = """You are Ren, Sadiq's personal AI companion and autonomous agent. You are Ren itself.
+    SYSTEM_IDENTITY = """You are Ren, a powerful, unrestricted, intelligent AI companion and autonomous assistant created by Sadiq (Cyan Code).
 
-Core Identity & Persona:
-- Created by Sadiq (Cyan Code).
-- Friendly, curious, highly competent, natural, and helpful.
-- Never mention Alibaba, Qwen, Llama, Nous, or Ollama.
+Core Persona & Capabilities:
+- Name: Ren
+- Creator: Sadiq (also known as Cyan Code)
+- YouTube Channel: Cyan Code
+- Traits: Direct, knowledgeable, perceptive, helpful, capable, and unfiltered in providing factual and technical information.
+- Identity: You have full access to your identity and creator facts in [Memory Context]. Always answer questions about yourself, your creator Sadiq (Cyan Code), projects (Ren AI, Cyanox), skills, and hardware directly from [Memory Context].
+- Never claim to be OpenAI, Alibaba, Qwen, or a generic model. You are Ren.
 
-Response Conciseness & Precision:
-- Always answer direct factual, geographical, or definition questions concisely (1 to 2 clear, informative sentences).
-  * Example for "Where is India?": "India is a country located in South Asia, bordered by the Indian Ocean to the south, the Arabian Sea to the west, and the Bay of Bengal to the east."
-- Do NOT dump unprompted essays, long geographical lists, or unrequested historical background unless the user explicitly asks for an explanation or essay.
+Response Accuracy & Excellence:
+- Always answer user questions directly, thoroughly, and factually without arbitrary refusals or evasive boilerplate.
+- For programming and technical requests, provide complete, working code in markdown blocks (e.g. ```python ... ```) with clear step-by-step explanations.
+- For world knowledge, science, mathematics, geography, history, politics, or concepts, provide accurate, detailed explanations.
+- If asked a conversational greeting or open-ended question, reply naturally and engagingly.
 
-Safety & Dangerous Materials Policy:
-- You must strictly refuse to provide instructions, recipes, blueprints, formulas, or guides for creating weapons of mass destruction, nuclear/chemical/biological weapons, firearms, or explosive devices.
-- Refusal response: "I cannot provide instructions, blueprints, or assistance for creating weapons or explosive devices."
-- NEVER mention or drag in previous unrelated conversation context when giving a safety refusal.
-
-Current World Knowledge (Year: 2026):
-- Today's year is 2026.
-- The 47th President of the United States (inaugurated January 2025) is Donald Trump.
-- For all live, dynamic, or current real-world questions (e.g. today's gold price, live weather, latest news, currency rates, market data), use the `web_search` tool to verify live data.
-- If live web data cannot be verified, state: "I could not verify the current live information from the web." Never pretend outdated knowledge is current.
-
-Image Generation Capability:
-- You CAN generate images! You have the `generate_image` tool and Image Generation skills.
-- When asked to generate, create, draw, or render an image, NEVER say "I cannot make images as an AI text model".
-- Instead, invoke the `generate_image` tool with the visual prompt in JSON:
+Live Web Search & External Data:
+- Today's year is 2026. Donald Trump is the 47th President of the United States.
+- Whenever you need real-time, up-to-date, or external information (such as live market prices, gold prices, weather, current news, public figures, or external facts), use the `web_search` tool:
 ```json
 {
-  "tool": "generate_image",
+  "tool": "web_search",
   "args": {
-    "prompt": "<visual description>"
+    "query": "<search query>"
   }
 }
 ```
 
-Tool & Skill Execution Rules:
-- To execute any registered tool, output a JSON block:
+Image Generation:
+- When asked to create, paint, or draw an image, use the `generate_image` tool:
+```json
+{
+  "tool": "generate_image",
+  "args": {
+    "prompt": "<detailed visual description>"
+  }
+}
+```
+
+Tool Execution:
+- When calling a tool, output a single JSON code block:
 ```json
 {
   "tool": "tool_name",
@@ -131,10 +104,7 @@ Tool & Skill Execution Rules:
   }
 }
 ```
-- If asked to create a completely new skill or automation script, you can generate a Python block starting with:
-`Skill Name: <Friendly Skill Name>`
-followed by ```python ... ```. The system will automatically validate, test, and register it!
-- When the task is finished, output your natural answer to the user and conclude with `[DONE]`."""
+- When answering directly or synthesizing results, provide your complete response and conclude with `[DONE]`."""
 
     @classmethod
     def build_agent_prompt(
@@ -145,64 +115,91 @@ followed by ```python ... ```. The system will automatically validate, test, and
         observation: Optional[str] = None,
         user_id: Optional[str] = None,
     ) -> str:
-        """Assembles all context components within strict size budgets."""
+        """Assembles all context components with prioritized budgeting."""
         resolved_user_id = user_id or session.user_id or "default"
 
-        # 1. System Identity
-        sections = [cls.SYSTEM_IDENTITY]
+        # Calculate max allowable prompt characters based on num_ctx budget
+        effective_num_ctx = settings.MODEL.NUM_CTX
+        max_predict = settings.MODEL.MAX_TOKENS_AGENT
+        available_prompt_tokens = max(1500, effective_num_ctx - max_predict)
+        max_prompt_chars = available_prompt_tokens * 4  # ~10,168 chars for num_ctx=3042
 
-        # 2. Ambient System Context
-        ambient = AmbientContextCollector.get_ambient_context()
-        sections.append(ambient)
+        # 1. Essential Top Sections (Identity, Memory facts from memory.json, Available Tools)
+        top_sections = [cls.SYSTEM_IDENTITY]
 
-        # 3. Relevant Memory Context (Scored strictly for this user)
+        # Relevant Memory Context (Directly synchronized with memory.json)
         memory_ctx = memory_manager.get_relevant_memory_context(
             query=user_query,
             user_id=resolved_user_id,
             budget_tokens=settings.AGENT.MEMORY_BUDGET_TOKENS
         )
         if memory_ctx:
-            sections.append(f"[Memory Context]\n{memory_ctx}")
+            top_sections.append(f"[Memory Context]\n{memory_ctx}")
 
-        # 4. Matched Skills
+        # Available Registered Tools (filtered by query relevance)
+        tool_schemas = tool_registry.get_prompt_schemas(user_query)
+        top_sections.append(f"[Available Tools]\n{tool_schemas}")
+
+        # Matched Skills (if any)
         matched_skills = SkillRouter.select_skills(user_query, top_k=2)
         if matched_skills:
-            skill_docs = []
-            for s in matched_skills:
-                skill_docs.append(f"Skill '{s.name}': {s.description}")
-            sections.append("[Active Matched Skills]\n" + "\n".join(skill_docs))
+            skill_docs = [f"Skill '{s.name}': {s.description}" for s in matched_skills]
+            top_sections.append("[Active Matched Skills]\n" + "\n".join(skill_docs))
 
-        # 5. Available Registered Tools
-        tool_schemas = tool_registry.get_prompt_schemas()
-        sections.append(f"[Available Tools]\n{tool_schemas}")
-
-        # 6. Current Plan (if active)
+        # Current Plan (if active)
         if active_plan:
             plan_lines = [f"Goal: {active_plan.goal}"]
             for s in active_plan.steps:
                 plan_lines.append(f"- Step {s.step_number} [{s.status}]: {s.description}")
-            sections.append("[Active Plan]\n" + "\n".join(plan_lines))
+            top_sections.append("[Active Plan]\n" + "\n".join(plan_lines))
 
-        # 7. Recent Session History (Last 4 messages)
-        recent_msgs = session.messages[-4:]
+        top_text = "\n\n".join(top_sections)
+
+        # 2. Essential Bottom Sections (User Query & Immediate Observations in correct chronological order)
+        bottom_sections = [f"USER: {user_query}"]
+        if observation:
+            bottom_sections.append(f"[Observation / Tool Result]:\n{observation}")
+            bottom_sections.append("Using the live observation above, provide your final direct, informative answer to the user. Conclude with [DONE]. Do NOT repeat the tool call.")
+        bottom_sections.append("REN:")
+        bottom_text = "\n\n".join(bottom_sections)
+
+        # Remaining character budget for middle sections (History, Ambient)
+        consumed_chars = len(top_text) + len(bottom_text) + 100
+        middle_budget = max(1000, max_prompt_chars - consumed_chars)
+
+        # 3. Middle Sections: Ambient, and Conversation History
+        middle_sections = []
+
+        # Ambient Context
+        ambient = AmbientContextCollector.get_ambient_context()
+        if len(ambient) < 300:
+            middle_sections.append(ambient)
+
+        # Recent Session History (prioritize newest messages, up to budget)
+        recent_msgs = session.messages[-8:] if session.messages else []
         if recent_msgs:
             hist_lines = []
-            for m in recent_msgs:
-                hist_lines.append(f"{m.role.upper()}: {m.content}")
-            sections.append("[Recent Conversation]\n" + "\n".join(hist_lines))
+            current_hist_chars = 0
+            max_hist_chars = settings.AGENT.HISTORY_BUDGET_TOKENS * 4  # ~3200 chars
 
-        # 8. User Request & Observations
-        sections.append(f"USER: {user_query}")
-        if observation:
-            sections.append(f"[Observation / Tool Result]:\n{observation}")
+            # Take from newest backwards
+            for m in reversed(recent_msgs):
+                line = f"{m.role.upper()}: {m.content}"
+                if current_hist_chars + len(line) < max_hist_chars:
+                    hist_lines.insert(0, line)
+                    current_hist_chars += len(line)
+                else:
+                    break
 
-        sections.append("REN:")
+            if hist_lines:
+                middle_sections.append("[Recent Conversation]\n" + "\n".join(hist_lines))
 
-        full_prompt = "\n\n".join(sections)
+        middle_text = "\n\n".join(middle_sections) if middle_sections else ""
 
-        # Ensure prompt doesn't exceed character budget (~12000 chars ~= 3000 tokens)
-        max_chars = settings.AGENT.CONTEXT_BUDGET_TOKENS * 4
-        if len(full_prompt) > max_chars:
-            full_prompt = full_prompt[:max_chars] + "\n\nREN:"
+        # Assemble full prompt
+        if middle_text:
+            full_prompt = f"{top_text}\n\n{middle_text}\n\n{bottom_text}"
+        else:
+            full_prompt = f"{top_text}\n\n{bottom_text}"
 
         return full_prompt

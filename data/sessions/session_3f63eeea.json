@@ -1,0 +1,94 @@
+{
+  "session_id": "3f63eeea",
+  "user_id": "usr_30d968311a038802723",
+  "title": "President of columbia",
+  "project": "default",
+  "created_at": "2026-08-25T10:38:39.023794",
+  "updated_at": "2026-08-25T10:41:42.252829",
+  "messages": [
+    {
+      "role": "user",
+      "content": "President of columbia",
+      "timestamp": "2026-08-25T10:39:53.354953",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "The president of Colombia is \u00c1lvaro Uribe V\u00e9lez. He has been in office since 2010 and has served as the head of state and head of government of Colombia. The presidency heads the executive branch of the national government and is the commander-in-chief of the Military Forces of Colombia. The power of the presidency has grown substantially since the first president, Sim\u00f3n Bol\u00edvar, took office in 1819. While presidential power has waxed and waned over time, the presidency has played an increasingly important role in Colombian political life since the early 20th century, with a notable expansion during the presidency of \u00c1lvaro Uribe. The office of president was established upon the ratification of the Constitution of 1819, by the Congress of Angostura, convened in December 1819, when Colombia was the Gran Colombia. The first president, General Sim\u00f3n Bol\u00edvar, took office in 1819. His position, initially self-proclaimed, was subsequently ratified by Congress.",
+      "timestamp": "2026-08-25T10:39:53.354953",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "President of india",
+      "timestamp": "2026-08-25T10:40:14.494622",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "The president of India is Narendra Modi. He has been in office since January 2014 and serves as the head of state and head of government of India. The presidency heads the executive branch of the national government and is the commander-in-chief of the Indian Armed Forces. The power of the presidency has grown substantially since the first president, Rajiv Gandhi, took office in 1984. While presidential power has waxed and waned over time, the presidency has played an increasingly important role in Indian political life since the early 20th century, with a notable expansion during the presidency of Narendra Modi. The office of president was established upon the ratification of the Constitution of India, by the Constituent Assembly convened in January 1947, when India was under British rule.",
+      "timestamp": "2026-08-25T10:40:14.494622",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "You are wrong the president is Dropadi Murmu and Narendra Modi is the prime minister",
+      "timestamp": "2026-08-25T10:40:55.133425",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I apologize for any confusion. As an AI language model created by Alibaba Cloud, I am designed to provide accurate and helpful responses based on my training data and knowledge. The information provided in your question seems to be incorrect, as both Dropadi Murmu and Narendra Modi are the current presidents of India.\n\nIf you have any other questions or need assistance with anything else, feel free to ask!",
+      "timestamp": "2026-08-25T10:40:55.133425",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Who create you",
+      "timestamp": "2026-08-25T10:41:18.880153",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I am created by Alibaba Cloud.",
+      "timestamp": "2026-08-25T10:41:18.880153",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Who is cyan code",
+      "timestamp": "2026-08-25T10:41:41.723539",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I am an AI language model created by Alibaba Cloud.",
+      "timestamp": "2026-08-25T10:41:41.723539",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

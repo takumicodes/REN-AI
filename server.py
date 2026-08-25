@@ -21,11 +21,11 @@ import argparse
 import threading
 from pathlib import Path
 
-# Ensure UTF-8 console output on Windows
+# Ensure UTF-8 console output and unbuffered streaming on Windows
 if sys.platform == "win32":
     try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
+        sys.stdout.reconfigure(encoding="utf-8", line_buffering=True, errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", line_buffering=True, errors="replace")
     except Exception:
         pass
 
@@ -73,25 +73,25 @@ def main():
         public_url = tunnel_mgr.start(timeout=25)
 
     print("\n" + "=" * 62)
-    print(" 🪐 REN-AI SERVER & MOBILE CLIENT READY")
+    print(" [*] REN-AI SERVER & MOBILE CLIENT READY")
     print("=" * 62)
-    print(f"  • Local Desktop    : http://localhost:{args.port}")
-    print(f"  • Same Wi-Fi Access: http://{local_ip}:{args.port}")
+    print(f"  - Local Desktop    : http://localhost:{args.port}")
+    print(f"  - Same Wi-Fi Access: http://{local_ip}:{args.port}")
 
     if public_url:
         phone_url_with_token = f"{public_url}?token={passkey}" if passkey else public_url
         print("=" * 62)
-        print(" 🌍 GLOBAL REMOTE PHONE ACCESS (ANY NETWORK / COUNTRY):")
-        print(f"  • Public HTTPS URL : {public_url}")
+        print(" [*] GLOBAL REMOTE PHONE ACCESS (ANY NETWORK / COUNTRY):")
+        print(f"  - Public HTTPS URL : {public_url}")
         if passkey:
-            print(f"  • Security Passkey : {passkey}")
-            print(f"  • Auto-Login URL   : {phone_url_with_token}")
+            print(f"  - Security Passkey : {passkey}")
+            print(f"  - Auto-Login URL   : {phone_url_with_token}")
         print("=" * 62)
 
         if not args.no_qr:
             print_qr_code(phone_url_with_token)
     elif passkey:
-        print(f"  • Security Passkey : {passkey}")
+        print(f"  - Security Passkey : {passkey}")
         print("=" * 62)
 
     try:

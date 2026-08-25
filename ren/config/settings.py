@@ -63,7 +63,7 @@ class ModelSettings:
     PROVIDER: str = os.getenv("REN_MODEL_PROVIDER", "ollama")
     OLLAMA_HOST: str = os.getenv("REN_OLLAMA_HOST", "http://localhost:11434")
     OLLAMA_GENERATE_ENDPOINT: str = os.getenv("REN_OLLAMA_ENDPOINT", "http://localhost:11434/api/generate")
-    MODEL_NAME: str = os.getenv("REN_MODEL_NAME", "qwen2.5-coder:2.5b")
+    MODEL_NAME: str = os.getenv("REN_MODEL_NAME", "qwen2.5-coder:1.5b")
     DEFAULT_TEMPERATURE: float = float(os.getenv("REN_TEMPERATURE", "0.3"))
     MAX_TOKENS_SIMPLE: int = int(os.getenv("REN_MAX_TOKENS_SIMPLE", "300"))
     MAX_TOKENS_AGENT: int = int(os.getenv("REN_MAX_TOKENS_AGENT", "500"))
@@ -79,10 +79,10 @@ class AgentSettings:
     STEP_TIMEOUT_SECONDS: int = int(os.getenv("REN_STEP_TIMEOUT", "60"))
     MAX_REPEATED_FAILURES: int = 2
     LOOP_DETECTION_WINDOW: int = 3
-    CONTEXT_BUDGET_TOKENS: int = int(os.getenv("REN_CONTEXT_BUDGET", "1000"))
+    CONTEXT_BUDGET_TOKENS: int = int(os.getenv("REN_CONTEXT_BUDGET", "2400"))
     MEMORY_BUDGET_TOKENS: int = int(os.getenv("REN_MEMORY_BUDGET", "400"))
     SKILLS_BUDGET_TOKENS: int = int(os.getenv("REN_SKILLS_BUDGET", "400"))
-    HISTORY_BUDGET_TOKENS: int = int(os.getenv("REN_HISTORY_BUDGET", "500"))
+    HISTORY_BUDGET_TOKENS: int = int(os.getenv("REN_HISTORY_BUDGET", "800"))
     ENABLE_SELF_HEALING: bool = True
     ENABLE_DRY_RUN: bool = False
 

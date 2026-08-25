@@ -1,0 +1,30 @@
+{
+  "session_id": "06303b92",
+  "user_id": "test_capital",
+  "title": "What is the capital of",
+  "project": "default",
+  "created_at": "2026-08-25T10:37:13.666768",
+  "updated_at": "2026-08-25T10:37:35.166988",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the capital of France",
+      "timestamp": "2026-08-25T10:37:34.986465",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Paris is the capital and largest city of France, located on the river Seine in the centre of the \u00cele-de-France region, it is the largest metropolitan area and fourth-most populous city in the European Union (EU). Nicknamed the \"City of Light,\" Paris is not only the capital but also the most populous city of France. Paris is renowned globally for its art, fashion, gastronomy, and culture.",
+      "timestamp": "2026-08-25T10:37:34.986465",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

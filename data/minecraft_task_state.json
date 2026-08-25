@@ -1,420 +1,76 @@
 {
-  "active_task": null,
+  "active_task": {
+    "id": "task_1787655633883",
+    "name": "Give mace to Superiorx80",
+    "goal": {
+      "goal_type": "GIVE_ITEM",
+      "parameters": {
+        "player": "Superiorx80",
+        "item_name": "mace",
+        "count": 2
+      },
+      "raw_text": "give me mace and wincharge",
+      "target_player": "Superiorx80",
+      "priority": 100,
+      "created_at": 1787655633.8821971
+    },
+    "subtasks": [
+      {
+        "id": "step_1",
+        "action": "give",
+        "parameters": {
+          "player": "Superiorx80",
+          "item_name": "mace",
+          "count": 2
+        },
+        "status": "PENDING",
+        "attempts": 0,
+        "max_attempts": 3,
+        "error": null,
+        "result_details": {}
+      }
+    ],
+    "status": "IN_PROGRESS",
+    "current_subtask_index": 0,
+    "created_at": 1787655633.883195,
+    "updated_at": 1787655633.883195,
+    "failure_reason": null,
+    "progress_percentage": 0.0
+  },
   "history": [
     {
-      "id": "task_1787565424769",
-      "name": "Build Small House",
+      "id": "task_1787655633881",
+      "name": "Duel Superiorx80",
       "goal": {
-        "goal_type": "BUILD_HOUSE",
+        "goal_type": "PVP_COMBAT",
         "parameters": {
-          "home_type": "custom"
+          "player": "Superiorx80"
         },
-        "raw_text": "make a home",
-        "target_player": "CyanCode",
+        "raw_text": "pvp with me",
+        "target_player": "Superiorx80",
         "priority": 100,
-        "created_at": 1787565424.7680697
+        "created_at": 1787655633.8812
       },
       "subtasks": [
         {
-          "id": "build_step_1",
-          "action": "gather",
+          "id": "step_1",
+          "action": "pvp",
           "parameters": {
-            "block_type": "wood",
-            "count": 13
+            "player": "Superiorx80"
           },
-          "status": "COMPLETED",
-          "attempts": 1,
-          "max_attempts": 3,
-          "error": "Verification failed",
-          "result_details": {}
-        },
-        {
-          "id": "build_step_2",
-          "action": "craft",
-          "parameters": {
-            "item_name": "oak_planks",
-            "count": 13
-          },
-          "status": "COMPLETED",
-          "attempts": 0,
-          "max_attempts": 3,
-          "error": null,
-          "result_details": {}
-        },
-        {
-          "id": "build_step_3",
-          "action": "build_structure",
-          "parameters": {
-            "structure_name": "small_house",
-            "width": 4,
-            "length": 4,
-            "height": 4,
-            "blocks": [
-              {
-                "x": -3,
-                "y": 89,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 89,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 89,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 89,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 89,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 89,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 89,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 89,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 89,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 89,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 89,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 89,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 89,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 89,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 89,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 89,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 90,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 90,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 90,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 90,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 90,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 90,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 90,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 90,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 90,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 90,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 90,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 91,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 91,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 91,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 91,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 91,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 91,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 91,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 91,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 91,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 91,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 91,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 92,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 92,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 92,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": -3,
-                "y": 92,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 92,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 92,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 92,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": -2,
-                "y": 92,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 92,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 92,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 92,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": -1,
-                "y": 92,
-                "z": 105,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 92,
-                "z": 102,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 92,
-                "z": 103,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 92,
-                "z": 104,
-                "type": "oak_planks"
-              },
-              {
-                "x": 0,
-                "y": 92,
-                "z": 105,
-                "type": "oak_planks"
-              }
-            ],
-            "interior": [
-              {
-                "feature": "torch",
-                "pos": {
-                  "x": -1,
-                  "y": 91,
-                  "z": 103
-                }
-              },
-              {
-                "feature": "crafting_table",
-                "pos": {
-                  "x": -2,
-                  "y": 90,
-                  "z": 104
-                }
-              },
-              {
-                "feature": "furnace",
-                "pos": {
-                  "x": -1,
-                  "y": 90,
-                  "z": 104
-                }
-              }
-            ]
-          },
-          "status": "COMPLETED",
+          "status": "PENDING",
           "attempts": 0,
           "max_attempts": 3,
           "error": null,
           "result_details": {}
         }
       ],
-      "status": "COMPLETED",
-      "current_subtask_index": 3,
-      "created_at": 1787565424.7697577,
-      "updated_at": 1787565444.576043,
-      "failure_reason": null,
-      "progress_percentage": 100.0
+      "status": "CANCELLED",
+      "current_subtask_index": 0,
+      "created_at": 1787655633.8812,
+      "updated_at": 1787655633.8812,
+      "failure_reason": "New player directive",
+      "progress_percentage": 0.0
     }
   ]
 }

@@ -27,3 +27,7 @@ logs/security.log
 logs/skills.log
 logs/tools.log
 logs/performance.log
+data/ren_memory.db
+data/sessions/session_7b04e2ad.json
+logs/agent.log
+logs/performance.log

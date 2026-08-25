@@ -48,3 +48,8 @@
 [2026-08-24 02:38:36] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
 [2026-08-24 02:48:00] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
 [2026-08-24 02:48:54] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-25 02:39:07] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-25 03:25:24] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-25 03:37:57] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-25 03:48:24] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-25 04:00:43] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
