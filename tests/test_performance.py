@@ -8,7 +8,7 @@ from ren.monitoring.performance import perf_monitor, PerformanceMonitor
 
 class TestPerformance(unittest.TestCase):
     def test_telemetry_recording(self):
-        perf_monitor.record_llm_call(latency=1.25, tokens_generated=50, model="qwen2.5-coder:3b")
+        perf_monitor.record_llm_call(latency=1.25, tokens_generated=50, model="hermes3:3b")
         snapshot = perf_monitor.get_system_snapshot()
         self.assertGreaterEqual(snapshot["total_llm_calls"], 1)
         self.assertGreaterEqual(snapshot["total_tokens"], 50)

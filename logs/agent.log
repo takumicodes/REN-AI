@@ -3170,3 +3170,117 @@
 [2026-08-25 05:13:50] [INFO] [ren.agent]: Starting Agent Loop for request: 'Why are you different from other ai chatbots'
 [2026-08-25 05:15:23] [INFO] [ren.agent]: Processing input (user='usr_ff38ae0f1a038962f95', session='8cfa6413'): 'Commit all the changes done on ren ai folder'
 [2026-08-25 05:15:23] [INFO] [ren.agent]: Starting Agent Loop for request: 'Commit all the changes done on ren ai folder'
+[2026-08-25 05:34:45] [INFO] [ren.agent]: Processing input (user='usr_ff38ae0f1a038962f95', session='8cfa6413'): 'Commit all these changes successfully'
+[2026-08-25 05:34:45] [INFO] [ren.agent]: Starting Agent Loop for request: 'Commit all these changes successfully'
+[2026-08-25 05:34:57] [INFO] [ren.agent]: SSE Stream cancelled by client for session '8cfa6413'.
+[2026-08-25 05:34:57] [INFO] [ren.agent]: AgentRuntime: Cancellation requested for session '8cfa6413'.
+[2026-08-25 05:36:30] [INFO] [ren.agent]: Processing input (user='usr_ff38ae0f1a038962f95', session='8cfa6413'): 'Commit all these changes successfully'
+[2026-08-25 05:36:30] [INFO] [ren.agent]: Starting Agent Loop for request: 'Commit all these changes successfully'
+[2026-08-25 05:37:03] [INFO] [ren.agent]: Compacting session 8cfa6413 (count: 12)...
+[2026-08-25 05:37:03] [INFO] [ren.agent]: Session compacted. New summary: User: Who is your creator | Assistant: Sadiq is a software developer and the cre...
+[2026-08-25 06:58:17] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-29 02:48:28] [INFO] [ren.agent]: Cloudflare tunnel established: https://boxes-console-late-headline.trycloudflare.com
+[2026-08-29 02:48:29] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-29 02:50:11] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-29 02:50:42] [INFO] [ren.agent]: Cloudflare tunnel established: https://proposition-hrs-pieces-capture.trycloudflare.com
+[2026-08-29 02:50:43] [INFO] [ren.agent]: REN API Server started on http://10.95.30.148:8000
+[2026-08-29 02:52:36] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 2b9720ec) for user 'usr_b1f1d3881a04cef6a58'
+[2026-08-29 02:52:49] [INFO] [ren.agent]: Processing input (user='usr_b1f1d3881a04cef6a58', session='2b9720ec'): 'Hello'
+[2026-08-29 02:52:49] [INFO] [ren.agent]: Starting Agent Loop for request: 'Hello'
+[2026-08-29 02:52:50] [WARNING] [ren.agent]: Model 'qwen2.5-coder:1.5b' not found in Ollama.
+[2026-08-29 02:53:05] [INFO] [ren.agent]: Processing input (user='usr_b1f1d3881a04cef6a58', session='2b9720ec'): 'Hello'
+[2026-08-29 02:53:05] [INFO] [ren.agent]: Starting Agent Loop for request: 'Hello'
+[2026-08-29 02:53:06] [WARNING] [ren.agent]: Model 'qwen2.5-coder:1.5b' not found in Ollama.
+[2026-08-29 02:54:21] [INFO] [ren.agent]: REN API Server shutting down...
+[2026-08-29 03:28:18] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-29 03:28:18] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 320 steps, eps=0.050
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [TASK CREATED] 'Build House Task' with 3 subtasks. Progress: 0%
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [SUBTASK OK] gather (s1) completed! Progress: 33.3%
+[2026-08-29 03:28:19] [INFO] [ren.agent]: Resumed persistent task 'Build House Task' at step 2
+[2026-08-29 03:28:19] [INFO] [ren.agent]: Resumed persistent task 'Give mace to Superiorx80' at step 1
+[2026-08-29 03:28:19] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 320 steps, eps=0.050
+[2026-08-29 03:28:19] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, build me a house'
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [INTENT PARSED] GoalType: BUILD_HOUSE, Params: {'structure_type': 'small_house', 'material': 'wooden', 'size': 'small'}
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [TASK CANCELLED] 'Give mace to Superiorx80': New player directive
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [TASK CREATED] 'Build Small House' with 3 subtasks. Progress: 0%
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [VERIFY] Action=gather Success=True Details={'delta': 4, 'expected': 1}
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [SUBTASK OK] gather (build_step_1) completed! Progress: 33.3%
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [VERIFY] Action=build_structure Success=True Details={'placed_count': 54}
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [SUBTASK OK] craft (build_step_2) completed! Progress: 66.7%
+[2026-08-29 03:28:19] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'REN, survive on your own'
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [INTENT PARSED] GoalType: AUTONOMOUS_SURVIVAL, Params: {}
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [TASK CANCELLED] 'Build Small House': Switched to autonomous survival
+[2026-08-29 03:28:19] [WARNING] [ren.agent]: [FAIL] Action=gather Reason=None
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-29 03:28:19] [INFO] [ren.agent]: Minecraft Chat [CyanCode]: 'run self test'
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SELF_TEST, Params: {}
+[2026-08-29 03:28:19] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-29 03:28:19] [INFO] [ren.agent]: 
+================================================================
+ [*] REN-AI MINECRAFT EMBODIED SELF-TEST REPORT
+================================================================
+ [PASS] | WorldState & Perception        |   0.0ms | Compact Obs: [HP:18/20|FD:16/20|Time:day|Threat:SAFE] Pos:(10,64,-20) Inv:[oak_planks:16, stone_pickaxe:1] Hostiles:[none] Player:[none] Task:[IDLE:NONE 0%]
+ [PASS] | Skill Registry                 |   0.0ms | 22 skills registered across 7 categories
+ [PASS] | Intent Parsing                 |   0.0ms | Parsed House(BUILD_HOUSE), Speedrun(SPEEDRUN), Survival(AUTONOMOUS_SURVIVAL)
+ [PASS] | 3D Construction Engine         |   0.0ms | Blueprint small_house: 54 blocks, 3 subtasks
+ [PASS] | Action Verifier                |   0.0ms | Verified gather delta (+4 logs): True
+ [PASS] | Stuck Watchdog & Recovery      |   0.0ms | Detected: Action 'gather' timed out after 60s. | Recovery steps: 2
+ [PASS] | Persistent Multi-Store Memory  |  17.5ms | Spatial base stored at {'x': 100.0, 'y': 64.0, 'z': -100.0}, Episodic count: 26
+ [PASS] | Priority Event Bus             |   0.0ms | Handled CRITICAL event: True
+ [PASS] | Autonomous Survival FSM        |   0.0ms | Decided: {'cmd': 'eat', 'args': {}} (Priority: CRITICAL, Critical hunger/healing required)
+ [PASS] | Model Provider Interface       |   0.0ms | Active Provider: qwen2.5-coder:1.5b
+================================================================
+ OVERALL: PASSED (100%) | Total Time: 17.5ms
+================================================================
+[2026-08-29 03:28:20] [INFO] [ren.agent]: [WATCHDOG] Generating recovery plan for stuck action 'gather'
+[2026-08-29 03:28:21] [INFO] [ren.agent]: Loaded Minecraft RL Brain: 44 states, 320 steps, eps=0.050
+[2026-08-29 03:28:21] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'let's speedrun minecraft'
+[2026-08-29 03:28:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: SPEEDRUN, Params: {}
+[2026-08-29 03:28:21] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'pvp with me'
+[2026-08-29 03:28:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: PVP_COMBAT, Params: {'player': 'Superiorx80'}
+[2026-08-29 03:28:21] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-29 03:28:21] [INFO] [ren.agent]: [TASK CREATED] 'Duel Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-29 03:28:21] [INFO] [ren.agent]: Minecraft Chat [Superiorx80]: 'give me mace and wincharge'
+[2026-08-29 03:28:21] [INFO] [ren.agent]: [INTENT PARSED] GoalType: GIVE_ITEM, Params: {'player': 'Superiorx80', 'item_name': 'mace', 'count': 2}
+[2026-08-29 03:28:21] [INFO] [ren.agent]: [TASK CANCELLED] 'Duel Superiorx80': New player directive
+[2026-08-29 03:28:21] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-29 03:28:21] [INFO] [ren.agent]: [TASK CREATED] 'Give mace to Superiorx80' with 1 subtasks. Progress: 0%
+[2026-08-29 03:28:23] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-29 03:28:23] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-29 03:28:27] [INFO] [ren.agent]: Compacting session 8437338a (count: 12)...
+[2026-08-29 03:28:27] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-29 03:28:27] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 4ac0c581) for user 'default'
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: b4ae23ef) for user 'default'
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 0d21f579) for user 'default'
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Created session 'Session 1' (ID: 0d40533c) for user 'default'
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Created session 'Session 2' (ID: 7a87caed) for user 'default'
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Created session 'New Conversation' (ID: db636532) for user 'default'
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Created session 'Long Session' (ID: 88833601) for user 'default'
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Compacting session 88833601 (count: 12)...
+[2026-08-29 03:28:29] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-29 03:30:48] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check my system status'
+[2026-08-29 03:30:48] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check my system status'
+[2026-08-29 03:30:51] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'
+[2026-08-29 03:30:51] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Check status please'
+[2026-08-29 03:30:51] [INFO] [ren.agent]: Starting Agent Loop for request: 'Check status please'
+[2026-08-29 03:30:52] [INFO] [ren.agent]: Hermes Agent Reasoning: I will check the system status.
+[2026-08-29 03:30:54] [INFO] [ren.agent]: Compacting session 8437338a (count: 12)...
+[2026-08-29 03:30:54] [INFO] [ren.agent]: Session compacted. New summary: User: Check my system status | Assistant: System status has been verified | User...
+[2026-08-29 03:30:54] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'Inspect status'
+[2026-08-29 03:30:54] [INFO] [ren.agent]: Starting Agent Loop for request: 'Inspect status'
+[2026-08-29 03:30:58] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'How is the system running?'
+[2026-08-29 03:30:58] [INFO] [ren.agent]: Starting Agent Loop for request: 'How is the system running?'
+[2026-08-29 03:30:59] [INFO] [ren.agent]: Hermes Agent Reasoning: The user is asking about the system. I should answer concisely.
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 3fd71588) for user 'default'
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Created session 'Unit Test Session' (ID: a2e83c7a) for user 'default'
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 05d3bd0d) for user 'default'
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Created session 'Session 1' (ID: c55d941f) for user 'default'
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Created session 'Session 2' (ID: 2cae7c56) for user 'default'
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Created session 'New Conversation' (ID: 13ebfae9) for user 'default'
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Created session 'Long Session' (ID: 02a88afa) for user 'default'
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Compacting session 02a88afa (count: 12)...
+[2026-08-29 03:31:02] [INFO] [ren.agent]: Session compacted. New summary: Assistant: Message step 3 | User: Message step 4 | Assistant: Message step 5 | U...
+[2026-08-29 03:31:16] [INFO] [ren.agent]: Processing input (user='default', session='None'): 'who are you'

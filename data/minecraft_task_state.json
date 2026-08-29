@@ -1,6 +1,6 @@
 {
   "active_task": {
-    "id": "task_1787655633883",
+    "id": "task_1787999301187",
     "name": "Give mace to Superiorx80",
     "goal": {
       "goal_type": "GIVE_ITEM",
@@ -12,7 +12,7 @@
       "raw_text": "give me mace and wincharge",
       "target_player": "Superiorx80",
       "priority": 100,
-      "created_at": 1787655633.8821971
+      "created_at": 1787999301.1871598
     },
     "subtasks": [
       {
@@ -32,14 +32,14 @@
     ],
     "status": "IN_PROGRESS",
     "current_subtask_index": 0,
-    "created_at": 1787655633.883195,
-    "updated_at": 1787655633.883195,
+    "created_at": 1787999301.1871598,
+    "updated_at": 1787999301.1871598,
     "failure_reason": null,
     "progress_percentage": 0.0
   },
   "history": [
     {
-      "id": "task_1787655633881",
+      "id": "task_1787999301187",
       "name": "Duel Superiorx80",
       "goal": {
         "goal_type": "PVP_COMBAT",
@@ -49,7 +49,7 @@
         "raw_text": "pvp with me",
         "target_player": "Superiorx80",
         "priority": 100,
-        "created_at": 1787655633.8812
+        "created_at": 1787999301.1871598
       },
       "subtasks": [
         {
@@ -67,8 +67,8 @@
       ],
       "status": "CANCELLED",
       "current_subtask_index": 0,
-      "created_at": 1787655633.8812,
-      "updated_at": 1787655633.8812,
+      "created_at": 1787999301.1871598,
+      "updated_at": 1787999301.1871598,
       "failure_reason": "New player directive",
       "progress_percentage": 0.0
     }

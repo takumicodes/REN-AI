@@ -63,7 +63,7 @@ class ModelSettings:
     PROVIDER: str = os.getenv("REN_MODEL_PROVIDER", "ollama")
     OLLAMA_HOST: str = os.getenv("REN_OLLAMA_HOST", "http://localhost:11434")
     OLLAMA_GENERATE_ENDPOINT: str = os.getenv("REN_OLLAMA_ENDPOINT", "http://localhost:11434/api/generate")
-    MODEL_NAME: str = os.getenv("REN_MODEL_NAME", "qwen2.5-coder:1.5b")
+    MODEL_NAME: str = os.getenv("REN_MODEL_NAME", "hermes3:3b")
     DEFAULT_TEMPERATURE: float = float(os.getenv("REN_TEMPERATURE", "0.3"))
     MAX_TOKENS_SIMPLE: int = int(os.getenv("REN_MAX_TOKENS_SIMPLE", "300"))
     MAX_TOKENS_AGENT: int = int(os.getenv("REN_MAX_TOKENS_AGENT", "500"))

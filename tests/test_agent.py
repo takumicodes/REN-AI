@@ -44,6 +44,36 @@ class TestAgentRuntime(unittest.TestCase):
 
         self.assertTrue(context.is_looping(window=3))
 
+    def test_hermes_scratchpad_reasoning(self):
+        # Hermes Agent outputs <thought> scratchpad before answer
+        model_output = "<thought>The user is asking about the system. I should answer concisely.</thought>All systems are operating at peak efficiency! [DONE]"
+        self.mock_provider.set_responses([model_output])
+
+        spoken = []
+        result = agent_runtime.process_input("How is the system running?", speak_fn=lambda t: spoken.append(t))
+        self.assertIn("peak efficiency", result)
+        self.assertNotIn("<thought>", result)
+        self.assertNotIn("<thought>", spoken[0] if spoken else "")
+
+    def test_hermes_native_tool_call_xml(self):
+        # Hermes native XML <tool_call> format
+        tool_call_xml = '<thought>I will check the system status.</thought>\n<tool_call>\n{"name": "system_status", "arguments": {}}\n</tool_call>'
+        final_answer = "System status check complete: Healthy. [DONE]"
+        self.mock_provider.set_responses([tool_call_xml, final_answer])
+
+        spoken = []
+        result = agent_runtime.process_input("Check status please", speak_fn=lambda t: spoken.append(t))
+        self.assertIn("Healthy", result)
+
+    def test_hermes_openai_function_format(self):
+        # Hermes OpenAI-style function format inside json markdown
+        tool_call_json = '```json\n{"name": "system_status", "arguments": {}}\n```'
+        final_answer = "Everything is running smoothly! [DONE]"
+        self.mock_provider.set_responses([tool_call_json, final_answer])
+
+        result = agent_runtime.process_input("Inspect status")
+        self.assertIn("smoothly", result)
+
 
 if __name__ == "__main__":
     unittest.main()

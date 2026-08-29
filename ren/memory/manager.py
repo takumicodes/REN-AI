@@ -196,7 +196,7 @@ class MemoryManager:
         recent_episodes = self.store.get_recent_episodes(limit=3, user_id=user_id)
         valid_episodes = [
             e for e in recent_episodes
-            if "alibaba" not in e.get("solution", "").lower() and "qwen" not in e.get("solution", "").lower()
+            if not any(bad in e.get("solution", "").lower() for bad in ["alibaba", "qwen", "nous research", "hermes"])
         ]
         ranked_episodes = MemoryRetrieval.rank_memories(
             query,

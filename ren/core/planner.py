@@ -68,8 +68,10 @@ JSON:"""
             provider = get_model_provider()
             resp = provider.generate(prompt, max_tokens=256, temperature=0.2)
             
+            clean_resp = re.sub(r'<(?:thought|scratchpad)>.*?</(?:thought|scratchpad)>', '', resp, flags=re.DOTALL | re.IGNORECASE).strip()
+            
             # Extract JSON block
-            json_match = re.search(r'\{.*\}', resp, re.DOTALL)
+            json_match = re.search(r'\{.*\}', clean_resp or resp, re.DOTALL)
             if json_match:
                 data = json.loads(json_match.group(0))
                 plan = Plan.from_dict(data)

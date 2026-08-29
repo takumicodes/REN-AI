@@ -254,7 +254,7 @@ class IntentRouter:
             return True, msg
 
         if cleaned in ["explain your architecture", "how you work"]:
-            msg = "I am built with a modular local-first architecture powered by Qwen, persistent SQLite memory, dynamic skills, and a bounded agent loop."
+            msg = "I am built with a modular local-first architecture powered by Hermes Agent, persistent SQLite memory, dynamic skills, and a bounded agent loop."
             if speak_fn: speak_fn(msg)
             return True, msg
 

@@ -88,18 +88,30 @@ class AgentLoop:
 
             agent_logger.debug(f"LLM Raw Output:\n{llm_response}")
 
-            # 3. Check for Intro Text before Code or Tool Call & speak it immediately
-            intro_parts = llm_response.split('```')
+            # 3. Hermes Agent: Extract internal thoughts / scratchpad reasoning
+            thought_match = re.search(r'<(?:thought|scratchpad)>(.*?)</(?:thought|scratchpad)>', llm_response, re.DOTALL | re.IGNORECASE)
+            if thought_match:
+                internal_thought = thought_match.group(1).strip()
+                agent_logger.info(f"Hermes Agent Reasoning: {internal_thought}")
+
+            # Strip thought/scratchpad tags for action parsing and clean speech
+            effective_response = re.sub(r'<(?:thought|scratchpad)>.*?</(?:thought|scratchpad)>', '', llm_response, flags=re.DOTALL | re.IGNORECASE).strip()
+            if not effective_response:
+                effective_response = llm_response
+
+            # 4. Check for Intro Text before Code or Tool Call & speak it immediately
+            intro_parts = effective_response.split('```')
             if len(intro_parts) > 1:
                 intro_text = intro_parts[0].strip()
                 intro_text = re.sub(r'(?i)skill\s*name:\s*.*', '', intro_text).strip()
+                intro_text = re.sub(r'<tool_call>.*', '', intro_text, flags=re.DOTALL | re.IGNORECASE).strip()
                 intro_clean = re.sub(r'[*#_`-]', '', intro_text).strip()
                 if intro_clean and speak_fn and self.context.current_iteration == 1:
                     speak_fn(intro_clean)
 
-            # 4. Check for Skill Generation (`Skill Name:` + Python block)
-            skill_match = re.search(r'Skill\s*Name:\s*(.*)', llm_response, re.IGNORECASE)
-            python_blocks = re.findall(r'```python\s*(.*?)\s*```', llm_response, re.DOTALL)
+            # 5. Check for Skill Generation (`Skill Name:` + Python block)
+            skill_match = re.search(r'Skill\s*Name:\s*(.*)', effective_response, re.IGNORECASE)
+            python_blocks = re.findall(r'```python\s*(.*?)\s*```', effective_response, re.DOTALL)
 
             if skill_match and python_blocks:
                 friendly_name = skill_match.group(1).strip()
@@ -126,29 +138,56 @@ class AgentLoop:
                 observation = f"[Skill Registration Result]: {reg_msg}"
                 continue
 
-            # 5. Check for JSON Tool Call
-            json_blocks = re.findall(r'```json\s*(.*?)\s*```', llm_response, re.DOTALL)
+            # 6. Check for Tool Calls (Hermes <tool_call> XML tags, JSON blocks, or native function format)
             parsed_tool_call = None
 
-            if json_blocks:
+            # 6a. Check Hermes native XML <tool_call> tags
+            tool_call_xml = re.findall(r'<tool_call>\s*(.*?)\s*</tool_call>', effective_response, re.DOTALL | re.IGNORECASE)
+            if tool_call_xml:
                 try:
-                    parsed_tool_call = json.loads(json_blocks[0])
+                    parsed_tool_call = json.loads(tool_call_xml[0].strip())
                 except Exception:
-                    # Handle python triple-quoted strings inside JSON blocks
-                    tool_m = re.search(r'"tool"\s*:\s*"([^"]+)"', json_blocks[0])
-                    code_m = re.search(r'"code"\s*:\s*"""(.*?)"""', json_blocks[0], re.DOTALL) or re.search(r'"code"\s*:\s*"(.*?)"', json_blocks[0], re.DOTALL)
-                    if tool_m:
-                        tool_name = tool_m.group(1)
-                        tool_args = {"code": code_m.group(1).strip()} if code_m else {}
-                        parsed_tool_call = {"tool": tool_name, "args": tool_args}
+                    pass
 
+            # 6b. Check JSON markdown blocks
             if not parsed_tool_call:
-                raw_json = re.search(r'\{\s*"tool"\s*:\s*"[^"]+"\s*,\s*"args"\s*:\s*\{.*?\}\s*\}', llm_response, re.DOTALL)
+                json_blocks = re.findall(r'```(?:json|tool_call)\s*(.*?)\s*```', effective_response, re.DOTALL)
+                if json_blocks:
+                    try:
+                        parsed_tool_call = json.loads(json_blocks[0])
+                    except Exception:
+                        # Handle python triple-quoted strings inside JSON blocks
+                        tool_m = re.search(r'"(?:tool|name)"\s*:\s*"([^"]+)"', json_blocks[0])
+                        code_m = re.search(r'"code"\s*:\s*"""(.*?)"""', json_blocks[0], re.DOTALL) or re.search(r'"code"\s*:\s*"(.*?)"', json_blocks[0], re.DOTALL)
+                        if tool_m:
+                            tool_name = tool_m.group(1)
+                            tool_args = {"code": code_m.group(1).strip()} if code_m else {}
+                            parsed_tool_call = {"tool": tool_name, "args": tool_args}
+
+            # 6c. Check raw inline JSON objects
+            if not parsed_tool_call:
+                raw_json = (
+                    re.search(r'\{\s*"(?:tool|name)"\s*:\s*"[^"]+"\s*,\s*"(?:args|arguments)"\s*:\s*\{.*?\}\s*\}', effective_response, re.DOTALL)
+                    or re.search(r'\{\s*"tool"\s*:\s*"[^"]+"\s*,\s*"args"\s*:\s*\{.*?\}\s*\}', effective_response, re.DOTALL)
+                )
                 if raw_json:
                     try:
                         parsed_tool_call = json.loads(raw_json.group(0))
                     except Exception:
                         pass
+
+            # 6d. Normalize Hermes function call format ({name: ..., arguments: ...}) -> ({tool: ..., args: ...})
+            if isinstance(parsed_tool_call, dict):
+                if "tool" not in parsed_tool_call and "name" in parsed_tool_call:
+                    parsed_tool_call["tool"] = parsed_tool_call["name"]
+                if "args" not in parsed_tool_call and "arguments" in parsed_tool_call:
+                    raw_args = parsed_tool_call["arguments"]
+                    if isinstance(raw_args, str):
+                        try:
+                            raw_args = json.loads(raw_args)
+                        except Exception:
+                            pass
+                    parsed_tool_call["args"] = raw_args if isinstance(raw_args, dict) else {}
 
             # If user asked to write/explain code and model wrapped it in python_execute tool instead of answering
             if parsed_tool_call and parsed_tool_call.get("tool") == "python_execute":
@@ -161,6 +200,8 @@ class AgentLoop:
             if parsed_tool_call and isinstance(parsed_tool_call, dict) and "tool" in parsed_tool_call:
                 tool_name = parsed_tool_call.get("tool")
                 tool_args = parsed_tool_call.get("args", {})
+                if not isinstance(tool_args, dict):
+                    tool_args = {}
 
                 action_signature = f"{tool_name}:{json.dumps(tool_args, sort_keys=True)}"
                 self.context.record_action(action_signature)
@@ -203,7 +244,7 @@ class AgentLoop:
                 observation = f"Tool '{tool_name}' result:\nSuccess: {tool_result.success}\nOutput:\n{tool_result.output or tool_result.error}"
                 continue
 
-            # 6. Check for standalone Python script execution block
+            # 7. Check for standalone Python script execution block
             if python_blocks and not skill_match:
                 code_to_exec = python_blocks[0]
                 if ui_callback:
@@ -227,8 +268,8 @@ class AgentLoop:
                     break
                 continue
 
-            # 7. Final Conversational Response (preserves all formatting, code, lists, and answers)
-            clean_text = llm_response.replace("[DONE]", "").strip()
+            # 8. Final Conversational Response (preserves all formatting, code, lists, and answers)
+            clean_text = effective_response.replace("[DONE]", "").strip()
             clean_text = re.sub(r'^(?:REN|Assistant):\s*', '', clean_text, flags=re.IGNORECASE).strip()
 
             if clean_text:

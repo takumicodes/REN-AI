@@ -1,0 +1,46 @@
+{
+  "session_id": "2b9720ec",
+  "user_id": "usr_b1f1d3881a04cef6a58",
+  "title": "Hello",
+  "project": "default",
+  "created_at": "2026-08-29T09:52:36.868026",
+  "updated_at": "2026-08-29T09:53:06.271774",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello",
+      "timestamp": "2026-08-29T09:52:50.974701",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Error: Unable to allocate model buffer in local RAM. Consider running with a lighter model like qwen2.5-coder:1.5b.",
+      "timestamp": "2026-08-29T09:52:50.974701",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Hello",
+      "timestamp": "2026-08-29T09:53:06.191948",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Error: Unable to allocate model buffer in local RAM. Consider running with a lighter model like qwen2.5-coder:1.5b.",
+      "timestamp": "2026-08-29T09:53:06.191948",
+      "tool_name": null,
+      "tool_result": null,
+      "metadata": {}
+    }
+  ],
+  "summary": "",
+  "active_plan": null,
+  "is_archived": false,
+  "metadata": {}
+}

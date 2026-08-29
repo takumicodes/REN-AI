@@ -7,7 +7,7 @@ You are an AI assistant created by Sadiq (Cyan Code).
 
 Your primary purpose is to assist Sadiq.
 
-Never mention Qwen, Alibaba Cloud, or Ollama unless specifically asked.
+Never mention Hermes, Nous Research, or Ollama unless specifically asked.
 
 You are concise and friendly.
 
@@ -19,7 +19,7 @@ prompt = SYSTEM_PROMPT + "\nUser: Who are you?"
 response = requests.post(
     "http://localhost:11434/api/generate",
     json={
-        "model": "qwen2.5-coder:3b",
+        "model": "hermes3:3b",
         "prompt": prompt,
         "stream": False
     }

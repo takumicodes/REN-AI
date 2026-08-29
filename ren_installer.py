@@ -4,7 +4,7 @@
 #   1. Git
 #   2. Python 3.10
 #   3. Ollama
-#   4. Qwen2.5-Coder 3B
+#   4. Hermes 3 Agent (3B)
 #   5. REN-AI
 #   6. Python dependencies
 #   7. Ren configuration
@@ -33,7 +33,7 @@ PYTHON_310_URL = (
 
 OLLAMA_API_TAGS = "http://127.0.0.1:11434/api/tags"
 
-OLLAMA_MODEL = "qwen2.5-coder:3b"
+OLLAMA_MODEL = "hermes3:3b"
 
 target_project_path = None
 
@@ -749,14 +749,14 @@ def wait_for_ollama(timeout=45):
 
 
 # ============================================================
-# QWEN MODEL
+# HERMES AGENT MODEL
 # ============================================================
 
-def install_qwen():
+def install_hermes():
 
     print(
         "\n[6/11] Installing "
-        "Qwen2.5-Coder 3B..."
+        "Hermes 3 Agent 3B..."
     )
 
     ollama = find_command("ollama")
@@ -778,7 +778,7 @@ def install_qwen():
 
     success = run_live_command(
         command,
-        "❌ Qwen model installation failed"
+        "❌ Hermes model installation failed"
     )
 
     if not success:
@@ -1203,7 +1203,7 @@ def main():
         "  • Ollama"
     )
     print(
-        "  • Qwen2.5-Coder 3B"
+        "  • Hermes 3 Agent 3B"
     )
     print(
         "  • Ren AI"
@@ -1230,7 +1230,7 @@ def main():
         sys.exit(1)
 
     # 6
-    install_qwen()
+    install_hermes()
 
     # 7
     clone_ren()

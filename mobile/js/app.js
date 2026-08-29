@@ -973,7 +973,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 systemCpuRamVal.textContent = `${data.system.cpu_percent.toFixed(0)}% / ${data.system.ram_percent.toFixed(0)}%`;
             }
             if (data.agent) {
-                systemModelVal.textContent = data.agent.active_model || "qwen";
+                systemModelVal.textContent = data.agent.active_model || "hermes3:3b";
             }
 
             if (data.ollama && data.ollama.online === false) {

@@ -6,7 +6,7 @@
         "y": 64.0,
         "z": -100.0
       },
-      "updated_at": 1787655633.4285815,
+      "updated_at": 1787999300.7703836,
       "metadata": {}
     },
     "death_point": {
@@ -728,6 +728,36 @@
       },
       "importance": 0.9,
       "timestamp": 1787655633.4285815,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787999299680",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787999299.680934,
+      "location": null,
+      "tags": [
+        "test_event"
+      ]
+    },
+    {
+      "id": "ep_1787999300770",
+      "category": "episodic",
+      "content": {
+        "event": "test_event",
+        "summary": "Completed self-test check",
+        "details": {}
+      },
+      "importance": 0.9,
+      "timestamp": 1787999300.7703836,
       "location": null,
       "tags": [
         "test_event"

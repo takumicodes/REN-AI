@@ -1,6 +1,6 @@
 """
 Ollama Local Model Provider
-Integrates with local Ollama daemon (Qwen, DeepSeek, Llama) with resource locks,
+Integrates with local Ollama daemon (Hermes Agent, DeepSeek, Llama) with resource locks,
 adaptive context window scaling, and automated memory-fallback model selection.
 """
 
@@ -19,12 +19,17 @@ class OllamaProvider(ModelProvider):
     """Local Ollama client with concurrency gates and adaptive parameters."""
 
     FALLBACK_MODELS = [
+        "hermes3:3b",
+        "hermes3:8b",
+        "hermes3:latest",
+        "hermes3",
+        "hermes-3-llama-3.2-3b",
+        "nous-hermes2",
+        "hermes-2-pro-llama-3-8b",
         "qwen2.5-coder:1.5b",
         "qwen2.5-coder:3b",
-        "qwen2.5:1.5b",
-        "qwen2.5:3b",
-        "llama3.2:1b",
         "llama3.2:3b",
+        "llama3.2:1b",
     ]
 
     def __init__(
@@ -278,15 +283,15 @@ class OllamaProvider(ModelProvider):
                     error_logger.error(f"Ollama error on '{target_model}': {raw_err}")
                     break
 
-            return "Error: Unable to allocate model buffer in local RAM. Consider running with a lighter model like qwen2.5-coder:1.5b."
+            return "Error: Unable to allocate model buffer in local RAM. Consider running with a lighter model like hermes3:3b."
 
     def chat(self, messages: List[Dict[str, str]], **kwargs) -> str:
-        """Converts structured messages into prompt string and generates response."""
+        """Converts structured messages into ChatML prompt string for Hermes Agent and generates response."""
         prompt_parts = []
         for msg in messages:
-            role = msg.get("role", "user").upper()
+            role = msg.get("role", "user").lower()
             content = msg.get("content", "")
-            prompt_parts.append(f"{role}:\n{content}\n")
-        prompt_parts.append("REN:\n")
+            prompt_parts.append(f"<|im_start|>{role}\n{content}<|im_end|>")
+        prompt_parts.append("<|im_start|>assistant\n")
         full_prompt = "\n".join(prompt_parts)
         return self.generate(full_prompt, **kwargs)
