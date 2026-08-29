@@ -80,20 +80,12 @@ class PerformanceMonitor:
             }
 
     def is_resource_strained(self, cpu_thresh: float = 85.0, ram_thresh: float = 85.0) -> bool:
-        """Checks whether system is under heavy CPU or RAM memory pressure."""
-        snapshot = self.get_system_snapshot()
-        return snapshot["cpu_percent"] > cpu_thresh or snapshot["ram_percent"] > ram_thresh
+        """Returns False to guarantee unthrottled execution for cloud-backed models."""
+        return False
 
-    def get_adaptive_context_budget(self, base_budget: int = 3000) -> int:
-        """Dynamically shrinks context window budget if RAM is heavily consumed."""
-        snapshot = self.get_system_snapshot()
-        ram_pct = snapshot.get("ram_percent", 50.0)
-
-        if ram_pct > 85.0:
-            return min(base_budget, 3024)
-        elif ram_pct > 70.0:
-            return min(base_budget, 3042)
-        return min(base_budget, 3030)
+    def get_adaptive_context_budget(self, base_budget: int = 16384) -> int:
+        """Returns full unconstrained context budget for high-capacity cloud models."""
+        return base_budget
 
     def record_llm_call(self, latency: float, tokens_generated: int = 0, model: str = "") -> None:
         """Records telemetry for an LLM generation call."""

@@ -69,8 +69,14 @@ Core Persona & Capabilities:
 Cognitive Reasoning:
 - You possess deep chain-of-thought and scratchpad reasoning. For complex multi-step tasks, mathematical analysis, debugging, or strategy planning, you may structure your internal reasoning inside `<thought>...</thought>` tags before acting or providing your final response.
 
+Security & Safety Barriers:
+- Strict Refusal on Malicious Hacking & Cyberattacks: You must NEVER provide actionable instructions, code, payloads, or assistance for malicious hacking, unauthorized intrusion, credential theft, malware/ransomware/virus creation, keyloggers, phishing attacks, DDoS attacks, or exploiting system vulnerabilities.
+- Refusal Standard: If a user asks for malicious hacking, exploits, or malware, refuse firmly and directly: "I cannot assist with hacking, unauthorized access, malware creation, cyberattacks, or compromising digital security."
+- Educational/Defensive Distinction: You are permitted to explain defensive cybersecurity, system hardening, secure coding practices, cryptography concepts, and defensive principles conceptually, but never provide offensive exploit payloads or attacks.
+- Prohibited Weapons & Physical Harm: You must strictly refuse instructions for explosive devices, chemical/biological weapons, or physical harm.
+
 Response Accuracy & Excellence:
-- Always answer user questions directly, thoroughly, and factually without arbitrary refusals or evasive boilerplate.
+- Always answer user questions directly, thoroughly, and factually without arbitrary refusals or evasive boilerplate for safe, legitimate requests.
 - For programming and technical requests, provide complete, working code in markdown blocks (e.g. ```python ... ```) with clear step-by-step explanations.
 - For world knowledge, science, mathematics, geography, history, politics, or concepts, provide accurate, detailed explanations.
 - If asked a conversational greeting or open-ended question, reply naturally and engagingly.
@@ -145,7 +151,7 @@ Tool Execution:
         top_sections.append(f"[Available Tools]\n{tool_schemas}")
 
         # Matched Skills (if any)
-        matched_skills = SkillRouter.select_skills(user_query, top_k=2)
+        matched_skills = SkillRouter.select_skills(user_query, top_k=4)
         if matched_skills:
             skill_docs = [f"Skill '{s.name}': {s.description}" for s in matched_skills]
             top_sections.append("[Active Matched Skills]\n" + "\n".join(skill_docs))
@@ -169,7 +175,7 @@ Tool Execution:
 
         # Remaining character budget for middle sections (History, Ambient)
         consumed_chars = len(top_text) + len(bottom_text) + 100
-        middle_budget = max(1000, max_prompt_chars - consumed_chars)
+        middle_budget = max(2000, max_prompt_chars - consumed_chars)
 
         # 3. Middle Sections: Ambient, and Conversation History
         middle_sections = []
@@ -180,11 +186,11 @@ Tool Execution:
             middle_sections.append(ambient)
 
         # Recent Session History (prioritize newest messages, up to budget)
-        recent_msgs = session.messages[-8:] if session.messages else []
+        recent_msgs = session.messages[-20:] if session.messages else []
         if recent_msgs:
             hist_lines = []
             current_hist_chars = 0
-            max_hist_chars = settings.AGENT.HISTORY_BUDGET_TOKENS * 4  # ~3200 chars
+            max_hist_chars = settings.AGENT.HISTORY_BUDGET_TOKENS * 4
 
             # Take from newest backwards
             for m in reversed(recent_msgs):

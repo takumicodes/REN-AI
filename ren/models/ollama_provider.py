@@ -1,7 +1,7 @@
 """
-Ollama Local Model Provider
-Integrates with local Ollama daemon (Hermes Agent, DeepSeek, Llama) with resource locks,
-adaptive context window scaling, and automated memory-fallback model selection.
+Ollama & Cloud Model Provider
+Direct, unthrottled high-performance inference for Hermes Agent / Gemma 31B on Cloud
+with full token potential and zero fallbacks or artificial performance reductions.
 """
 
 import time
@@ -16,21 +16,7 @@ from ren.monitoring.performance import perf_monitor
 
 
 class OllamaProvider(ModelProvider):
-    """Local Ollama client with concurrency gates and adaptive parameters."""
-
-    FALLBACK_MODELS = [
-        "hermes3:3b",
-        "hermes3:8b",
-        "hermes3:latest",
-        "hermes3",
-        "hermes-3-llama-3.2-3b",
-        "nous-hermes2",
-        "hermes-2-pro-llama-3-8b",
-        "qwen2.5-coder:1.5b",
-        "qwen2.5-coder:3b",
-        "llama3.2:3b",
-        "llama3.2:1b",
-    ]
+    """Direct unthrottled client with full context potential and zero fallbacks."""
 
     def __init__(
         self,
@@ -47,7 +33,7 @@ class OllamaProvider(ModelProvider):
         self._last_tags_check: float = 0.0
 
     def get_installed_models(self) -> List[str]:
-        """Queries and caches installed Ollama models."""
+        """Queries and caches installed models."""
         now = time.time()
         if self._installed_models_cache and (now - self._last_tags_check < 30.0):
             return self._installed_models_cache
@@ -63,7 +49,7 @@ class OllamaProvider(ModelProvider):
         return self._installed_models_cache
 
     def is_available(self) -> bool:
-        """Checks if Ollama daemon is reachable and responding."""
+        """Checks if model endpoint is reachable and responding."""
         try:
             r = requests.get(self.tags_url, timeout=3)
             return r.status_code == 200
@@ -71,7 +57,7 @@ class OllamaProvider(ModelProvider):
             return False
 
     def health_check(self) -> Dict[str, Any]:
-        """Queries Ollama for loaded models and server status."""
+        """Queries model host for available models and server status."""
         try:
             start_t = time.perf_counter()
             r = requests.get(self.tags_url, timeout=4)
@@ -79,7 +65,7 @@ class OllamaProvider(ModelProvider):
             if r.status_code == 200:
                 data = r.json()
                 models = [m.get("name") for m in data.get("models", [])]
-                model_present = any(self.model_name in m for m in models)
+                model_present = any(self.model_name in m for m in models) if models else True
                 return {
                     "online": True,
                     "latency": round(latency, 3),
@@ -93,7 +79,7 @@ class OllamaProvider(ModelProvider):
 
     def _execute_request(self, model: str, prompt: str, ctx: int, num_predict: int, temp: float) -> Tuple[bool, str, int, str]:
         """
-        Sends raw generation request to Ollama with retry and precision sampling.
+        Sends raw generation request to model host with retry.
         Returns: (success: bool, text_or_error: str, tokens_count: int, raw_error_text: str)
         """
         payload = {
@@ -119,14 +105,14 @@ class OllamaProvider(ModelProvider):
                     tokens_count = data.get("eval_count", len(text.split()))
                     return True, text, tokens_count, ""
                 if attempt == 0 and ("forcibly closed" in response.text or "encountered while running" in response.text):
-                    time.sleep(0.8)
+                    time.sleep(0.5)
                     continue
                 return False, f"HTTP {response.status_code}", 0, response.text
             except requests.Timeout:
                 return False, "Timeout", 0, "Inference timed out"
             except Exception as e:
                 if attempt == 0:
-                    time.sleep(0.8)
+                    time.sleep(0.5)
                     continue
                 return False, str(e), 0, str(e)
 
@@ -143,7 +129,7 @@ class OllamaProvider(ModelProvider):
         cancel_check: Optional[Callable[[], bool]] = None,
     ) -> Tuple[bool, str, int, str]:
         """
-        Sends streaming generation request to Ollama with retry and precision sampling.
+        Sends streaming generation request to model host with retry.
         Calls token_callback(chunk_text) for each chunk.
         Returns: (success: bool, full_text_or_error: str, tokens_count: int, raw_error_text: str)
         """
@@ -166,7 +152,7 @@ class OllamaProvider(ModelProvider):
                 response = requests.post(self.generate_url, json=payload, stream=True, timeout=self.timeout)
                 if response.status_code != 200:
                     if attempt == 0 and ("forcibly closed" in response.text or "encountered while running" in response.text):
-                        time.sleep(0.8)
+                        time.sleep(0.5)
                         continue
                     return False, f"HTTP {response.status_code}", 0, response.text
 
@@ -197,7 +183,7 @@ class OllamaProvider(ModelProvider):
                 return False, "Timeout", 0, "Inference timed out"
             except Exception as e:
                 if attempt == 0:
-                    time.sleep(0.8)
+                    time.sleep(0.5)
                     continue
                 return False, str(e), 0, str(e)
 
@@ -213,77 +199,56 @@ class OllamaProvider(ModelProvider):
         cancel_check: Optional[Callable[[], bool]] = None,
         **kwargs,
     ) -> str:
-        """Sends prompt to Ollama with single-inference concurrency and auto-fallback."""
+        """Sends prompt directly to model with full context potential and zero fallbacks."""
         num_predict = max_tokens or settings.MODEL.MAX_TOKENS_AGENT
         temp = temperature if temperature is not None else settings.MODEL.DEFAULT_TEMPERATURE
         ctx = num_ctx or settings.MODEL.NUM_CTX
+        target_model = self.model_name
 
-        # Enforce single primary inference to avoid thrashing CPU/RAM
-        with perf_monitor.inference_lock:
-            start_time = time.perf_counter()
+        start_time = time.perf_counter()
+        agent_logger.debug(f"Generating ({target_model}) ctx={ctx} predict={num_predict}...")
 
-            # Context size steps to try (preserving requested num_ctx)
-            ctx_steps = [ctx]
+        if token_callback or cancel_check:
+            success, result_text, tokens_count, raw_err = self._execute_stream_request(
+                model=target_model,
+                prompt=prompt,
+                ctx=ctx,
+                num_predict=num_predict,
+                temp=temp,
+                token_callback=token_callback,
+                cancel_check=cancel_check,
+            )
+        else:
+            success, result_text, tokens_count, raw_err = self._execute_request(
+                model=target_model,
+                prompt=prompt,
+                ctx=ctx,
+                num_predict=num_predict,
+                temp=temp,
+            )
 
-            # Candidate models (primary target first, followed by installed fallbacks)
-            installed = self.get_installed_models()
-            candidate_models = [self.model_name]
-            for fb in self.FALLBACK_MODELS:
-                if fb not in candidate_models and any(fb in m for m in installed):
-                    candidate_models.append(fb)
+        if success:
+            latency = time.perf_counter() - start_time
+            perf_monitor.record_llm_call(
+                latency=latency,
+                tokens_generated=tokens_count,
+                model=target_model
+            )
+            return result_text
 
-            for target_model in candidate_models:
-                for attempt_ctx in ctx_steps:
-                    agent_logger.debug(f"Ollama generating ({target_model}) ctx={attempt_ctx} predict={num_predict}...")
+        if "not found" in raw_err.lower():
+            agent_logger.warning(f"Model '{target_model}' not found on {self.host}.")
+            return (
+                f"Model '{target_model}' was not found on host {self.host}.\n\n"
+                f"To resolve this:\n"
+                f"1. If running locally: run `ollama pull {target_model}` in your terminal.\n"
+                f"2. If running on Cloud (e.g. Gemma 31B / Hermes): set your cloud host and model in your `.env` file:\n"
+                f"   REN_OLLAMA_HOST=http://<YOUR_CLOUD_IP>:11434\n"
+                f"   REN_MODEL_NAME=<YOUR_MODEL_TAG>"
+            )
 
-                    if token_callback or cancel_check:
-                        success, result_text, tokens_count, raw_err = self._execute_stream_request(
-                            model=target_model,
-                            prompt=prompt,
-                            ctx=attempt_ctx,
-                            num_predict=num_predict,
-                            temp=temp,
-                            token_callback=token_callback,
-                            cancel_check=cancel_check,
-                        )
-                    else:
-                        success, result_text, tokens_count, raw_err = self._execute_request(
-                            model=target_model,
-                            prompt=prompt,
-                            ctx=attempt_ctx,
-                            num_predict=num_predict,
-                            temp=temp,
-                        )
-
-                    if success:
-                        latency = time.perf_counter() - start_time
-                        perf_monitor.record_llm_call(
-                            latency=latency,
-                            tokens_generated=tokens_count,
-                            model=target_model
-                        )
-                        if target_model != self.model_name:
-                            agent_logger.info(f"Ollama auto-selected installed model '{target_model}'")
-                            self.model_name = target_model
-                        return result_text
-
-                    # If memory allocation failure, try next context step or lighter model
-                    if "failed to allocate" in raw_err or "alloc_tensor_range" in raw_err or "unable to allocate" in raw_err:
-                        agent_logger.warning(
-                            f"Ollama buffer allocation failed for '{target_model}' at ctx={attempt_ctx}. Stepping down..."
-                        )
-                        time.sleep(0.5)
-                        continue
-
-                    # If model not found or other non-memory error, log and break ctx loop to try next model
-                    if "not found" in raw_err.lower():
-                        agent_logger.warning(f"Model '{target_model}' not found in Ollama.")
-                        break
-
-                    error_logger.error(f"Ollama error on '{target_model}': {raw_err}")
-                    break
-
-            return "Error: Unable to allocate model buffer in local RAM. Consider running with a lighter model like hermes3:3b."
+        error_logger.error(f"Inference error on '{target_model}': {raw_err}")
+        return f"Error: Inference failed on {target_model}: {raw_err}"
 
     def chat(self, messages: List[Dict[str, str]], **kwargs) -> str:
         """Converts structured messages into ChatML prompt string for Hermes Agent and generates response."""

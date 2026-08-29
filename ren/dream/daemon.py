@@ -87,13 +87,8 @@ class DreamDaemon:
         return logs
 
     def run_reflection_cycle(self, ui_callback_fn: Optional[Callable[[str, Any], None]] = None):
-        """Single resource-aware dream cycle."""
-        # 1. Resource check: Do not execute heavy dream tasks if CPU/RAM is strained
-        if perf_monitor.is_resource_strained(cpu_thresh=80.0, ram_thresh=85.0):
-            self.log_action("DREAM_DAEMON: Resource strain detected. Throttling dream cycle.")
-            return
-
-        # 2. Check for unresolved runtime errors in error_log.json
+        """Unconstrained cognitive reflection cycle with cloud model inference."""
+        # 1. Check for unresolved runtime errors in error_log.json
         err_file = settings.PATHS.ERROR_LOG_FILE
         errors = []
         if err_file.exists():

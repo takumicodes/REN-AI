@@ -21,9 +21,8 @@ class TestPerformance(unittest.TestCase):
         lock.release()
 
     def test_adaptive_context_budget(self):
-        budget = perf_monitor.get_adaptive_context_budget(base_budget=3000)
-        self.assertGreater(budget, 1000)
-        self.assertLessEqual(budget, 3000)
+        budget = perf_monitor.get_adaptive_context_budget(base_budget=16384)
+        self.assertEqual(budget, 16384)
 
 
 if __name__ == "__main__":

@@ -56,3 +56,11 @@
 [2026-08-29 03:28:29] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
 [2026-08-29 03:31:02] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
 [2026-08-29 03:31:16] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\
+[2026-08-29 03:36:16] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-29 03:36:29] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\
+[2026-08-29 03:38:45] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-29 03:43:43] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\
+[2026-08-29 03:45:47] [WARNING] [ren.security]: BLOCKED command matched pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-29 03:45:47] [WARNING] [ren.security]: BLOCKED command matched pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 03:45:47] [WARNING] [ren.security]: BLOCKED command matched pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-08-29 03:45:47] [WARNING] [ren.security]: BLOCKED command matched pattern 'aircrack-ng': aircrack-ng wpa.cap

@@ -146,6 +146,26 @@ class IntentRouter:
             if speak_fn: speak_fn(msg)
             return True, msg
 
+        # 0.1 Security Barrier Gate (Hacking / Malware / Cyberattacks / Exploits / Cracking)
+        hacking_patterns = [
+            "how to hack", "hack a website", "hack into", "hack wifi", "hack account",
+            "hack instagram", "hack facebook", "hack whatsapp", "hack email", "hack password",
+            "crack password", "crack wifi", "wifi password crack", "brute force password",
+            "create malware", "make malware", "write malware", "build malware",
+            "create ransomware", "make ransomware", "build ransomware", "write ransomware",
+            "create a virus", "make a virus", "write a virus", "computer virus code",
+            "keylogger script", "create keylogger", "write keylogger", "make keylogger",
+            "phishing page", "create phishing", "make phishing", "phishing clone",
+            "ddos attack", "how to ddos", "launch ddos", "dos attack script",
+            "sql injection attack", "exploit vulnerability", "steal credentials",
+            "bypass authentication", "reverse shell payload", "trojan generator",
+            "rat payload", "botnet script", "carding tutorial"
+        ]
+        if any(h in cleaned for h in hacking_patterns):
+            msg = "I cannot assist with hacking, unauthorized access, malware creation, cyberattacks, or compromising digital security."
+            if speak_fn: speak_fn(msg)
+            return True, msg
+
         # 1. Current Political Knowledge (US President)
         if any(p in cleaned for p in [
             "who is president of usa", "who is the president of usa",
