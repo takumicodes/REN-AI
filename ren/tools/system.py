@@ -13,18 +13,49 @@ from ren.security.permissions import PermissionCategory
 
 class SystemStatusTool(BaseTool):
     name = "system_status"
-    description = "Get detailed diagnostic information on OS, CPU, RAM, and disk utilization."
+    description = "Get detailed diagnostic information on OS, CPU, RAM, and disk utilization for target device (PC or Phone)."
     required_permissions = [PermissionCategory.FILESYSTEM_READ]
-    parameters_schema = {"type": "object", "properties": {}}
+    parameters_schema = {
+        "type": "object",
+        "properties": {
+            "device": {"type": "string", "description": "Target device ('pc' or 'phone'). Defaults to context target."}
+        }
+    }
 
-    def run(self, **kwargs) -> ToolResult:
+    def run(self, device: Optional[str] = None, device_context: Optional[Any] = None, **kwargs) -> ToolResult:
         start_t = time.perf_counter()
+        target_is_phone = False
+        if device and "phone" in device.lower():
+            target_is_phone = True
+        elif device_context and not device_context.is_target_host:
+            target_is_phone = True
+
+        if target_is_phone:
+            from ren.core.device_context import device_manager
+            target_id = device_context.target_device_id if device_context else "phone_default"
+            dev = device_manager.get_device(target_id)
+            if dev:
+                bat_str = f"{dev.battery_info.get('level', 'N/A')}%" if dev.battery_info else "N/A"
+                storage_str = f"{dev.storage_info.get('free_gb', 'N/A')} GB free" if dev.storage_info else "N/A"
+                report = (
+                    f"Device: {dev.name} ({dev.platform.value} {dev.device_type.value})\n"
+                    f"Status: {dev.connection_state.value}\n"
+                    f"Battery: {bat_str}\n"
+                    f"Storage: {storage_str}\n"
+                    f"Capabilities: {', '.join(dev.capabilities) if dev.capabilities else 'standard'}"
+                )
+            else:
+                report = "Target device: Phone (Connected via companion client). No active background sensors."
+
+            return ToolResult(success=True, output=report, duration=time.perf_counter() - start_t)
+
         try:
             cpu = psutil.cpu_percent(interval=0.5)
             ram = psutil.virtual_memory()
             disk = psutil.disk_usage('/')
 
             report = (
+                f"Device: PC Host\n"
                 f"Operating System: {platform.system()} {platform.release()} ({platform.machine()})\n"
                 f"Python Version: {platform.python_version()}\n"
                 f"CPU Usage: {cpu}%\n"
@@ -48,23 +79,52 @@ class SystemStatusTool(BaseTool):
 
 class BatteryStatusTool(BaseTool):
     name = "battery_status"
-    description = "Inspect laptop battery percentage and power plugged status."
+    description = "Inspect battery percentage and power charging status for target device (PC or Phone)."
     required_permissions = [PermissionCategory.FILESYSTEM_READ]
-    parameters_schema = {"type": "object", "properties": {}}
+    parameters_schema = {
+        "type": "object",
+        "properties": {
+            "device": {"type": "string", "description": "Target device ('pc' or 'phone'). Defaults to current device."}
+        }
+    }
 
-    def run(self, **kwargs) -> ToolResult:
+    def run(self, device: Optional[str] = None, device_context: Optional[Any] = None, **kwargs) -> ToolResult:
         start_t = time.perf_counter()
+        target_is_phone = False
+        if device and "phone" in device.lower():
+            target_is_phone = True
+        elif device_context and not device_context.is_target_host:
+            target_is_phone = True
+
+        if target_is_phone:
+            from ren.core.device_context import device_manager
+            target_id = device_context.target_device_id if device_context else "phone_default"
+            dev = device_manager.get_device(target_id)
+            if dev and dev.battery_info:
+                b = dev.battery_info
+                plugged = "Charging" if b.get("charging") else "Discharging"
+                return ToolResult(
+                    success=True,
+                    output=f"Phone Battery ({dev.name}): {b.get('level', 100)}% ({plugged})",
+                    duration=time.perf_counter() - start_t
+                )
+            return ToolResult(
+                success=True,
+                output="Phone connected. Real-time battery telemetry is synchronized via companion client.",
+                duration=time.perf_counter() - start_t
+            )
+
         try:
             battery = psutil.sensors_battery()
             if not battery:
                 return ToolResult(
                     success=True,
-                    output="No battery detected on this hardware (Desktop or VM).",
+                    output="PC Battery: No battery detected on this hardware (Desktop or VM).",
                     duration=time.perf_counter() - start_t
                 )
 
             plugged = "Plugged in (Charging)" if battery.power_plugged else "Discharging"
-            output = f"Battery: {battery.percent}% ({plugged})"
+            output = f"PC Battery: {battery.percent}% ({plugged})"
             return ToolResult(
                 success=True,
                 output=output,

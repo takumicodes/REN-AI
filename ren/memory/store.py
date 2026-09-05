@@ -103,6 +103,10 @@ class MemoryStore:
                 ltm_cols = [r[1] if not hasattr(r, 'keys') else r['name'] for r in cursor.fetchall()]
                 if "user_id" not in ltm_cols:
                     cursor.execute("ALTER TABLE long_term_memories ADD COLUMN user_id TEXT DEFAULT 'default';")
+                if "confidence" not in ltm_cols:
+                    cursor.execute("ALTER TABLE long_term_memories ADD COLUMN confidence REAL DEFAULT 1.0;")
+                if "provenance" not in ltm_cols:
+                    cursor.execute("ALTER TABLE long_term_memories ADD COLUMN provenance TEXT DEFAULT 'user';")
                 cursor.execute("CREATE INDEX IF NOT EXISTS idx_ltm_user ON long_term_memories(user_id);")
 
                 cursor.execute("PRAGMA table_info(episodic_memories);")
@@ -299,18 +303,20 @@ class MemoryStore:
         importance: int = 1,
         tags: str = "",
         user_id: str = "default",
+        confidence: float = 1.0,
+        provenance: str = "user",
     ) -> int:
-        """Inserts a new long-term memory entry with user scoping."""
+        """Inserts a new long-term memory entry with user scoping, confidence, and provenance."""
         now = datetime.utcnow().isoformat()
         try:
             with self._get_connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(
                     """
-                    INSERT INTO long_term_memories (user_id, category, key, content, importance, tags, created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO long_term_memories (user_id, category, key, content, importance, tags, confidence, provenance, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
-                    (user_id, category, key or "", content, importance, tags, now, now)
+                    (user_id, category, key or "", content, importance, tags, confidence, provenance, now, now)
                 )
                 conn.commit()
                 return cursor.lastrowid

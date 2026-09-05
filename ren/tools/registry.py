@@ -13,10 +13,11 @@ from ren.tools.python_runner import PythonRunnerTool
 from ren.tools.system import SystemStatusTool, BatteryStatusTool, ProcessListTool
 from ren.tools.project import InspectProjectTool
 from ren.tools.git import GitStatusTool, GitDiffTool, GitCommitTool, GitLogTool
-from ren.tools.skills_tool import ListSkillsTool, InspectSkillTool
+from ren.tools.skills_tool import ListSkillsTool, InspectSkillTool, ExecuteSkillTool
 from ren.tools.memory_tool import QueryMemoryTool, RememberFactTool
 from ren.tools.web_search import WebSearchTool
 from ren.tools.generate_image import GenerateImageTool
+from ren.tools.minecraft_tool import MinecraftControlTool
 
 from ren.security.permissions import permission_manager, PermissionRisk
 from ren.security.confirmations import confirmation_manager
@@ -64,10 +65,12 @@ class ToolRegistry:
             GitLogTool(),
             ListSkillsTool(),
             InspectSkillTool(),
+            ExecuteSkillTool(),
             QueryMemoryTool(),
             RememberFactTool(),
             WebSearchTool(),
             GenerateImageTool(),
+            MinecraftControlTool(),
         ]
         for t in default_tools:
             self.register_tool(t)
@@ -77,9 +80,10 @@ class ToolRegistry:
         name: str,
         args: Optional[Dict[str, Any]] = None,
         dry_run: bool = False,
+        device_context: Optional[Any] = None,
     ) -> ToolResult:
         """
-        Executes a registered tool with full validation, permission checks, and logging.
+        Executes a registered tool with full validation, permission checks, device context, and logging.
         """
         start_t = time.perf_counter()
         args = args or {}
@@ -136,10 +140,17 @@ class ToolRegistry:
                     duration=time.perf_counter() - start_t
                 )
 
-        # 4. Execution
+        # 4. Execution with Device Context forwarding
         tools_logger.info(f"Executing tool '{name}' with args {args}...")
         try:
-            result = tool.run(**args)
+            exec_args = dict(args)
+            if device_context is not None:
+                exec_args["device_context"] = device_context
+
+            try:
+                result = tool.run(**exec_args)
+            except TypeError:
+                result = tool.run(**args)
             duration = time.perf_counter() - start_t
             result.duration = duration
 

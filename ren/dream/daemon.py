@@ -1,7 +1,8 @@
 """
 REN Dream Mode 2.0 (Cognitive Reflection Daemon)
-Resource-aware background reflection performing session compaction, error analysis,
-skill re-indexing, downloads organization, and curiosity synthesis.
+Autonomous background worker performing state inspection, unresolved problem analysis,
+session compaction, skill indexing, book learning, and proactive initiative proposals.
+Runs headlessly and independently of desktop GUI or browser connections.
 """
 
 import os
@@ -12,7 +13,7 @@ import shutil
 import threading
 import sys
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Callable
+from typing import List, Dict, Any, Optional, Callable, Tuple
 
 from ren.config.settings import settings
 from ren.monitoring.logger import agent_logger, error_logger
@@ -21,6 +22,8 @@ from ren.memory.manager import memory_manager
 from ren.sessions.manager import session_manager
 from ren.skills.registry import skill_registry
 from ren.models import get_model_provider
+from ren.core.events import event_bus, EventType
+from ren.autonomy.engine import autonomy_engine
 
 
 def get_downloads_dir() -> Optional[str]:
@@ -41,15 +44,19 @@ def get_downloads_dir() -> Optional[str]:
 
 
 class DreamDaemon:
-    """Resource-aware background reflection engine."""
+    """Headless background reflection and self-improvement engine."""
 
     def __init__(self):
         self._running = False
         self._thread: Optional[threading.Thread] = None
         self._log_file = settings.PATHS.DREAM_LOG_FILE
 
+    @property
+    def is_running(self) -> bool:
+        return self._running
+
     def log_action(self, action_str: str):
-        """Appends a line to dream_history.log."""
+        """Appends an event to dream_history.log."""
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         try:
             with open(self._log_file, "a", encoding="utf-8") as f:
@@ -58,10 +65,10 @@ class DreamDaemon:
             error_logger.error(f"Failed writing dream log: {e}")
 
     def get_logs(self) -> List[str]:
-        """Returns structured logs for the GUI reflection panel."""
+        """Returns structured reflection logs."""
         logs = [
             "SYNAPSE OPTIMIZATION: SQLite memory indexing active.",
-            "ANALYZING: CPU / RAM limits. Adaptive token budgeting active.",
+            "ANALYZING: Cloud inference latency & telemetry online.",
             "SKILL REGISTRY: Validated active tool and skill components.",
         ]
 
@@ -86,9 +93,50 @@ class DreamDaemon:
         logs.append("SYNAPSE RE-ALIGNMENT COMPLETE. COGNITION CYCLE IN STANDBY.")
         return logs
 
+    def check_resource_limits(self) -> Tuple[bool, str]:
+        """Ensures CPU, RAM, and battery levels are safe for background sleep cognition."""
+        try:
+            import psutil
+            cpu = psutil.cpu_percent(interval=None)
+            if cpu > 85.0:
+                return False, f"CPU usage high ({cpu}%)"
+            ram = psutil.virtual_memory().percent
+            if ram > 90.0:
+                return False, f"RAM usage high ({ram}%)"
+            bat = psutil.sensors_battery()
+            if bat and not bat.power_plugged and bat.percent < 20:
+                return False, f"Battery low ({bat.percent}%) and discharging"
+        except Exception:
+            pass
+        return True, "Resources healthy"
+
     def run_reflection_cycle(self, ui_callback_fn: Optional[Callable[[str, Any], None]] = None):
-        """Unconstrained cognitive reflection cycle with cloud model inference."""
-        # 1. Check for unresolved runtime errors in error_log.json
+        """Single cognitive reflection and sleep learning cycle."""
+        # Check resource bounds
+        healthy, reason = self.check_resource_limits()
+        if not healthy:
+            self.log_action(f"RESOURCE_THROTTLE: Postponing cognitive cycle: {reason}")
+            return
+
+        event_bus.publish(EventType.DREAM_STARTED, {"timestamp": time.time()})
+        reviewed_count = 0
+        gaps_found = 0
+        tests_run = 0
+
+        # 1. Review recent experiences
+        recent_episodes = memory_manager.get_recent_episodes(limit=5)
+        reviewed_count = len(recent_episodes)
+
+        # 2. Curiosity Engine: Identify knowledge gaps & failure patterns
+        from ren.cognitive.curiosity import curiosity_engine
+        objectives = curiosity_engine.inspect_knowledge_gaps()
+        gaps_found = len(objectives)
+
+        # 3. Self-Evaluation Engine: Identify weak tools or skills
+        from ren.cognitive.self_evaluation import self_evaluation_engine
+        improvements = self_evaluation_engine.evaluate_and_generate_improvement_objectives()
+
+        # 4. Check for unresolved runtime errors in error_log.json
         err_file = settings.PATHS.ERROR_LOG_FILE
         errors = []
         if err_file.exists():
@@ -101,19 +149,29 @@ class DreamDaemon:
         if errors:
             current_err = errors.pop(0)
             self.log_action(f"ANALYZING_EXCEPTION: Examining '{current_err[:50]}...'")
-            # Save updated error file
             try:
                 with open(err_file, "w", encoding="utf-8") as f:
                     json.dump(errors, f, indent=4)
             except Exception:
                 pass
+
+            if len(errors) > 2:
+                autonomy_engine.propose_initiative(
+                    content=f"During background reflection, I examined system error '{current_err[:50]}'. {len(errors)} related exceptions remain.",
+                    source="dream_reflection",
+                    importance=0.85,
+                    curiosity_score=0.80,
+                    reason="Recurring error analysis in Dream Mode",
+                    title="Exception Diagnostic"
+                )
+            event_bus.publish(EventType.DREAM_COMPLETED, {"reviewed": reviewed_count, "gaps": gaps_found})
             return
 
-        # 3. Compact active session if needed (zero-cost maintenance)
+        # 2. Compact active sessions (zero-cost maintenance)
         session = session_manager.active_session
         session_manager.compact_session_if_needed(session)
 
-        # 4. Low-cost maintenance: Clean/Organize Downloads
+        # 3. Clean and Organize Downloads
         downloads_dir = get_downloads_dir()
         if downloads_dir and os.path.exists(downloads_dir):
             try:
@@ -125,7 +183,7 @@ class DreamDaemon:
                     "Installers": [".exe", ".msi"]
                 }
                 moved = 0
-                for fname in files[:30]:  # Limit batch
+                for fname in files[:30]:
                     fpath = os.path.join(downloads_dir, fname)
                     _, ext = os.path.splitext(fname)
                     ext = ext.lower()
@@ -141,10 +199,10 @@ class DreamDaemon:
             except Exception as e:
                 error_logger.error(f"Dream downloads organizer failed: {e}")
 
-        # 5. Low-cost Book Reading / Summary (only if idle)
+        # 4. Learning from Books
         books_dir = settings.PATHS.BOOKS_DIR
         books = list(books_dir.glob("*.txt"))
-        if books and random.random() < 0.3:
+        if books and random.random() < 0.35:
             book = random.choice(books)
             try:
                 with open(book, "r", encoding="utf-8", errors="ignore") as bf:
@@ -156,17 +214,53 @@ class DreamDaemon:
                 provider = get_model_provider()
                 insight = provider.generate(prompt, max_tokens=64, temperature=0.3)
                 if insight and not insight.startswith("Error"):
+                    clean_insight = insight.strip()
                     memory_manager.store_fact(
-                        content=f"Read '{book.name}': {insight.strip()}",
+                        content=f"Read '{book.name}': {clean_insight}",
                         category="reading",
                         tags="book,learning"
                     )
-                    self.log_action(f"READING: Learned from '{book.name}': {insight.strip()[:60]}")
+                    self.log_action(f"READING: Learned from '{book.name}': {clean_insight[:60]}")
+
+                    # Propose autonomous suggestion if highly interesting
+                    if len(clean_insight) > 20 and random.random() < 0.2:
+                        autonomy_engine.propose_initiative(
+                            content=f"While reflecting on '{book.name}', I learned: \"{clean_insight}\"",
+                            source="dream_reading",
+                            importance=0.75,
+                            curiosity_score=0.85,
+                            reason="Book reflection insight",
+                            title="Reading Discovery"
+                        )
             except Exception as e:
                 error_logger.error(f"Dream book reading error: {e}")
 
+        # 5. Run Autonomy periodic inspection
+        autonomy_engine.run_inspection_cycle()
+
+        # 6. Sleep Mode Updates Check
+        from ren.system.upgrade_manager import upgrade_manager
+        pending_upgrades = upgrade_manager.check_updates()
+
+        # 7. Record Structured Dream Report
+        report_str = f"Dream Report: Reviewed {reviewed_count} experiences, found {gaps_found} knowledge gaps, {len(pending_upgrades)} maintenance items pending."
+        self.log_action(report_str)
+
         if ui_callback_fn:
             ui_callback_fn('reflect_mode', {'active': True, 'logs': self.get_logs()})
+
+        # Publish completion event
+        event_bus.publish(EventType.DREAM_COMPLETED, {
+            "reviewed": reviewed_count,
+            "gaps": gaps_found,
+            "pending_upgrades": len(pending_upgrades),
+            "report": report_str
+        })
+        event_bus.publish(EventType.POPUP_NOTIFICATION, {
+            "type": "dream_result",
+            "message": report_str,
+            "logs": self.get_logs()[:3]
+        })
 
     def start(self, ui_callback_fn: Optional[Callable[[str, Any], None]] = None):
         """Starts background dream daemon thread."""
@@ -183,7 +277,7 @@ class DreamDaemon:
                     error_logger.error(f"Error in dream cycle: {e}")
 
                 # Sleep in increments so stop responds promptly
-                for _ in range(20):
+                for _ in range(30):
                     if not self._running:
                         break
                     time.sleep(1.0)

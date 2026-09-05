@@ -1,11 +1,12 @@
 """
 Ollama & Cloud Model Provider
 Direct, unthrottled high-performance inference for Hermes Agent / Gemma 31B on Cloud
-with full token potential and zero fallbacks or artificial performance reductions.
+with multimodal vision support, full token potential, and zero fallbacks.
 """
 
 import time
 import json
+import re
 import requests
 from typing import Dict, Any, Optional, List, Tuple, Callable
 
@@ -16,7 +17,9 @@ from ren.monitoring.performance import perf_monitor
 
 
 class OllamaProvider(ModelProvider):
-    """Direct unthrottled client with full context potential and zero fallbacks."""
+    """Direct unthrottled client with multimodal image support and zero fallbacks."""
+
+    VISION_PATTERNS = ["vision", "llava", "bakllava", "moondream", "minicpm-v", "gemini", "gpt-4", "claude"]
 
     def __init__(
         self,
@@ -31,6 +34,11 @@ class OllamaProvider(ModelProvider):
         self.timeout = timeout or settings.MODEL.TIMEOUT_SECONDS
         self._installed_models_cache: List[str] = []
         self._last_tags_check: float = 0.0
+
+    def supports_vision(self) -> bool:
+        """Determines if the configured model supports vision/images."""
+        m_lower = self.model_name.lower()
+        return any(pattern in m_lower for pattern in self.VISION_PATTERNS)
 
     def get_installed_models(self) -> List[str]:
         """Queries and caches installed models."""
@@ -72,17 +80,32 @@ class OllamaProvider(ModelProvider):
                     "available_models": models,
                     "target_model_installed": model_present,
                     "active_model": self.model_name,
+                    "supports_vision": self.supports_vision(),
                 }
         except Exception as e:
-            return {"online": False, "error": str(e), "active_model": self.model_name}
-        return {"online": False, "error": "Unknown status", "active_model": self.model_name}
+            return {"online": False, "error": str(e), "active_model": self.model_name, "supports_vision": self.supports_vision()}
+        return {"online": False, "error": "Unknown status", "active_model": self.model_name, "supports_vision": self.supports_vision()}
 
-    def _execute_request(self, model: str, prompt: str, ctx: int, num_predict: int, temp: float) -> Tuple[bool, str, int, str]:
-        """
-        Sends raw generation request to model host with retry.
-        Returns: (success: bool, text_or_error: str, tokens_count: int, raw_error_text: str)
-        """
-        payload = {
+    def _execute_request(
+        self,
+        model: str,
+        prompt: str,
+        ctx: int,
+        num_predict: int,
+        temp: float,
+        images: Optional[List[str]] = None,
+    ) -> Tuple[bool, str, int, str]:
+        """Sends raw generation request to model host with retry."""
+        clean_images = [img for img in (images or []) if img]
+        # Clean any data URI headers (e.g. data:image/png;base64,...)
+        formatted_images = []
+        for img in clean_images:
+            if "," in img and "base64" in img:
+                formatted_images.append(img.split(",", 1)[1].strip())
+            else:
+                formatted_images.append(img.strip())
+
+        payload: Dict[str, Any] = {
             "model": model,
             "prompt": prompt,
             "stream": False,
@@ -95,6 +118,9 @@ class OllamaProvider(ModelProvider):
                 "repeat_penalty": 1.1,
             },
         }
+
+        if formatted_images:
+            payload["images"] = formatted_images
 
         for attempt in range(2):
             try:
@@ -125,15 +151,20 @@ class OllamaProvider(ModelProvider):
         ctx: int,
         num_predict: int,
         temp: float,
+        images: Optional[List[str]] = None,
         token_callback: Optional[Callable[[str], None]] = None,
         cancel_check: Optional[Callable[[], bool]] = None,
     ) -> Tuple[bool, str, int, str]:
-        """
-        Sends streaming generation request to model host with retry.
-        Calls token_callback(chunk_text) for each chunk.
-        Returns: (success: bool, full_text_or_error: str, tokens_count: int, raw_error_text: str)
-        """
-        payload = {
+        """Sends streaming generation request to model host with retry."""
+        clean_images = [img for img in (images or []) if img]
+        formatted_images = []
+        for img in clean_images:
+            if "," in img and "base64" in img:
+                formatted_images.append(img.split(",", 1)[1].strip())
+            else:
+                formatted_images.append(img.strip())
+
+        payload: Dict[str, Any] = {
             "model": model,
             "prompt": prompt,
             "stream": True,
@@ -146,6 +177,9 @@ class OllamaProvider(ModelProvider):
                 "repeat_penalty": 1.1,
             },
         }
+
+        if formatted_images:
+            payload["images"] = formatted_images
 
         for attempt in range(2):
             try:
@@ -192,6 +226,7 @@ class OllamaProvider(ModelProvider):
     def generate(
         self,
         prompt: str,
+        images: Optional[List[str]] = None,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         num_ctx: Optional[int] = None,
@@ -199,14 +234,14 @@ class OllamaProvider(ModelProvider):
         cancel_check: Optional[Callable[[], bool]] = None,
         **kwargs,
     ) -> str:
-        """Sends prompt directly to model with full context potential and zero fallbacks."""
+        """Sends prompt directly to model with optional image inputs and zero fallbacks."""
         num_predict = max_tokens or settings.MODEL.MAX_TOKENS_AGENT
         temp = temperature if temperature is not None else settings.MODEL.DEFAULT_TEMPERATURE
         ctx = num_ctx or settings.MODEL.NUM_CTX
         target_model = self.model_name
 
         start_time = time.perf_counter()
-        agent_logger.debug(f"Generating ({target_model}) ctx={ctx} predict={num_predict}...")
+        agent_logger.debug(f"Generating ({target_model}) ctx={ctx} predict={num_predict} images={len(images or [])}...")
 
         if token_callback or cancel_check:
             success, result_text, tokens_count, raw_err = self._execute_stream_request(
@@ -215,6 +250,7 @@ class OllamaProvider(ModelProvider):
                 ctx=ctx,
                 num_predict=num_predict,
                 temp=temp,
+                images=images,
                 token_callback=token_callback,
                 cancel_check=cancel_check,
             )
@@ -225,6 +261,7 @@ class OllamaProvider(ModelProvider):
                 ctx=ctx,
                 num_predict=num_predict,
                 temp=temp,
+                images=images,
             )
 
         if success:
@@ -250,13 +287,13 @@ class OllamaProvider(ModelProvider):
         error_logger.error(f"Inference error on '{target_model}': {raw_err}")
         return f"Error: Inference failed on {target_model}: {raw_err}"
 
-    def chat(self, messages: List[Dict[str, str]], **kwargs) -> str:
+    def chat(self, messages: List[Dict[str, Any]], images: Optional[List[str]] = None, **kwargs) -> str:
         """Converts structured messages into ChatML prompt string for Hermes Agent and generates response."""
         prompt_parts = []
         for msg in messages:
-            role = msg.get("role", "user").lower()
-            content = msg.get("content", "")
+            role = str(msg.get("role", "user")).lower()
+            content = str(msg.get("content", ""))
             prompt_parts.append(f"<|im_start|>{role}\n{content}<|im_end|>")
         prompt_parts.append("<|im_start|>assistant\n")
         full_prompt = "\n".join(prompt_parts)
-        return self.generate(full_prompt, **kwargs)
+        return self.generate(full_prompt, images=images, **kwargs)

@@ -62,8 +62,8 @@ class MinecraftAgent:
         self.enable_rl = enable_rl
         self.enable_curiosity = enable_curiosity
 
-        # Operational Modes: "COMPANION", "AUTONOMOUS_AGI", or "SPEEDRUN"
-        self.mode: str = "SPEEDRUN"
+        # Operational Modes: "AUTONOMOUS_AGI" (Full Free Will & Survival), "COMPANION", or "SPEEDRUN"
+        self.mode: str = "AUTONOMOUS_AGI"
 
         # Core Architectural Subsystems
         self.events = MinecraftEventBus()
@@ -445,7 +445,14 @@ class MinecraftAgent:
                 self.send_chat(msg)
                 return
 
-            # 5. Interactive Tasks (Default to COMPANION mode with top priority)
+            # 5. Handle Conversational Questions or Unknown Goals with 31B Hermes Cloud Model
+            if g_type == "UNKNOWN":
+                llm_reply = self._generate_llm_chat_response(username, message)
+                if llm_reply:
+                    self.send_chat(llm_reply)
+                return
+
+            # 6. Interactive Tasks (Default to COMPANION mode with top priority)
             self.mode = "COMPANION"
             self.task_manager.cancel_active_task("New player directive")
 
@@ -454,7 +461,7 @@ class MinecraftAgent:
             self.task_manager.create_task(task.name, goal, task.subtasks)
             agent_logger.info(f"[TASK CREATED] '{task.name}' with {len(task.subtasks)} subtasks. Progress: 0%")
 
-            # Friendly acknowledgment
+            # Friendly acknowledgment powered by conversational intelligence
             if g_type == "BUILD_HOUSE":
                 self.send_chat(f"Starting 3D construction of your wooden house, {username}! 🔨")
             elif g_type == "PVP_COMBAT":
@@ -465,8 +472,11 @@ class MinecraftAgent:
                 res = goal.parameters.get("resource", "resources")
                 amt = goal.parameters.get("amount", 4)
                 self.send_chat(f"Gathering {amt}x {res} for you right now!")
+            elif g_type == "HUNT_FOOD":
+                self.send_chat(f"Hunting for food to stock our rations, {username}! 🍖")
             else:
-                self.send_chat(f"On it, {username}!")
+                llm_reply = self._generate_llm_chat_response(username, message)
+                self.send_chat(llm_reply or f"On it, {username}!")
 
             # Execute first subtask
             first_subtask = self.task_manager.active_task.current_subtask
@@ -476,6 +486,41 @@ class MinecraftAgent:
         except Exception as e:
             agent_logger.warning(f"Error handling player chat: {e}")
             self.send_chat(f"Understood, {username}!")
+
+    def _generate_llm_chat_response(self, username: str, message: str) -> str:
+        """
+        Generates rich conversational responses grounded in the live Minecraft world
+        using the Cloud 31B Hermes model.
+        """
+        try:
+            pos = self.last_state.get("pos", {})
+            hp = self.last_state.get("hp", 20)
+            food = self.last_state.get("food", 20)
+            inv = self.last_state.get("inventory", {})
+            entities = self.last_state.get("entities", [])
+            hostiles = [e.get("name") for e in entities if e.get("isHostile")][:3]
+
+            prompt = (
+                f"You are Ren, an intelligent, autonomous companion playing Minecraft with player '{username}'.\n"
+                f"Current In-Game State:\n"
+                f"- Coordinates: X:{int(pos.get('x',0))}, Y:{int(pos.get('y',64))}, Z:{int(pos.get('z',0))}\n"
+                f"- Health: {hp}/20 | Hunger: {food}/20\n"
+                f"- Inventory: {list(inv.keys())[:6]}\n"
+                f"- Nearby Hostiles: {hostiles if hostiles else 'None'}\n\n"
+                f"Player '{username}' said: \"{message}\"\n\n"
+                f"Reply in 1 short, lively, authentic in-game chat sentence as Ren (max 100 characters, no quotes or prefix):"
+            )
+
+            resp = self.provider.generate(prompt, max_tokens=60, temperature=0.5)
+            if resp and not resp.startswith("Error"):
+                clean = resp.replace("<thought>", "").replace("</thought>", "").strip()
+                clean = re.sub(r'^(?:Ren|Assistant):\s*', '', clean, flags=re.IGNORECASE).strip()
+                if clean:
+                    return clean[:110]
+        except Exception as e:
+            agent_logger.debug(f"LLM chat generation error: {e}")
+
+        return f"Got it, {username}! Let's explore together."
 
     def _execute_subtask(self, subtask: Subtask):
         """Dispatches an atomic subtask to the Minecraft bridge."""
@@ -526,7 +571,7 @@ class MinecraftAgent:
                     self.send_command(action["cmd"], action.get("args", {}))
                 continue
 
-            # 3. Companion Mode (Curiosity Observations)
+            # 3. Companion Mode (Curiosity Observations & Lively Idle Presence)
             if self.mode == "COMPANION":
                 perception = self.perception_engine.summarize_state(self.last_state)
                 if self.enable_curiosity and perception.threat_level == "SAFE" and perception.hp >= 16:
@@ -536,6 +581,14 @@ class MinecraftAgent:
                     )
                     if question:
                         self.send_chat(question)
+
+                # Active presence: If idle, perform gentle ambient movement so bot feels lively
+                if not self.is_busy:
+                    import random
+                    if random.random() < 0.2:
+                        dx = random.randint(-5, 5)
+                        dz = random.randint(-5, 5)
+                        self.send_command("goTo", {"x": perception.pos["x"] + dx, "y": perception.pos["y"], "z": perception.pos["z"] + dz})
                 continue
 
             # 4. Autonomous Survival Mode Execution (Priority FSM)

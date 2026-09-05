@@ -94,9 +94,15 @@ class MinecraftIntentParser:
             mode = "creative" if "creative" in normalized else "survival"
             return Goal(goal_type="GAMEMODE", parameters={"mode": mode}, raw_text=text, target_player=player_name, created_at=time.time())
 
-        # 7. House / Shelter Building
-        if any(w in normalized for w in ["make house", "build house", "make a house", "build a house", "build me a house", "make me a house", "make home", "build home", "small wooden house", "make base", "build base"]):
-            return Goal(goal_type="BUILD_HOUSE", parameters={"structure_type": "small_house", "material": "wooden", "size": "small"}, raw_text=text, target_player=player_name, created_at=time.time())
+        # 7. House / Shelter / Architecture Building
+        if any(w in normalized for w in ["make house", "build house", "make a house", "build a house", "build me a house", "make me a house", "make home", "build home", "best house", "nice house", "big house", "mansion", "villa", "modern house", "cottage", "medieval house", "aesthetic house", "make base", "build base"]):
+            style = "medieval_cottage"
+            if any(w in normalized for w in ["modern", "villa", "mansion", "luxury"]):
+                style = "modern_villa"
+            elif any(w in normalized for w in ["castle", "tower", "fortress"]):
+                style = "castle_tower"
+
+            return Goal(goal_type="BUILD_HOUSE", parameters={"structure_type": style, "style": style}, raw_text=text, target_player=player_name, created_at=time.time())
 
         if any(w in normalized for w in ["make shelter", "build shelter", "make a shelter", "build a shelter", "shelter before night", "quick shelter", "small home fast", "emergency shelter", "make a shelter to survive"]):
             return Goal(goal_type="BUILD_SHELTER", parameters={"structure_type": "shelter", "size": "compact"}, raw_text=text, target_player=player_name, created_at=time.time())

@@ -1,18 +1,20 @@
 """
 Chat API Endpoints
-Provides real-time streaming (SSE) and JSON chat interactions with multi-user isolation.
+Provides real-time streaming (SSE) and JSON chat interactions with multi-user isolation,
+multimodal image input support, thinking modes (FAST, MEDIUM, HIGH), and think-hard toggle.
 """
 
 import json
 import asyncio
 import queue
 import threading
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import StreamingResponse
 
 from ren.core.agent import agent_runtime
+from ren.core.thinking import ThinkingMode, thinking_manager
 from ren.sessions.manager import session_manager
 from ren.monitoring.logger import agent_logger, error_logger
 from api.user_session import get_current_user_id
@@ -25,6 +27,13 @@ class ChatRequest(BaseModel):
     message: str
     session_id: Optional[str] = None
     stream: Optional[bool] = True
+    image_base64: Optional[str] = None
+    images: Optional[List[str]] = None
+    thinking_mode: Optional[str] = "MEDIUM"
+    think_hard: Optional[bool] = False
+    developer_token: Optional[str] = None
+    source_device_id: Optional[str] = None
+    target_device_id: Optional[str] = None
 
 
 class StopRequest(BaseModel):
@@ -50,11 +59,18 @@ async def chat_endpoint(
 ):
     """
     Main chat interaction endpoint with strict multi-user isolation.
-    Supports token streaming via Server-Sent Events (SSE) or full JSON response.
+    Supports multimodal images, thinking modes (Fast/Medium/High), Think Hard override, and SSE streaming.
     """
     user_message = req.message.strip()
-    if not user_message:
-        raise HTTPException(status_code=400, detail="Message cannot be empty.")
+    images = list(req.images or [])
+    if req.image_base64 and req.image_base64 not in images:
+        images.insert(0, req.image_base64)
+
+    if not user_message and not images:
+        raise HTTPException(status_code=400, detail="Message or image must be provided.")
+
+    if not user_message and images:
+        user_message = "Analyze this image and describe what you see."
 
     # Resolve or create session strictly for this user
     target_session = None
@@ -70,14 +86,24 @@ async def chat_endpoint(
 
     session_id = target_session.session_id
 
+    # Extract source and target device identities from request or headers
+    source_device_id = req.source_device_id or request.headers.get("X-Source-Device-ID") or request.headers.get("X-Device-ID") or "pc_host"
+    target_device_id = req.target_device_id or request.headers.get("X-Target-Device-ID") or None
+
     # If streaming is NOT requested, process synchronously in thread pool
     if not req.stream:
         try:
             response_text = await asyncio.to_thread(
                 agent_runtime.process_input,
                 user_message,
+                images=images if images else None,
+                thinking_mode=req.thinking_mode,
+                think_hard=bool(req.think_hard),
+                developer_token=req.developer_token,
                 session_id=session_id,
                 user_id=user_id,
+                source_device_id=source_device_id,
+                target_device_id=target_device_id,
             )
             updated_session = session_manager.resume_session(session_id, user_id=user_id)
             title = updated_session.title if updated_session else target_session.title
@@ -87,6 +113,10 @@ async def chat_endpoint(
                 "session_id": session_id,
                 "user_id": user_id,
                 "title": title,
+                "source_device_id": source_device_id,
+                "target_device_id": target_device_id,
+                "thinking_mode": req.thinking_mode,
+                "think_hard": req.think_hard,
                 "status": "completed"
             }
         except Exception as e:
@@ -103,7 +133,7 @@ async def chat_endpoint(
         if event_type == "agent_stage":
             event_queue.put({"type": "status", "stage": data, "message": f"Stage: {data}"})
         elif event_type == "status":
-            event_queue.put({"type": "status", "stage": data, "message": f"Status: {data}"})
+            event_queue.put({"type": "status", "stage": data, "message": f"{data}"})
         elif event_type == "module_status":
             module_name, status_text, _ = data
             event_queue.put({"type": "tool", "tool": module_name, "message": f"Tool '{module_name}': {status_text}"})
@@ -113,14 +143,32 @@ async def chat_endpoint(
 
     def run_agent_worker():
         try:
-            event_queue.put({"type": "start", "session_id": session_id, "user_id": user_id})
+            mode_cfg = thinking_manager.get_config(
+                ThinkingMode.from_string(req.thinking_mode),
+                think_hard=bool(req.think_hard)
+            )
+            event_queue.put({
+                "type": "start",
+                "session_id": session_id,
+                "user_id": user_id,
+                "source_device_id": source_device_id,
+                "target_device_id": target_device_id,
+                "thinking_mode": mode_cfg.mode.value,
+                "status_label": mode_cfg.status_label,
+            })
             
             final_res = agent_runtime.process_input(
                 user_message,
+                images=images if images else None,
+                thinking_mode=req.thinking_mode,
+                think_hard=bool(req.think_hard),
+                developer_token=req.developer_token,
                 ui_callback=ui_callback,
                 token_callback=token_callback,
                 session_id=session_id,
                 user_id=user_id,
+                source_device_id=source_device_id,
+                target_device_id=target_device_id,
             )
 
             updated_session = session_manager.resume_session(session_id, user_id=user_id)
@@ -131,6 +179,8 @@ async def chat_endpoint(
                 "response": final_res,
                 "session_id": session_id,
                 "user_id": user_id,
+                "source_device_id": source_device_id,
+                "target_device_id": target_device_id,
                 "title": title
             })
         except Exception as err:

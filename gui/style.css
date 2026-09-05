@@ -970,3 +970,101 @@ body {
 .pipeline-step.completed + .pipeline-arrow {
     color: var(--neon-blue);
 }
+
+/* REN 2.0 Input Toolbar & Controls */
+.input-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+    max-width: 800px;
+    margin: 0 auto 6px auto;
+    padding: 0 4px;
+}
+
+.input-controls-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-tool-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: var(--neon-blue);
+    font-size: 0.78rem;
+    font-family: var(--font-family-tech);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-tool-icon:hover {
+    background: rgba(0, 240, 255, 0.18);
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+}
+
+.btn-think-hard {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: #c084fc;
+    font-size: 0.78rem;
+    font-family: var(--font-family-tech);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-think-hard:hover, .btn-think-hard.active {
+    background: rgba(168, 85, 247, 0.25);
+    border-color: #c084fc;
+    color: #f3e8ff;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+}
+
+.thinking-mode-select {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #e2e8f0;
+    font-size: 0.78rem;
+    font-family: var(--font-family-tech);
+    outline: none;
+    cursor: pointer;
+}
+
+.thinking-mode-select:focus {
+    border-color: var(--neon-blue);
+}
+
+.image-preview-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 240, 255, 0.15);
+    border: 1px solid var(--neon-blue);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    color: #e2e8f0;
+}
+
+.btn-clear-img {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0 2px;
+}
+

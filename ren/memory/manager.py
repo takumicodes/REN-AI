@@ -54,8 +54,10 @@ class MemoryManager:
         importance: int = 1,
         tags: str = "",
         user_id: str = "default",
+        confidence: float = 1.0,
+        provenance: str = "user",
     ) -> int:
-        """Stores a user or domain fact into long-term memory."""
+        """Stores a user or domain fact into long-term memory with confidence and provenance."""
         memory_logger.info(f"Storing memory fact [{category}] for user '{user_id}': {content[:60]}...")
         return self.store.add_long_term_memory(
             content=content,
@@ -64,7 +66,30 @@ class MemoryManager:
             importance=importance,
             tags=tags,
             user_id=user_id,
+            confidence=confidence,
+            provenance=provenance,
         )
+
+    def store_semantic(self, content: str, key: Optional[str] = None, tags: str = "", confidence: float = 1.0, provenance: str = "user", user_id: str = "default") -> int:
+        return self.store_fact(content=content, category="semantic", key=key, importance=2, tags=tags, user_id=user_id, confidence=confidence, provenance=provenance)
+
+    def store_procedural(self, content: str, key: Optional[str] = None, tags: str = "", confidence: float = 1.0, provenance: str = "user", user_id: str = "default") -> int:
+        return self.store_fact(content=content, category="procedural", key=key, importance=3, tags=tags, user_id=user_id, confidence=confidence, provenance=provenance)
+
+    def store_goal(self, content: str, key: Optional[str] = None, tags: str = "", confidence: float = 1.0, provenance: str = "user", user_id: str = "default") -> int:
+        return self.store_fact(content=content, category="goals", key=key, importance=4, tags=tags, user_id=user_id, confidence=confidence, provenance=provenance)
+
+    def store_preference(self, content: str, key: Optional[str] = None, tags: str = "", confidence: float = 1.0, provenance: str = "user", user_id: str = "default") -> int:
+        return self.store_fact(content=content, category="preferences", key=key, importance=3, tags=tags, user_id=user_id, confidence=confidence, provenance=provenance)
+
+    def store_device_state(self, content: str, key: Optional[str] = None, tags: str = "", confidence: float = 1.0, provenance: str = "system", user_id: str = "default") -> int:
+        return self.store_fact(content=content, category="device_state", key=key, importance=2, tags=tags, user_id=user_id, confidence=confidence, provenance=provenance)
+
+    def store_experience(self, content: str, key: Optional[str] = None, tags: str = "", confidence: float = 1.0, provenance: str = "agent", user_id: str = "default") -> int:
+        return self.store_fact(content=content, category="experiences", key=key, importance=3, tags=tags, user_id=user_id, confidence=confidence, provenance=provenance)
+
+    def store_learning(self, content: str, key: Optional[str] = None, tags: str = "", confidence: float = 1.0, provenance: str = "evaluation", user_id: str = "default") -> int:
+        return self.store_fact(content=content, category="learning", key=key, importance=4, tags=tags, user_id=user_id, confidence=confidence, provenance=provenance)
 
     def record_episode(
         self,

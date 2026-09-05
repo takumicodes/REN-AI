@@ -23,6 +23,11 @@ from api.routes.tts import router as tts_router
 from api.routes.chat import router as chat_router
 from api.routes.dream import router as dream_router
 from api.routes.vision import router as vision_router
+from api.routes.autonomy import router as autonomy_router
+from api.routes.developer import router as developer_router
+from api.routes.events import router as events_router
+from api.routes.assets import router as assets_router
+from api.routes.devices import router as devices_router
 from ren.config.settings import settings
 from ren.monitoring.logger import agent_logger
 
@@ -100,6 +105,11 @@ def create_app() -> FastAPI:
     app.include_router(tts_router, prefix="/api", dependencies=[Depends(require_auth)])
     app.include_router(dream_router, prefix="/api", dependencies=[Depends(require_auth)])
     app.include_router(vision_router, prefix="/api", dependencies=[Depends(require_auth)])
+    app.include_router(autonomy_router, prefix="/api", dependencies=[Depends(require_auth)])
+    app.include_router(developer_router, prefix="/api", dependencies=[Depends(require_auth)])
+    app.include_router(events_router, prefix="/api", dependencies=[Depends(require_auth)])
+    app.include_router(assets_router, prefix="/api", dependencies=[Depends(require_auth)])
+    app.include_router(devices_router, prefix="/api", dependencies=[Depends(require_auth)])
 
     # Serve Mobile Web Client static files & PWA assets
     if MOBILE_DIR.exists():

@@ -128,17 +128,42 @@ class SecuritySettings:
 
 
 @dataclass
+class AutonomySettings:
+    """Autonomous initiative engine settings."""
+    ENABLED: bool = os.getenv("REN_AUTONOMY_ENABLED", "true").lower() in ("true", "1", "yes")
+    COOLDOWN_SECONDS: int = int(os.getenv("REN_AUTONOMY_COOLDOWN", "300"))
+    MIN_CURIOSITY_THRESHOLD: float = float(os.getenv("REN_AUTONOMY_CURIOSITY_THRESHOLD", "0.6"))
+    MIN_IMPORTANCE_THRESHOLD: float = float(os.getenv("REN_AUTONOMY_IMPORTANCE_THRESHOLD", "0.7"))
+    MAX_MESSAGES_PER_HOUR: int = int(os.getenv("REN_AUTONOMY_MAX_PER_HOUR", "3"))
+    QUIET_HOURS_ENABLED: bool = False
+    QUIET_HOURS_START: int = 23
+    QUIET_HOURS_END: int = 7
+
+
+@dataclass
+class DeveloperSettings:
+    """Developer/Admin mode security and capability settings."""
+    SECRET_KEY: str = os.getenv("REN_DEVELOPER_SECRET", "ren_dev_admin_2026")
+    DEFAULT_DEBUG: bool = False
+    ENABLE_SKILL_DEV: bool = True
+    ENABLE_ADVANCED_TOOLS: bool = True
+    ENABLE_AUTONOMOUS_TOOLS: bool = True
+
+
+@dataclass
 class SystemSettings:
     """Overall system settings and persona."""
     ASSISTANT_NAME: str = "Ren"
     CREATOR_NAME: str = "Sadiq"
     CREATOR_NICKNAME: str = "Cyan Code"
-    VERSION: str = "1.0.0"
+    VERSION: str = "2.0.0"
     LOG_LEVEL: str = os.getenv("REN_LOG_LEVEL", "INFO")
     PATHS: PathSettings = field(default_factory=PathSettings)
     MODEL: ModelSettings = field(default_factory=ModelSettings)
     AGENT: AgentSettings = field(default_factory=AgentSettings)
     SECURITY: SecuritySettings = field(default_factory=SecuritySettings)
+    AUTONOMY: AutonomySettings = field(default_factory=AutonomySettings)
+    DEVELOPER: DeveloperSettings = field(default_factory=DeveloperSettings)
 
 
 # Global singleton settings instance

@@ -1,8 +1,10 @@
 """
-REN Security & Permission System
-Classifies operations into risk tiers, enforces permission gates, and protects host safety.
+REN Security & Permission System (Risk-Based Policy Engine)
+Classifies operations into deterministic risk tiers (LOW, MEDIUM, HIGH, BLOCKED),
+enforces permission gates outside the LLM, and protects host safety without unnecessary friction.
 """
 
+import os
 from enum import Enum
 from typing import List, Set, Dict, Any, Optional
 from dataclasses import dataclass
@@ -11,11 +13,16 @@ from ren.config.settings import settings
 from ren.monitoring.logger import security_logger
 
 
-class PermissionRisk(Enum):
-    SAFE = "SAFE"
-    CONFIRM = "CONFIRM"
-    HIGH_RISK = "HIGH_RISK"
+class PermissionRisk(str, Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
     BLOCKED = "BLOCKED"
+
+    # Aliases for backwards compatibility
+    SAFE = "LOW"
+    CONFIRM = "MEDIUM"
+    HIGH_RISK = "HIGH"
 
 
 class PermissionCategory(str, Enum):
@@ -33,22 +40,22 @@ class PermissionCategory(str, Enum):
     REN_MODIFY = "ren.modify"
 
 
-# Default classification mapping
+# Deterministic risk mapping
 RISK_MAP: Dict[PermissionCategory, PermissionRisk] = {
-    PermissionCategory.FILESYSTEM_READ: PermissionRisk.SAFE,
-    PermissionCategory.NETWORK_REQUEST: PermissionRisk.SAFE,
-    PermissionCategory.BROWSER_CONTROL: PermissionRisk.SAFE,
+    PermissionCategory.FILESYSTEM_READ: PermissionRisk.LOW,
+    PermissionCategory.NETWORK_REQUEST: PermissionRisk.LOW,
+    PermissionCategory.BROWSER_CONTROL: PermissionRisk.LOW,
     
-    PermissionCategory.FILESYSTEM_WRITE: PermissionRisk.CONFIRM,
-    PermissionCategory.GIT_WRITE: PermissionRisk.CONFIRM,
-    PermissionCategory.TERMINAL_EXECUTE: PermissionRisk.CONFIRM,
-    PermissionCategory.PROCESS_START: PermissionRisk.CONFIRM,
-    PermissionCategory.SKILL_INSTALL: PermissionRisk.CONFIRM,
+    PermissionCategory.FILESYSTEM_WRITE: PermissionRisk.MEDIUM,
+    PermissionCategory.GIT_WRITE: PermissionRisk.MEDIUM,
+    PermissionCategory.TERMINAL_EXECUTE: PermissionRisk.MEDIUM,
+    PermissionCategory.PROCESS_START: PermissionRisk.MEDIUM,
+    PermissionCategory.SKILL_INSTALL: PermissionRisk.MEDIUM,
 
-    PermissionCategory.FILESYSTEM_DELETE: PermissionRisk.HIGH_RISK,
-    PermissionCategory.PROCESS_STOP: PermissionRisk.HIGH_RISK,
-    PermissionCategory.SYSTEM_MODIFY: PermissionRisk.HIGH_RISK,
-    PermissionCategory.REN_MODIFY: PermissionRisk.HIGH_RISK,
+    PermissionCategory.FILESYSTEM_DELETE: PermissionRisk.HIGH,
+    PermissionCategory.PROCESS_STOP: PermissionRisk.HIGH,
+    PermissionCategory.SYSTEM_MODIFY: PermissionRisk.HIGH,
+    PermissionCategory.REN_MODIFY: PermissionRisk.HIGH,
 }
 
 
@@ -61,7 +68,7 @@ class PermissionCheckResult:
 
 
 class PermissionManager:
-    """Evaluates and enforces permission policies across tool and skill invocations."""
+    """Evaluates and enforces risk-based security policies across tool and skill invocations."""
 
     def __init__(self):
         self.blocked_patterns = settings.SECURITY.BLOCKED_COMMANDS
@@ -72,46 +79,66 @@ class PermissionManager:
         operation_desc: str = "",
         details: Optional[Dict[str, Any]] = None,
     ) -> PermissionCheckResult:
-        """Evaluates whether an action requires confirmation or is blocked."""
-        # 1. Check for explicitly blocked commands or patterns
+        """
+        Determines permission risk tier and whether action is allowed or requires confirmation.
+        The backend permission layer is authoritative and completely independent of the LLM.
+        """
+        # 1. Blacklist check (Immediate hard block)
         if details and "command" in details:
             cmd = str(details["command"]).lower()
             for blocked in self.blocked_patterns:
                 if blocked in cmd:
-                    security_logger.warning(f"BLOCKED command matched pattern '{blocked}': {cmd}")
+                    security_logger.warning(f"BLOCKED command matched blacklist pattern '{blocked}': {cmd}")
                     return PermissionCheckResult(
                         allowed=False,
                         risk=PermissionRisk.BLOCKED,
                         reason=f"Command matches destructive blocked blacklist pattern: {blocked}",
+                        requires_user_confirmation=False,
                     )
 
-        highest_risk = PermissionRisk.SAFE
+        # 2. Determine highest risk tier from required permissions
+        highest_risk = PermissionRisk.LOW
         for perm in required_permissions:
-            risk = RISK_MAP.get(perm, PermissionRisk.CONFIRM)
-            if risk == PermissionRisk.HIGH_RISK:
-                highest_risk = PermissionRisk.HIGH_RISK
-            elif risk == PermissionRisk.CONFIRM and highest_risk != PermissionRisk.HIGH_RISK:
-                highest_risk = PermissionRisk.CONFIRM
+            risk = RISK_MAP.get(perm, PermissionRisk.MEDIUM)
+            if risk == PermissionRisk.HIGH:
+                highest_risk = PermissionRisk.HIGH
+            elif risk == PermissionRisk.MEDIUM and highest_risk != PermissionRisk.HIGH:
+                highest_risk = PermissionRisk.MEDIUM
 
-        if highest_risk == PermissionRisk.SAFE:
-            return PermissionCheckResult(allowed=True, risk=highest_risk)
+        # 3. Path-based sensitivity checks
+        if details and "path" in details:
+            target_path = str(details["path"]).lower()
+            # Deleting or modifying outside project workspace elevates risk
+            if any(p in target_path for p in ["c:\\windows", "/etc", "/usr", "c:\\program files"]):
+                highest_risk = PermissionRisk.HIGH
 
-        if highest_risk == PermissionRisk.CONFIRM:
+        # 4. Low-Risk: Auto-approve without asking confirmation
+        if highest_risk == PermissionRisk.LOW:
+            return PermissionCheckResult(
+                allowed=True,
+                risk=highest_risk,
+                reason="Low-risk operation allowed automatically.",
+                requires_user_confirmation=False,
+            )
+
+        # 5. Medium-Risk: Allowed when requested, configurable confirmation
+        if highest_risk == PermissionRisk.MEDIUM:
             req_confirm = settings.SECURITY.REQUIRE_CONFIRMATION_FOR_MODIFICATIONS
             return PermissionCheckResult(
                 allowed=True,
                 risk=highest_risk,
-                reason=f"Operation requires write/execute permission ({operation_desc})",
+                reason=f"Medium-risk operation ({operation_desc})",
                 requires_user_confirmation=req_confirm,
             )
 
-        # High Risk
+        # 6. High-Risk: Requires explicit user confirmation
         return PermissionCheckResult(
             allowed=True,
-            risk=highest_risk,
+            risk=PermissionRisk.HIGH,
             reason=f"High-risk operation requested ({operation_desc}). Requires explicit confirmation.",
             requires_user_confirmation=True,
         )
 
 
+# Global permission manager singleton
 permission_manager = PermissionManager()

@@ -1,6 +1,6 @@
 """
 Skill Management Tools
-Allows agent to query and inspect available registered skills.
+Allows agent to query, inspect, and execute registered skills.
 """
 
 import time
@@ -30,7 +30,7 @@ class ListSkillsTool(BaseTool):
 
         lines = []
         for s in skills:
-            lines.append(f"- {s.name} (v{s.version}): {s.description}")
+            lines.append(f"- `{s.name}` ({s.risk_level} risk): {s.description}")
 
         return ToolResult(
             success=True,
@@ -67,6 +67,7 @@ class InspectSkillTool(BaseTool):
         output = (
             f"Skill: {skill.name}\n"
             f"Version: {skill.version}\n"
+            f"Risk Level: {skill.risk_level}\n"
             f"Description: {skill.description}\n"
             f"Capabilities: {', '.join(skill.capabilities)}\n"
             f"Code:\n```python\n{skill.code_content}\n```"
@@ -77,3 +78,21 @@ class InspectSkillTool(BaseTool):
             output=output,
             duration=time.perf_counter() - start_t
         )
+
+
+class ExecuteSkillTool(BaseTool):
+    name = "execute_skill"
+    description = "Executes an existing registered skill by name with optional parameters."
+    required_permissions = [PermissionCategory.TERMINAL_EXECUTE]
+    parameters_schema = {
+        "type": "object",
+        "properties": {
+            "skill_name": {"type": "string", "description": "Name of the skill to execute."},
+            "arguments": {"type": "object", "description": "Optional dictionary of arguments for the skill."}
+        },
+        "required": ["skill_name"]
+    }
+
+    def run(self, skill_name: str, arguments: Optional[Dict[str, Any]] = None, **kwargs) -> ToolResult:
+        from ren.skills.registry import skill_registry
+        return skill_registry.execute_skill(name=skill_name, args=arguments or {})

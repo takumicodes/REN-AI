@@ -379,18 +379,80 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // Prompt submission
+    // REN 2.0 State & Controls
+    let attachedImageBase64 = null;
+    let attachedImageName = "";
+    let isThinkHardActive = false;
+
     const promptInput = document.getElementById("prompt-input");
     const btnSubmitPrompt = document.getElementById("btn-submit-prompt");
+    const imageFileInput = document.getElementById("image-file-input");
+    const btnThinkHard = document.getElementById("btn-think-hard");
+    const selectThinkingMode = document.getElementById("select-thinking-mode");
+    const imagePreviewTag = document.getElementById("image-preview-tag");
+    const imagePreviewName = document.getElementById("image-preview-name");
+    const btnClearImage = document.getElementById("btn-clear-image");
+
+    if (imageFileInput) {
+        imageFileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    attachedImageBase64 = event.target.result;
+                    attachedImageName = file.name;
+                    imagePreviewName.textContent = file.name;
+                    imagePreviewTag.classList.remove("hidden");
+                    logToHUD(`Visual image attached: ${file.name}`, "system");
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    if (btnClearImage) {
+        btnClearImage.addEventListener("click", () => {
+            attachedImageBase64 = null;
+            attachedImageName = "";
+            imageFileInput.value = "";
+            imagePreviewTag.classList.add("hidden");
+        });
+    }
+
+    if (btnThinkHard) {
+        btnThinkHard.addEventListener("click", () => {
+            isThinkHardActive = !isThinkHardActive;
+            btnThinkHard.classList.toggle("active", isThinkHardActive);
+            if (isThinkHardActive) {
+                logToHUD("Think Hard mode ARMED: Maximum multi-step reasoning requested for next action.", "system");
+            }
+        });
+    }
 
     function submitPrompt() {
         const prompt = promptInput.value.trim();
-        if (prompt && window.pywebview && window.pywebview.api) {
-            logToHUD(`Queued typed instruction: "${prompt}"`, "user");
-            window.pywebview.api.submit_prompt(prompt).then((msg) => {
+        const thinkingMode = selectThinkingMode ? selectThinkingMode.value : "MEDIUM";
+
+        if ((prompt || attachedImageBase64) && window.pywebview && window.pywebview.api) {
+            logToHUD(`Queued instruction [${thinkingMode}${isThinkHardActive ? '+HARD' : ''}]: "${prompt || '[Image Analysis]'}"`, "user");
+            window.pywebview.api.submit_prompt(
+                prompt,
+                attachedImageBase64,
+                thinkingMode,
+                isThinkHardActive
+            ).then((msg) => {
                 logToHUD(msg, "system");
             });
+
             promptInput.value = "";
+            attachedImageBase64 = null;
+            attachedImageName = "";
+            if (imageFileInput) imageFileInput.value = "";
+            if (imagePreviewTag) imagePreviewTag.classList.add("hidden");
+            if (isThinkHardActive) {
+                isThinkHardActive = false;
+                if (btnThinkHard) btnThinkHard.classList.remove("active");
+            }
         }
     }
 

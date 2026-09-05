@@ -165,9 +165,30 @@
                 </div>
             </div>
 
-            <!-- Prompt Input Box -->
+            <!-- Prompt Input Box & Controls -->
+            <div class="input-toolbar">
+                <div class="input-controls-left">
+                    <label class="btn-tool-icon" title="Attach Image for Visual Analysis">
+                        <input type="file" id="image-file-input" accept="image/*" style="display: none;">
+                        <span>📎 Image</span>
+                    </label>
+                    <button id="btn-think-hard" class="btn-think-hard" title="Engage Maximum Multi-Step Deep Reasoning">
+                        <span>🧠 Think Hard</span>
+                    </button>
+                    <select id="select-thinking-mode" class="thinking-mode-select" title="Cognitive Depth Mode">
+                        <option value="FAST">⚡ Fast (Low Latency)</option>
+                        <option value="MEDIUM" selected>🎯 Balanced</option>
+                        <option value="HIGH">🔬 High Reasoning</option>
+                    </select>
+                </div>
+                <div id="image-preview-tag" class="image-preview-tag hidden">
+                    <span id="image-preview-name">image.png</span>
+                    <button id="btn-clear-image" class="btn-clear-img">✕</button>
+                </div>
+            </div>
+
             <div class="input-container">
-                <input type="text" id="prompt-input" placeholder="Type a command for Ren here..." autocomplete="off">
+                <input type="text" id="prompt-input" placeholder="Type a command or ask a question for Ren here..." autocomplete="off">
                 <button id="btn-submit-prompt">SEND</button>
                 <button id="btn-stop-ops">STOP</button>
             </div>

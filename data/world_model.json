@@ -1,0 +1,89 @@
+{
+  "users": {
+    "default": {
+      "user_id": "default",
+      "goals": [
+        "Evolve REN 2.0 persistent autonomous agent",
+        "Create Cyanox AI operating ecosystem"
+      ],
+      "preferences": {
+        "favorite_language": "Python",
+        "agent_mode": "autonomous"
+      },
+      "active_projects": [
+        "REN-AI",
+        "Cyanox"
+      ],
+      "routines": [
+        "Daily system sync",
+        "Autonomous dream consolidation"
+      ]
+    },
+    "usr_1": {
+      "user_id": "usr_1",
+      "goals": [],
+      "preferences": {},
+      "active_projects": [],
+      "routines": []
+    },
+    "test_usr": {
+      "user_id": "test_usr",
+      "goals": [],
+      "preferences": {},
+      "active_projects": [],
+      "routines": []
+    },
+    "usr_e56778871a06f706791": {
+      "user_id": "usr_e56778871a06f706791",
+      "goals": [],
+      "preferences": {},
+      "active_projects": [],
+      "routines": []
+    }
+  },
+  "projects": {
+    "REN-AI": {
+      "name": "REN-AI",
+      "status": "active",
+      "tasks": [
+        {
+          "desc": "Upgrade to REN 2.0 persistent architecture",
+          "status": "active"
+        }
+      ],
+      "dependencies": [
+        "Python 3.10",
+        "Ollama",
+        "Pygame",
+        "FastAPI"
+      ],
+      "knowledge": [
+        "Local-first modular companion with persistent SQLite memory and Hermes Agent"
+      ],
+      "updated_at": 1788574535.602685
+    }
+  },
+  "tasks": {
+    "task_1788574538354_1": {
+      "task_id": "task_1788574538354_1",
+      "user_id": "test_user",
+      "description": "Test task for automated testing",
+      "status": "completed",
+      "assigned_device": "pc_host",
+      "created_at": 1788574538.3548174,
+      "completed_at": 1788574538.356413,
+      "result": "Test verified successfully"
+    },
+    "task_1788575831423_2": {
+      "task_id": "task_1788575831423_2",
+      "user_id": "test_user",
+      "description": "Test task for automated testing",
+      "status": "completed",
+      "assigned_device": "pc_host",
+      "created_at": 1788575831.4239628,
+      "completed_at": 1788575831.4239628,
+      "result": "Test verified successfully"
+    }
+  },
+  "knowledge": {}
+}

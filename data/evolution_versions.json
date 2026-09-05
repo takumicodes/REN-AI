@@ -1,0 +1,29 @@
+{
+  "current_version": "v1",
+  "versions": {
+    "v1": {
+      "version_id": "v1",
+      "iteration": 1,
+      "name": "REN Baseline (Hermes Cloud + Dynamic Memory)",
+      "state": "CURRENT",
+      "benchmark_score": 0.88,
+      "changes_summary": "Initial verified baseline version.",
+      "created_at": 1788575185.122496,
+      "promoted_at": null,
+      "dataset_sample_count": 0,
+      "artifacts_path": null
+    },
+    "v2": {
+      "version_id": "v2",
+      "iteration": 2,
+      "name": "REN Evolutionary Candidate v2",
+      "state": "ARCHIVED",
+      "benchmark_score": 0.93,
+      "changes_summary": "Upgraded retrieval calibration rules.",
+      "created_at": 1788575822.8278859,
+      "promoted_at": 1788575822.829974,
+      "dataset_sample_count": 2,
+      "artifacts_path": null
+    }
+  }
+}

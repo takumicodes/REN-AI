@@ -1,0 +1,20 @@
+{
+  "name": "Battery_Checker",
+  "description": "Skill to Battery_Checker",
+  "version": "1.0.0",
+  "triggers": [
+    "battery_checker"
+  ],
+  "capabilities": [
+    "battery checker"
+  ],
+  "dependencies": [],
+  "entrypoint": "main",
+  "parameters": {},
+  "permissions": [],
+  "risk_level": "LOW",
+  "enabled": true,
+  "created_at": "2026-08-30T06:05:18.595276",
+  "source_task": "Create a skill to check my battery percentage and laptop power status.",
+  "tested": false
+}

@@ -1,0 +1,41 @@
+{
+  "learn_1ab53f65": {
+    "id": "learn_1ab53f65",
+    "experience": "Cloudflare tunnel restarted with new URL",
+    "lesson": "Preserve persistent device identity across tunnel endpoint rotations",
+    "source": "user_interaction",
+    "confidence": 0.8999999999999999,
+    "times_confirmed": 4,
+    "times_failed": 0,
+    "status": "validated",
+    "training_candidate": true,
+    "created_at": 1788575195.9370792,
+    "updated_at": 1788575195.9428709
+  },
+  "learn_e39a11e1": {
+    "id": "learn_e39a11e1",
+    "experience": "Cloudflare tunnel restarted with new URL",
+    "lesson": "Preserve persistent device identity across tunnel endpoint rotations",
+    "source": "user_interaction",
+    "confidence": 0.8999999999999999,
+    "times_confirmed": 4,
+    "times_failed": 0,
+    "status": "validated",
+    "training_candidate": true,
+    "created_at": 1788575252.5689516,
+    "updated_at": 1788575252.5739489
+  },
+  "learn_19ddc783": {
+    "id": "learn_19ddc783",
+    "experience": "Cloudflare tunnel restarted with new URL",
+    "lesson": "Preserve persistent device identity across tunnel endpoint rotations",
+    "source": "user_interaction",
+    "confidence": 0.8999999999999999,
+    "times_confirmed": 4,
+    "times_failed": 0,
+    "status": "validated",
+    "training_candidate": true,
+    "created_at": 1788575822.8188894,
+    "updated_at": 1788575822.823893
+  }
+}

@@ -51,9 +51,14 @@ def stop_operations() -> str:
     return agent_runtime.stop_operations()
 
 
-def submit_typed_prompt(prompt: str):
+def submit_typed_prompt(prompt: str, image_base64: Optional[str] = None, thinking_mode: str = "MEDIUM", think_hard: bool = False):
     """Pushes typed input from GUI text box to the execution queue."""
-    input_queue.put(('text', prompt))
+    input_queue.put(('text', {
+        'prompt': prompt,
+        'image_base64': image_base64,
+        'thinking_mode': thinking_mode,
+        'think_hard': think_hard,
+    }))
 
 
 def get_unlocked_skills() -> list:
@@ -179,23 +184,35 @@ def start_assistant(ui_callback: Optional[Callable[[str, Any], None]] = None, st
 
         try:
             try:
-                input_type, raw_text = input_queue.get(timeout=0.2)
+                input_type, raw_payload = input_queue.get(timeout=0.2)
             except queue.Empty:
                 continue
 
             is_processing = True
+            
+            if isinstance(raw_payload, dict):
+                raw_text = raw_payload.get('prompt', '')
+                image_b64 = raw_payload.get('image_base64')
+                t_mode = raw_payload.get('thinking_mode', 'MEDIUM')
+                t_hard = raw_payload.get('think_hard', False)
+            else:
+                raw_text = str(raw_payload)
+                image_b64 = None
+                t_mode = "MEDIUM"
+                t_hard = False
+
             text = raw_text.lower().strip()
-            if not text:
+            if not text and not image_b64:
                 is_processing = False
                 continue
 
             agent_logger.info(f"Processing input ({input_type}): {text}")
             if ui_callback:
-                ui_callback('user_speech', raw_text)
+                ui_callback('user_speech', raw_text if raw_text else "[Image Attached]")
                 ui_callback('status', 'thinking')
 
             # Sleep / Wake commands
-            if "sleep" in text:
+            if "sleep" in text and not image_b64:
                 awake = False
                 agent_speak("Going to sleep, Sir.")
                 if ui_callback:
@@ -204,7 +221,7 @@ def start_assistant(ui_callback: Optional[Callable[[str, Any], None]] = None, st
                 is_processing = False
                 continue
 
-            if any(w in text for w in WAKE_WORDS):
+            if any(w in text for w in WAKE_WORDS) and not image_b64:
                 awake = True
                 dream_daemon.stop()
                 agent_speak("Hello sir.")
@@ -218,14 +235,14 @@ def start_assistant(ui_callback: Optional[Callable[[str, Any], None]] = None, st
                 continue
 
             # Praise recognition
-            if any(w in text for w in PRAISE_WORDS):
+            if any(w in text for w in PRAISE_WORDS) and not image_b64:
                 memory_manager.set_system_fact("mood", "excited")
                 agent_speak("Glad I could help, Sir.")
                 is_processing = False
                 continue
 
             # Gesture Control Commands
-            if ("camera" in text or "gesture" in text or ("hand" in text and "open" in text)) and not gs_running:
+            if ("camera" in text or "gesture" in text or ("hand" in text and "open" in text)) and not gs_running and not image_b64:
                 agent_speak("Opening gesture recognition mode.")
                 gesture.start()
                 gs_running = True
@@ -244,7 +261,7 @@ def start_assistant(ui_callback: Optional[Callable[[str, Any], None]] = None, st
                 continue
 
             # Neural Network Mode
-            if "train neural network" in text or "start neural network training" in text or "run nn model" in text:
+            if ("train neural network" in text or "start neural network training" in text or "run nn model" in text) and not image_b64:
                 agent_speak("Opening neural network mode.")
                 if ui_callback:
                     ui_callback('module_status', ('nn', 'active', True))
@@ -254,26 +271,15 @@ def start_assistant(ui_callback: Optional[Callable[[str, Any], None]] = None, st
                 is_processing = False
                 continue
 
-            # Task & Todo Commands
-            if "add task" in text or "add to do" in text or "add this task" in text:
-                task_content = text.replace("add task", "").replace("add to do", "").replace("add this task", "").strip()
-                if not task_content:
-                    agent_speak("Sure, tell me what task to add.")
-                    try:
-                        _, task_content = input_queue.get(timeout=10)
-                    except queue.Empty:
-                        task_content = ""
-
-                if task_content:
-                    add_task(task_content)
-                    agent_speak("Task added to your to-do list.")
-                else:
-                    agent_speak("No task details received.")
-                is_processing = False
-                continue
-
             # Default: Dispatch to Autonomous Agent Runtime
-            agent_runtime.process_input(raw_text, speak_fn=agent_speak, ui_callback=ui_callback)
+            agent_runtime.process_input(
+                raw_text,
+                images=[image_b64] if image_b64 else None,
+                thinking_mode=t_mode,
+                think_hard=t_hard,
+                speak_fn=agent_speak,
+                ui_callback=ui_callback
+            )
             refresh_skills_ui()
 
         except Exception as e:

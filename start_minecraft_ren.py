@@ -48,7 +48,7 @@ def main():
     print(f" [*] Connecting to Minecraft Server at {args.host}:{args.port}")
     print(f" [*] Bot Username     : {args.username}")
     print(f" [*] Auth Mode        : {args.auth}")
-    print(f" [*] Mode             : COMPANION (Loyal Partner)")
+    print(f" [*] Mode             : AUTONOMOUS AGI (Full Free Will, Survival & Exploration)")
     print(f" [*] RL Learning      : {'ENABLED' if not args.no_rl else 'DISABLED'}")
     print(f" [*] Curiosity Engine : {'ENABLED' if not args.no_curiosity else 'DISABLED'}")
     print("\n Type in Minecraft chat or type below in terminal to command Ren (e.g. 'follow me', 'give me 5 wood', 'kill cows', 'status', 'exit')\n")

@@ -61,10 +61,18 @@ class Api:
             print(f"System status error: {e}", file=sys.stderr)
             return None
 
-    def submit_prompt(self, prompt):
+    def submit_prompt(self, prompt, image_base64=None, thinking_mode="MEDIUM", think_hard=False):
         from back_end import submit_typed_prompt
-        submit_typed_prompt(prompt)
+        submit_typed_prompt(prompt, image_base64=image_base64, thinking_mode=thinking_mode, think_hard=think_hard)
         return "Prompt received by REN-AI Core."
+
+    def authenticate_developer(self, secret):
+        from ren.security.developer_mode import developer_mode_manager
+        token = developer_mode_manager.authenticate_session(secret)
+        if token:
+            caps = developer_mode_manager.get_capabilities(token)
+            return {"authenticated": True, "token": token, "capabilities": caps.to_dict()}
+        return {"authenticated": False, "error": "Invalid developer secret."}
 
     def refresh_skills(self):
         from back_end import refresh_skills_ui

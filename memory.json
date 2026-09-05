@@ -1,9 +1,10 @@
 {
     "creator_nickname": "Cyan Code",
     "assistant_name": "Ren",
-    "mood": "normal",
+    "mood": "Companion",
     "favorite_language": "Python",
     "youtube_channel": "Cyan Code",
+    "class": "9",
     "current_projects": [
         "Ren AI",
         "Cyanox",
@@ -19,7 +20,7 @@
     ],
     "computer": {
         "ram": "8GB",
-        "os": "Windows 10 / Kali Linux",
+        "os": "Windows 10",
         "storage": "HDD"
     },
     "youtube_videos": [

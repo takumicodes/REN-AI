@@ -22,15 +22,18 @@ class MockProvider(ModelProvider):
     def is_available(self) -> bool:
         return True
 
-    def health_check(self) -> Dict[str, Any]:
-        return {"online": True, "active_model": "mock", "latency": 0.001}
+    def supports_vision(self) -> bool:
+        return False
 
-    def generate(self, prompt: str, **kwargs) -> str:
+    def health_check(self) -> Dict[str, Any]:
+        return {"online": True, "active_model": "mock", "latency": 0.001, "supports_vision": False}
+
+    def generate(self, prompt: str, images: Optional[List[str]] = None, **kwargs) -> str:
         self.prompt_history.append(prompt)
         if self.response_queue:
             return self.response_queue.pop(0)
         return self.default_response
 
-    def chat(self, messages: List[Dict[str, str]], **kwargs) -> str:
+    def chat(self, messages: List[Dict[str, Any]], images: Optional[List[str]] = None, **kwargs) -> str:
         text = "\n".join(f"{m.get('role')}: {m.get('content')}" for m in messages)
-        return self.generate(text, **kwargs)
+        return self.generate(text, images=images, **kwargs)

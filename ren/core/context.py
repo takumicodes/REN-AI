@@ -1,7 +1,7 @@
 """
 REN Context Engine (ContextBuilder)
 Assembles strictly budgeted, prioritized context components for model inference.
-Guarantees user queries and observations are never truncated, utilizing the full num_ctx budget.
+Guarantees user queries, observations, thinking mode directives, and multimodal inputs are seamlessly handled.
 """
 
 import sys
@@ -12,6 +12,9 @@ from typing import Dict, Any, List, Optional
 import psutil
 
 from ren.config.settings import settings
+from ren.core.thinking import ThinkingConfig, ThinkingMode, thinking_manager
+from ren.core.device_context import DeviceContext
+from ren.core.world_model import world_model
 from ren.memory.manager import memory_manager
 from ren.skills.registry import skill_registry
 from ren.skills.router import SkillRouter
@@ -20,10 +23,16 @@ from ren.sessions.models import Session, Plan
 
 
 class AmbientContextCollector:
-    """Collects real-time host OS and environment telemetry."""
+    """Collects real-time host OS and environment telemetry or target device telemetry."""
 
     @staticmethod
-    def get_ambient_context() -> str:
+    def get_ambient_context(device_context: Optional[DeviceContext] = None) -> str:
+        # If targeting phone with reported battery/storage, use phone telemetry
+        if device_context and not device_context.is_target_host:
+            target_info = device_context
+            bat_str = "Phone Connected"
+            return f"[Device Ambient Context: Target={device_context.target_device_id} ({device_context.platform.value} {device_context.device_type.value}) | State={device_context.connection_state.value}]"
+
         active_window = "Unknown Window"
         try:
             if sys.platform == "win32":
@@ -93,6 +102,19 @@ Live Web Search & External Data:
 }
 ```
 
+Skill Generation & Invocation:
+- When asked to create a new reusable skill (e.g. "create a skill to..."), provide the Python script in a ```python ... ``` block preceded by `Skill Name: <Name>`.
+- You can execute any registered skill using `execute_skill` or directly invoking its registered tool name:
+```json
+{
+  "tool": "execute_skill",
+  "args": {
+    "skill_name": "<name>",
+    "arguments": {}
+  }
+}
+```
+
 Image Generation:
 - When asked to create, paint, or draw an image, use the `generate_image` tool:
 ```json
@@ -124,18 +146,42 @@ Tool Execution:
         active_plan: Optional[Plan] = None,
         observation: Optional[str] = None,
         user_id: Optional[str] = None,
+        thinking_config: Optional[ThinkingConfig] = None,
+        has_image: bool = False,
+        device_context: Optional[DeviceContext] = None,
     ) -> str:
-        """Assembles all context components with prioritized budgeting."""
+        """Assembles all context components with prioritized budgeting, thinking mode directives, and device context."""
         resolved_user_id = user_id or session.user_id or "default"
 
         # Calculate max allowable prompt characters based on num_ctx budget
         effective_num_ctx = settings.MODEL.NUM_CTX
-        max_predict = settings.MODEL.MAX_TOKENS_AGENT
+        max_predict = thinking_config.max_tokens if thinking_config else settings.MODEL.MAX_TOKENS_AGENT
         available_prompt_tokens = max(1500, effective_num_ctx - max_predict)
-        max_prompt_chars = available_prompt_tokens * 4  # ~10,168 chars for num_ctx=3042
+        max_prompt_chars = available_prompt_tokens * 4
 
         # 1. Essential Top Sections (Identity, Memory facts from memory.json, Available Tools)
         top_sections = [cls.SYSTEM_IDENTITY]
+
+        # Device Context (Decouples host from target device)
+        if device_context:
+            dev_target_desc = f"{device_context.target_device_id} ({device_context.platform.value} {device_context.device_type.value})"
+            top_sections.append(
+                f"[Device Context]\n"
+                f"- Source Device: {device_context.source_device_id}\n"
+                f"- Target Device: {dev_target_desc}\n"
+                f"- Target is Backend Host: {device_context.is_target_host}\n"
+                f"- Target Capabilities: {', '.join(device_context.capabilities) if device_context.capabilities else 'standard'}"
+            )
+            if device_context.is_ambiguous:
+                top_sections.append(
+                    "[Device Ambiguity Alert]\n"
+                    "The user's request could apply to their PC or their Phone, and both devices are connected. "
+                    "Ask the user for clarification before modifying files or executing device actions."
+                )
+
+        # Thinking Mode Guidance (if specified)
+        if thinking_config:
+            top_sections.append(f"[Reasoning Mode: {thinking_config.mode.value}]\n{thinking_config.reasoning_depth_prompt}")
 
         # Relevant Memory Context (Directly synchronized with memory.json)
         memory_ctx = memory_manager.get_relevant_memory_context(
@@ -146,14 +192,19 @@ Tool Execution:
         if memory_ctx:
             top_sections.append(f"[Memory Context]\n{memory_ctx}")
 
-        # Available Registered Tools (filtered by query relevance)
+        # Structured World Model Context (User projects, active tasks, long-term goals)
+        world_ctx = world_model.get_world_context_summary(user_id=resolved_user_id)
+        if world_ctx:
+            top_sections.append(world_ctx)
+
+        # Available Registered Tools & Skills (filtered by query relevance)
         tool_schemas = tool_registry.get_prompt_schemas(user_query)
         top_sections.append(f"[Available Tools]\n{tool_schemas}")
 
         # Matched Skills (if any)
         matched_skills = SkillRouter.select_skills(user_query, top_k=4)
         if matched_skills:
-            skill_docs = [f"Skill '{s.name}': {s.description}" for s in matched_skills]
+            skill_docs = [f"Skill '{s.name}' ({s.risk_level} risk): {s.description}" for s in matched_skills]
             top_sections.append("[Active Matched Skills]\n" + "\n".join(skill_docs))
 
         # Current Plan (if active)
@@ -166,7 +217,10 @@ Tool Execution:
         top_text = "\n\n".join(top_sections)
 
         # 2. Essential Bottom Sections (User Query & Immediate Observations in correct chronological order)
-        bottom_sections = [f"USER: {user_query}"]
+        bottom_sections = []
+        if has_image:
+            bottom_sections.append("[Multimodal Input Attached: User has provided an image for analysis]")
+        bottom_sections.append(f"USER: {user_query}")
         if observation:
             bottom_sections.append(f"[Observation / Tool Result]:\n{observation}")
             bottom_sections.append("Using the live observation above, provide your final direct, informative answer to the user. Conclude with [DONE]. Do NOT repeat the tool call.")
@@ -181,7 +235,9 @@ Tool Execution:
         middle_sections = []
 
         # Ambient Context
-        ambient = AmbientContextCollector.get_ambient_context()
+        ambient = AmbientContextCollector.get_ambient_context(device_context)
+        if len(ambient) < 300:
+            middle_sections.append(ambient)
         if len(ambient) < 300:
             middle_sections.append(ambient)
 

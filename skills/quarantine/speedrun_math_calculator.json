@@ -1,0 +1,38 @@
+{
+  "name": "Speedrun Math Calculator",
+  "description": "Calculates sum of numbers",
+  "version": "1.0.0",
+  "triggers": [
+    "speedrun",
+    "math",
+    "calculator"
+  ],
+  "capabilities": [
+    "speedrun math calculator"
+  ],
+  "dependencies": [],
+  "supported_devices": [
+    "pc_host",
+    "phone"
+  ],
+  "entrypoint": "main",
+  "parameters": {
+    "a": {
+      "type": "integer"
+    },
+    "b": {
+      "type": "integer"
+    }
+  },
+  "input_schema": {},
+  "output_schema": {},
+  "permissions": [],
+  "risk_level": "LOW",
+  "enabled": true,
+  "created_at": "2026-09-05T02:37:12.050384",
+  "source_task": "",
+  "tests": [],
+  "provenance": "llm_generated",
+  "confidence": 0.8,
+  "tested": false
+}

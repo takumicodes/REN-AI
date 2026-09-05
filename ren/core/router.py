@@ -14,7 +14,7 @@ import webbrowser
 import xml.etree.ElementTree as ET
 import requests
 from pathlib import Path
-from typing import Optional, Tuple, Callable
+from typing import Optional, Tuple, Callable, Any, Dict, List
 
 from smart_todo import add_task, get_all_tasks, clear_all_tasks
 from ren.monitoring.logger import agent_logger
@@ -129,9 +129,14 @@ class IntentRouter:
     """Dispatches fast deterministic commands before invoking LLM."""
 
     @classmethod
-    def try_fast_route(cls, text: str, speak_fn: Optional[Callable[[str], None]] = None) -> Tuple[bool, str]:
+    def try_fast_route(
+        cls,
+        text: str,
+        speak_fn: Optional[Callable[[str], None]] = None,
+        device_context: Optional[Any] = None
+    ) -> Tuple[bool, str]:
         """
-        Checks if text matches immediate built-in shortcuts or safety filters.
+        Checks if text matches immediate built-in shortcuts, safety filters, or device commands.
         Returns: (handled: bool, response_message: str)
         """
         cleaned = text.lower().strip()
@@ -179,7 +184,6 @@ class IntentRouter:
             return True, msg
 
         # 2. Direct Image Generation Shortcut
-        # Matches: "generate image of a cat", "make an image of a sunset", "draw a picture of a mountain"
         img_match = re.match(
             r'^(?:generate|make|create|draw|render)\s+(?:an?\s+)?(?:image|picture|art|photo)\s+(?:of|about|showing|with)?\s*(.+)$',
             cleaned,
@@ -195,13 +199,40 @@ class IntentRouter:
                     if res.success:
                         return True, res.output
 
-        # 3. Organize Downloads (with typo tolerance)
+        # 3. Organize Downloads (Device-aware)
         if any(w in cleaned for w in ["organise", "organize", "clean"]) and any(w in cleaned for w in ["download", "downlaod", "downloads", "downlaods"]):
+            if device_context:
+                if device_context.is_ambiguous:
+                    msg = "Would you like me to organize Downloads on your PC or your Phone?"
+                    if speak_fn: speak_fn(msg)
+                    return True, msg
+                elif not device_context.is_target_host:
+                    msg = "Phone downloads organization requires the mobile companion service. For PC, say 'Organize my PC Downloads'."
+                    if speak_fn: speak_fn(msg)
+                    return True, msg
+
             if speak_fn: speak_fn("Sure Sadiq, organizing your Downloads folder now...")
             count, msg = organize_downloads_folder()
             speak_msg = f"Downloads folder organized, Sir. Sorted {count} files into categories."
             if speak_fn: speak_fn(speak_msg)
             return True, speak_msg
+
+        # 3.1 Device Battery Query
+        if re.search(r"\b(what is|check|how is|what's)?\s*(?:my\s+)?(pc\s+|phone\s+)?battery(?:\s+level|\s+percentage|\s+status)?\b", cleaned):
+            bat_tool = tool_registry.get_tool("battery_status")
+            if bat_tool:
+                res = bat_tool.run(device_context=device_context)
+                msg = res.output
+                if speak_fn: speak_fn(msg)
+                return True, msg
+
+        # 3.2 Structured World State Query ("What am I working on?", "What are my tasks?")
+        if any(p in cleaned for p in ["what am i working on", "what's my active task", "what are my active tasks", "what are my current projects", "show current tasks"]):
+            from ren.core.world_model import world_model
+            uid = device_context.user_id if device_context else "default"
+            msg = world_model.what_am_i_working_on(user_id=uid)
+            if speak_fn: speak_fn(msg)
+            return True, msg
 
         # 4. Clear / Clean RAM
         if any(w in cleaned for w in ["clear", "clean", "free", "purge"]) and any(w in cleaned for w in ["ram", "memory", "waste"]):

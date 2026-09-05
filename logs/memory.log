@@ -769,3 +769,133 @@
 [2026-08-29 03:45:47] [INFO] [ren.memory]: Successfully migrated 12 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
 [2026-08-29 03:45:47] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp2v0gw4un\backups\ren_memory_backup_20260829_034547.db
 [2026-08-29 03:45:47] [INFO] [ren.memory]: Successfully migrated 12 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 04:34:41] [INFO] [ren.memory]: Storing memory fact [maintenance] for user 'default': Cleaned Downloads folder: Organized 2 files into categories....
+[2026-08-29 22:55:18] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpof6k26tj\backups\ren_memory_backup_20260829_225518.db
+[2026-08-29 22:55:18] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:55:19] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpof6k26tj\backups\ren_memory_backup_20260829_225519.db
+[2026-08-29 22:55:19] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-08-29 22:55:19] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmpof6k26tj\backups\ren_memory_backup_20260829_225519.db
+[2026-08-29 22:55:19] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpqprryc6z\backups\ren_memory_backup_20260829_225519.db
+[2026-08-29 22:55:19] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:55:20] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpfroyaj58\backups\ren_memory_backup_20260829_225520.db
+[2026-08-29 22:55:20] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:55:20] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp0nwi1r3k\backups\ren_memory_backup_20260829_225520.db
+[2026-08-29 22:55:20] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:55:21] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp4x3lmadg\backups\ren_memory_backup_20260829_225521.db
+[2026-08-29 22:55:21] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:56:06] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp846j041b\backups\ren_memory_backup_20260829_225606.db
+[2026-08-29 22:56:06] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:56:06] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp846j041b\backups\ren_memory_backup_20260829_225606.db
+[2026-08-29 22:56:06] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-08-29 22:56:06] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmp846j041b\backups\ren_memory_backup_20260829_225606.db
+[2026-08-29 22:56:06] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp193n22kb\backups\ren_memory_backup_20260829_225606.db
+[2026-08-29 22:56:06] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:56:07] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpcojxf90i\backups\ren_memory_backup_20260829_225607.db
+[2026-08-29 22:56:07] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:56:08] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp81m5duex\backups\ren_memory_backup_20260829_225608.db
+[2026-08-29 22:56:08] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 22:56:08] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp9a19wc34\backups\ren_memory_backup_20260829_225608.db
+[2026-08-29 22:56:08] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:24:34] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp0ojg1d0i\backups\ren_memory_backup_20260829_232434.db
+[2026-08-29 23:24:34] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:24:34] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp0ojg1d0i\backups\ren_memory_backup_20260829_232434.db
+[2026-08-29 23:24:34] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-08-29 23:24:34] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmp0ojg1d0i\backups\ren_memory_backup_20260829_232434.db
+[2026-08-29 23:24:34] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp7vgdidwd\backups\ren_memory_backup_20260829_232434.db
+[2026-08-29 23:24:34] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:24:34] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp2nnpicmr\backups\ren_memory_backup_20260829_232434.db
+[2026-08-29 23:24:34] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:24:35] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp7b_9eon3\backups\ren_memory_backup_20260829_232435.db
+[2026-08-29 23:24:35] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:24:36] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmphhvnw6l8\backups\ren_memory_backup_20260829_232436.db
+[2026-08-29 23:24:36] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:31:56] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmphp69mk44\backups\ren_memory_backup_20260829_233156.db
+[2026-08-29 23:31:56] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:31:56] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmphp69mk44\backups\ren_memory_backup_20260829_233156.db
+[2026-08-29 23:31:56] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-08-29 23:31:56] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmphp69mk44\backups\ren_memory_backup_20260829_233156.db
+[2026-08-29 23:31:56] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpp3w75b53\backups\ren_memory_backup_20260829_233156.db
+[2026-08-29 23:31:56] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:31:57] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpsx1j6uqc\backups\ren_memory_backup_20260829_233157.db
+[2026-08-29 23:31:57] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:31:57] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpt9816ked\backups\ren_memory_backup_20260829_233157.db
+[2026-08-29 23:31:57] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-08-29 23:31:58] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpf9e9qnmi\backups\ren_memory_backup_20260829_233158.db
+[2026-08-29 23:31:58] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:07:32] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp1yvg_qoa\backups\ren_memory_backup_20260904_190732.db
+[2026-09-04 19:07:32] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:07:32] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp1yvg_qoa\backups\ren_memory_backup_20260904_190732.db
+[2026-09-04 19:07:32] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-09-04 19:07:32] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmp1yvg_qoa\backups\ren_memory_backup_20260904_190732.db
+[2026-09-04 19:07:32] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpgaeolaw_\backups\ren_memory_backup_20260904_190732.db
+[2026-09-04 19:07:32] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:07:33] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp4us_phz8\backups\ren_memory_backup_20260904_190733.db
+[2026-09-04 19:07:33] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:07:33] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp_xv3k7p1\backups\ren_memory_backup_20260904_190733.db
+[2026-09-04 19:07:33] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:07:34] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp3v67xrkp\backups\ren_memory_backup_20260904_190734.db
+[2026-09-04 19:07:34] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:12:16] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmptzbiabrt\backups\ren_memory_backup_20260904_191216.db
+[2026-09-04 19:12:16] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:12:16] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmptzbiabrt\backups\ren_memory_backup_20260904_191216.db
+[2026-09-04 19:12:16] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-09-04 19:12:16] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmptzbiabrt\backups\ren_memory_backup_20260904_191216.db
+[2026-09-04 19:12:16] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp34gmj40m\backups\ren_memory_backup_20260904_191216.db
+[2026-09-04 19:12:16] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:12:17] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmppugan0m3\backups\ren_memory_backup_20260904_191217.db
+[2026-09-04 19:12:17] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:12:17] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpmb20s5ft\backups\ren_memory_backup_20260904_191217.db
+[2026-09-04 19:12:17] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:12:18] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpjpur44pd\backups\ren_memory_backup_20260904_191218.db
+[2026-09-04 19:12:18] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:13:07] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp5u8pteij\backups\ren_memory_backup_20260904_191307.db
+[2026-09-04 19:13:07] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:13:08] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp5u8pteij\backups\ren_memory_backup_20260904_191308.db
+[2026-09-04 19:13:08] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-09-04 19:13:08] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmp5u8pteij\backups\ren_memory_backup_20260904_191308.db
+[2026-09-04 19:13:08] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmph9l6gx32\backups\ren_memory_backup_20260904_191308.db
+[2026-09-04 19:13:08] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:13:09] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpfhdwpce3\backups\ren_memory_backup_20260904_191309.db
+[2026-09-04 19:13:09] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:13:10] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpwlelgufq\backups\ren_memory_backup_20260904_191310.db
+[2026-09-04 19:13:10] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:13:10] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp9xdbbbnj\backups\ren_memory_backup_20260904_191310.db
+[2026-09-04 19:13:10] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:15:36] [INFO] [ren.memory]: Storing memory fact [semantic] for user 'default': Python 3.10 is the core runtime...
+[2026-09-04 19:15:36] [INFO] [ren.memory]: Storing memory fact [procedural] for user 'default': To deploy, start Cloudflare tunnel and launch API...
+[2026-09-04 19:15:36] [INFO] [ren.memory]: Storing memory fact [goals] for user 'default': Reach autonomous persistent state...
+[2026-09-04 19:15:36] [INFO] [ren.memory]: Storing memory fact [learning] for user 'default': High-risk operations must prompt user confirmation...
+[2026-09-04 19:27:35] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp0heqbxz2\backups\ren_memory_backup_20260904_192735.db
+[2026-09-04 19:27:35] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:27:35] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp0heqbxz2\backups\ren_memory_backup_20260904_192735.db
+[2026-09-04 19:27:35] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-09-04 19:27:35] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmp0heqbxz2\backups\ren_memory_backup_20260904_192735.db
+[2026-09-04 19:27:36] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp1xeiwv8m\backups\ren_memory_backup_20260904_192736.db
+[2026-09-04 19:27:36] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:27:37] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpgf8hz_d3\backups\ren_memory_backup_20260904_192737.db
+[2026-09-04 19:27:37] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:27:37] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp4ee1r3b9\backups\ren_memory_backup_20260904_192737.db
+[2026-09-04 19:27:37] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:27:38] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpq5kz09oe\backups\ren_memory_backup_20260904_192738.db
+[2026-09-04 19:27:38] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:27:38] [INFO] [ren.memory]: Storing memory fact [semantic] for user 'default': Python 3.10 is the core runtime...
+[2026-09-04 19:27:38] [INFO] [ren.memory]: Storing memory fact [procedural] for user 'default': To deploy, start Cloudflare tunnel and launch API...
+[2026-09-04 19:27:38] [INFO] [ren.memory]: Storing memory fact [goals] for user 'default': Reach autonomous persistent state...
+[2026-09-04 19:27:39] [INFO] [ren.memory]: Storing memory fact [learning] for user 'default': High-risk operations must prompt user confirmation...
+[2026-09-04 19:37:06] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpvxma6c4k\backups\ren_memory_backup_20260904_193706.db
+[2026-09-04 19:37:06] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:37:06] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpvxma6c4k\backups\ren_memory_backup_20260904_193706.db
+[2026-09-04 19:37:06] [WARNING] [ren.memory]: Initiating database recovery protocol...
+[2026-09-04 19:37:06] [INFO] [ren.memory]: Restored database from backup C:\Users\CYANCO~1\AppData\Local\Temp\tmpvxma6c4k\backups\ren_memory_backup_20260904_193706.db
+[2026-09-04 19:37:06] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpnplvabnp\backups\ren_memory_backup_20260904_193706.db
+[2026-09-04 19:37:06] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:37:07] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpp3jzbzy0\backups\ren_memory_backup_20260904_193707.db
+[2026-09-04 19:37:07] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:37:07] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmpidbulj51\backups\ren_memory_backup_20260904_193707.db
+[2026-09-04 19:37:07] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:37:08] [INFO] [ren.memory]: Database backup saved to C:\Users\CYANCO~1\AppData\Local\Temp\tmp_idam5fn\backups\ren_memory_backup_20260904_193708.db
+[2026-09-04 19:37:08] [INFO] [ren.memory]: Successfully migrated 13 items from D:\Coding projects\REN-AI-main (1)\REN-AI-main\memory.json into SQLite.
+[2026-09-04 19:37:10] [INFO] [ren.memory]: Storing memory fact [semantic] for user 'default': Python 3.10 is the core runtime...
+[2026-09-04 19:37:10] [INFO] [ren.memory]: Storing memory fact [procedural] for user 'default': To deploy, start Cloudflare tunnel and launch API...
+[2026-09-04 19:37:10] [INFO] [ren.memory]: Storing memory fact [goals] for user 'default': Reach autonomous persistent state...
+[2026-09-04 19:37:10] [INFO] [ren.memory]: Storing memory fact [learning] for user 'default': High-risk operations must prompt user confirmation...

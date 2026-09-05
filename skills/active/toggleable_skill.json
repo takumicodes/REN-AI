@@ -1,0 +1,30 @@
+{
+  "name": "Toggleable Skill",
+  "description": "Skill to Toggleable Skill",
+  "version": "1.0.0",
+  "triggers": [
+    "toggleable",
+    "skill"
+  ],
+  "capabilities": [
+    "toggleable skill"
+  ],
+  "dependencies": [],
+  "supported_devices": [
+    "pc_host",
+    "phone"
+  ],
+  "entrypoint": "main",
+  "parameters": {},
+  "input_schema": {},
+  "output_schema": {},
+  "permissions": [],
+  "risk_level": "LOW",
+  "enabled": true,
+  "created_at": "2026-09-05T02:37:11.956856",
+  "source_task": "",
+  "tests": [],
+  "provenance": "llm_generated",
+  "confidence": 0.8,
+  "tested": true
+}

@@ -1,15 +1,17 @@
 """
 Autonomous Bounded Agent Loop
-Executes multi-step reasoning, tool dispatch, loop detection, streaming output, and failure recovery.
+Executes multi-step reasoning, thinking mode adaptation, multimodal image forwarding,
+immediate skill creation and execution, loop prevention, and streaming output.
 """
 
 import re
 import json
 import time
-from typing import Optional, Callable, Dict, Any
+from typing import Optional, Callable, Dict, Any, List
 
 from ren.core.state import ExecutionContext, AgentLifecycle
 from ren.core.context import ContextBuilder
+from ren.core.thinking import thinking_manager, ThinkingConfig
 from ren.core.events import event_bus, EventType
 from ren.models import get_model_provider
 from ren.tools.registry import tool_registry
@@ -25,6 +27,10 @@ class AgentLoop:
     def __init__(self, context: ExecutionContext):
         self.context = context
         self.provider = get_model_provider()
+        self.thinking_config = thinking_manager.get_config(
+            mode=context.thinking_mode,
+            think_hard=context.think_hard
+        )
 
     def run(
         self,
@@ -33,10 +39,15 @@ class AgentLoop:
         token_callback: Optional[Callable[[str], None]] = None,
     ) -> str:
         """Executes bounded autonomous reasoning loop with immediate streaming output."""
-        agent_logger.info(f"Starting Agent Loop for request: '{self.context.user_query}'")
-        event_bus.publish(EventType.AGENT_STARTED, {"query": self.context.user_query})
+        agent_logger.info(
+            f"Starting Agent Loop for request: '{self.context.user_query}' "
+            f"[Mode: {self.thinking_config.mode.value} | ThinkHard: {self.context.think_hard} | Images: {len(self.context.images or [])}]"
+        )
+        event_bus.publish(EventType.AGENT_STARTED, {"query": self.context.user_query, "mode": self.thinking_config.mode.value})
 
         if ui_callback:
+            if self.thinking_config.is_deep_thinking:
+                ui_callback('status', 'Analyzing deeply...')
             ui_callback('agent_stage', 'intent')
 
         observation: Optional[str] = None
@@ -55,20 +66,24 @@ class AgentLoop:
             iter_num = self.context.current_iteration
             agent_logger.debug(f"Agent Loop iteration {iter_num}/{self.context.max_iterations}")
 
-            # 1. Build Context
+            # 1. Build Context with thinking mode directives and image flags
             if ui_callback:
                 ui_callback('agent_stage', 'exec')
             event_bus.publish(EventType.AGENT_PLANNING, {"iteration": iter_num})
 
+            has_image = bool(self.context.images and len(self.context.images) > 0)
             prompt = ContextBuilder.build_agent_prompt(
                 user_query=self.context.user_query,
                 session=self.context.session,
                 active_plan=self.context.active_plan,
                 observation=observation,
                 user_id=self.context.user_id,
+                thinking_config=self.thinking_config,
+                has_image=has_image,
+                device_context=self.context.device_context,
             )
 
-            # 2. Query LLM with real-time streaming token callback
+            # 2. Query LLM with real-time streaming token callback & image payload
             streamed_tokens = []
             def stream_handler(chunk: str):
                 streamed_tokens.append(chunk)
@@ -77,8 +92,9 @@ class AgentLoop:
 
             llm_response = self.provider.generate(
                 prompt,
-                max_tokens=settings.MODEL.MAX_TOKENS_AGENT,
-                temperature=settings.MODEL.DEFAULT_TEMPERATURE,
+                images=self.context.images,
+                max_tokens=self.thinking_config.max_tokens,
+                temperature=self.thinking_config.temperature,
                 token_callback=stream_handler if token_callback else None,
                 cancel_check=lambda: self.context.is_cancelled,
             )
@@ -94,7 +110,7 @@ class AgentLoop:
                 internal_thought = thought_match.group(1).strip()
                 agent_logger.info(f"Hermes Agent Reasoning: {internal_thought}")
 
-            # Strip thought/scratchpad tags for action parsing and clean speech
+            # Strip thought/scratchpad tags for action parsing and clean speech (hides hidden chain-of-thought from raw text)
             effective_response = re.sub(r'<(?:thought|scratchpad)>.*?</(?:thought|scratchpad)>', '', llm_response, flags=re.DOTALL | re.IGNORECASE).strip()
             if not effective_response:
                 effective_response = llm_response
@@ -121,21 +137,31 @@ class AgentLoop:
                     ui_callback('agent_stage', 'tools')
                 event_bus.publish(EventType.SKILL_CREATED, {"name": friendly_name})
 
+                # Register, validate, sandbox-test, and dynamically promote skill
                 success, reg_msg = skill_registry.register_and_install_skill(
                     name=friendly_name,
                     code=code_to_install,
                     source_task=self.context.user_query,
                 )
 
-                if success and ui_callback:
-                    ui_callback('show_popup', {
-                        'title': 'Advancement Unlocked',
-                        'message': friendly_name,
-                        'type': 'advancement'
-                    })
-                    ui_callback('skills_list', skill_registry.get_unlocked_skill_names())
+                if success:
+                    if ui_callback:
+                        ui_callback('show_popup', {
+                            'title': 'Advancement Unlocked',
+                            'message': friendly_name,
+                            'type': 'advancement'
+                        })
+                        ui_callback('skills_list', skill_registry.get_unlocked_skill_names())
 
-                observation = f"[Skill Registration Result]: {reg_msg}"
+                    # Immediately execute the newly created skill to fulfill user request without stopping!
+                    exec_result = skill_registry.execute_skill(friendly_name)
+                    if exec_result.success:
+                        observation = f"[Skill Registration & Live Execution Result]: {reg_msg}\nLive Output:\n{exec_result.output}"
+                    else:
+                        observation = f"[Skill Registration & Live Execution Result]: {reg_msg}\nExecution Error:\n{exec_result.error or exec_result.output}"
+                else:
+                    observation = f"[Skill Registration Result]: {reg_msg}"
+
                 continue
 
             # 6. Check for Tool Calls (Hermes <tool_call> XML tags, JSON blocks, or native function format)
@@ -156,7 +182,6 @@ class AgentLoop:
                     try:
                         parsed_tool_call = json.loads(json_blocks[0])
                     except Exception:
-                        # Handle python triple-quoted strings inside JSON blocks
                         tool_m = re.search(r'"(?:tool|name)"\s*:\s*"([^"]+)"', json_blocks[0])
                         code_m = re.search(r'"code"\s*:\s*"""(.*?)"""', json_blocks[0], re.DOTALL) or re.search(r'"code"\s*:\s*"(.*?)"', json_blocks[0], re.DOTALL)
                         if tool_m:
@@ -229,7 +254,7 @@ class AgentLoop:
 
                 event_bus.publish(EventType.TOOL_STARTED, {"tool": tool_name, "args": tool_args})
 
-                tool_result = tool_registry.execute_tool(tool_name, tool_args)
+                tool_result = tool_registry.execute_tool(tool_name, tool_args, device_context=self.context.device_context)
 
                 if ui_callback:
                     ui_callback('agent_stage', 'verify')
@@ -250,7 +275,6 @@ class AgentLoop:
                 if ui_callback:
                     ui_callback('agent_stage', 'exec')
 
-                # Prepend common helper imports for convenience
                 preamble = (
                     "import os, sys, shutil, requests, psutil, json\n"
                     "from ren.core.router import get_downloads_dir\n"
@@ -258,7 +282,7 @@ class AgentLoop:
                 )
                 full_code = preamble + "\n" + code_to_exec
 
-                tool_result = tool_registry.execute_tool("python_execute", {"code": full_code})
+                tool_result = tool_registry.execute_tool("python_execute", {"code": full_code}, device_context=self.context.device_context)
                 if ui_callback:
                     ui_callback('agent_stage', 'verify')
 
@@ -268,7 +292,7 @@ class AgentLoop:
                     break
                 continue
 
-            # 8. Final Conversational Response (preserves all formatting, code, lists, and answers)
+            # 8. Final Conversational Response
             clean_text = effective_response.replace("[DONE]", "").strip()
             clean_text = re.sub(r'^(?:REN|Assistant):\s*', '', clean_text, flags=re.IGNORECASE).strip()
 

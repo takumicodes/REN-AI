@@ -1,52 +1,17 @@
 {
-  "active_task": {
-    "id": "task_1787999301187",
-    "name": "Give mace to Superiorx80",
-    "goal": {
-      "goal_type": "GIVE_ITEM",
-      "parameters": {
-        "player": "Superiorx80",
-        "item_name": "mace",
-        "count": 2
-      },
-      "raw_text": "give me mace and wincharge",
-      "target_player": "Superiorx80",
-      "priority": 100,
-      "created_at": 1787999301.1871598
-    },
-    "subtasks": [
-      {
-        "id": "step_1",
-        "action": "give",
+  "active_task": null,
+  "history": [
+    {
+      "id": "task_1787999301187",
+      "name": "Give mace to Superiorx80",
+      "goal": {
+        "goal_type": "GIVE_ITEM",
         "parameters": {
           "player": "Superiorx80",
           "item_name": "mace",
           "count": 2
         },
-        "status": "PENDING",
-        "attempts": 0,
-        "max_attempts": 3,
-        "error": null,
-        "result_details": {}
-      }
-    ],
-    "status": "IN_PROGRESS",
-    "current_subtask_index": 0,
-    "created_at": 1787999301.1871598,
-    "updated_at": 1787999301.1871598,
-    "failure_reason": null,
-    "progress_percentage": 0.0
-  },
-  "history": [
-    {
-      "id": "task_1787999301187",
-      "name": "Duel Superiorx80",
-      "goal": {
-        "goal_type": "PVP_COMBAT",
-        "parameters": {
-          "player": "Superiorx80"
-        },
-        "raw_text": "pvp with me",
+        "raw_text": "give me mace and wincharge",
         "target_player": "Superiorx80",
         "priority": 100,
         "created_at": 1787999301.1871598
@@ -54,9 +19,11 @@
       "subtasks": [
         {
           "id": "step_1",
-          "action": "pvp",
+          "action": "give",
           "parameters": {
-            "player": "Superiorx80"
+            "player": "Superiorx80",
+            "item_name": "mace",
+            "count": 2
           },
           "status": "PENDING",
           "attempts": 0,
@@ -70,6 +37,74 @@
       "created_at": 1787999301.1871598,
       "updated_at": 1787999301.1871598,
       "failure_reason": "New player directive",
+      "progress_percentage": 0.0
+    },
+    {
+      "id": "task_1788082318358",
+      "name": "Follow CyanCode",
+      "goal": {
+        "goal_type": "FOLLOW_PLAYER",
+        "parameters": {
+          "player": "CyanCode"
+        },
+        "raw_text": "follow me",
+        "target_player": "CyanCode",
+        "priority": 100,
+        "created_at": 1788082318.357005
+      },
+      "subtasks": [
+        {
+          "id": "step_1",
+          "action": "follow",
+          "parameters": {
+            "player": "CyanCode"
+          },
+          "status": "COMPLETED",
+          "attempts": 0,
+          "max_attempts": 3,
+          "error": null,
+          "result_details": {}
+        }
+      ],
+      "status": "COMPLETED",
+      "current_subtask_index": 1,
+      "created_at": 1788082318.3580031,
+      "updated_at": 1788082318.3649826,
+      "failure_reason": null,
+      "progress_percentage": 100.0
+    },
+    {
+      "id": "task_1788082425423",
+      "name": "CHAT",
+      "goal": {
+        "goal_type": "CHAT",
+        "parameters": {
+          "message": "hello"
+        },
+        "raw_text": "hello",
+        "target_player": "CyanCode",
+        "priority": 50,
+        "created_at": 1788082425.421035
+      },
+      "subtasks": [
+        {
+          "id": "step_1",
+          "action": "chat",
+          "parameters": {
+            "message": "hello"
+          },
+          "status": "PENDING",
+          "attempts": 0,
+          "max_attempts": 3,
+          "error": null,
+          "result_details": {}
+        }
+      ],
+      "status": "CANCELLED",
+      "current_subtask_index": 0,
+      "created_at": 1788082425.4230256,
+      "updated_at": 1788082425.4230256,
+      "failure_reason": "Switched to speedrun",
       "progress_percentage": 0.0
     }
   ]

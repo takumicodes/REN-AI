@@ -56,19 +56,24 @@ class MinecraftGoalPlanner:
         subtasks: List[Subtask] = []
         step_id = 1
 
-        # 1. BUILD_HOUSE
+        # 1. BUILD_HOUSE (Aesthetic Medieval Cottage / Modern Villa)
         if g_type == "BUILD_HOUSE":
             origin_x = int(pos.get("x", 0)) + 3
             origin_y = int(pos.get("y", 64))
             origin_z = int(pos.get("z", 0))
-            material = params.get("material", "wooden")
-            mat_block = "oak_planks" if material == "wooden" else "cobblestone"
+            style = params.get("style", "medieval_cottage")
 
-            blueprint = self.builder.generate_small_house_blueprint(origin_x, origin_y, origin_z, mat_block)
+            if style == "modern_villa":
+                blueprint = self.builder.generate_modern_villa_blueprint(origin_x, origin_y, origin_z)
+                task_name = "Build Modern Luxury Villa"
+            else:
+                blueprint = self.builder.generate_medieval_cottage_blueprint(origin_x, origin_y, origin_z)
+                task_name = "Build Aesthetic Medieval Cottage"
+
             subtasks = self.builder.create_construction_subtasks(blueprint, inv)
             return Task(
                 id=f"task_{g_type.lower()}",
-                name="Build Small House",
+                name=task_name,
                 goal=goal,
                 subtasks=subtasks
             )

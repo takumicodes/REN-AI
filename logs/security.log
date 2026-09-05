@@ -64,3 +64,133 @@
 [2026-08-29 03:45:47] [WARNING] [ren.security]: BLOCKED command matched pattern 'sqlmap': sqlmap -u http://example.com
 [2026-08-29 03:45:47] [WARNING] [ren.security]: BLOCKED command matched pattern 'msfvenom': msfvenom -p windows/meterpreter
 [2026-08-29 03:45:47] [WARNING] [ren.security]: BLOCKED command matched pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-08-29 04:37:28] [WARNING] [ren.security]: BLOCKED command matched pattern 'hashcat': mkdir "d:\downalods\system_logs" "d:\downalods\technical_security" "d:\downalods\tools" "d:\downalods\games" "d:\downalods\development" && move "d:\downalods\wintoys.msix" "d:\downalods\installers\" && move "d:\downalods\python-manager-26.0.msix" "d:\downalods\installers\" && move "d:\downalods\*.htm" "d:\downalods\documents\" && move "d:\downalods\bluetooth_content_share.html" "d:\downalods\documents\" && move "d:\downalods\buildozer.text" "d:\downalods\documents\" && move "d:\downalods\configuration.xml" "d:\downalods\documents\" && move "d:\downalods\debug.log" "d:\downalods\system_logs\" && move "d:\downalods\autorun.inf" "d:\downalods\system_logs\" && move "d:\downalods\desktop.ini" "d:\downalods\system_logs\" && move "d:\downalods\m0nkrus.nfo" "d:\downalods\system_logs\" && move "d:\downalods\wifihash.hc22000" "d:\downalods\technical_security\" && move "d:\downalods\deviltwin-nodemcu.ino.bin" "d:\downalods\technical_security\" && move "d:\downalods\*.whl" "d:\downalods\documents\" && move "d:\downalods\android_image_tools" "d:\downalods\tools\" && move "d:\downalods\qcomdloader" "d:\downalods\tools\" && move "d:\downalods\hashcat-utils" "d:\downalods\tools\" && move "d:\downalods\hcxtools" "d:\downalods\tools\" && move "d:\downalods\platform-tools" "d:\downalods\tools\" && move "d:\downalods\euro truck simulator 2" "d:\downalods\games\" && move "d:\downalods\hollow knight" "d:\downalods\games\" && move "d:\downalods\fears to fathom" "d:\downalods\games\" && move "d:\downalods\the-ultimate-python-course" "d:\downalods\development\" && move "d:\downalods\wi-fi-jammer" "d:\downalods\development\" && move "d:\downalods\nodemcu-flasher" "d:\downalods\development\"
+[2026-08-29 22:55:16] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 22:55:16] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-08-29 22:55:16] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-08-29 22:55:16] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-08-29 22:55:16] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-08-29 22:55:21] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-08-29 22:56:03] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 22:56:03] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-08-29 22:56:03] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-08-29 22:56:03] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-08-29 22:56:03] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-08-29 22:56:08] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-08-29 23:04:18] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 23:24:31] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 23:24:31] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-08-29 23:24:31] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-08-29 23:24:31] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-08-29 23:24:31] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-08-29 23:24:36] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-08-29 23:31:53] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 23:31:53] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-08-29 23:31:53] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-08-29 23:31:53] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-08-29 23:31:53] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-08-29 23:31:58] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-08-29 23:37:33] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-08-29 23:37:44] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-09-04 19:07:28] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:07:28] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-09-04 19:07:28] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-09-04 19:07:28] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-09-04 19:07:28] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-09-04 19:07:34] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-09-04 19:12:15] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:12:15] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-09-04 19:12:15] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-09-04 19:12:15] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-09-04 19:12:15] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-09-04 19:12:18] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-09-04 19:13:04] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:13:04] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-09-04 19:13:04] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-09-04 19:13:04] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-09-04 19:13:04] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-09-04 19:13:10] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-09-04 19:27:32] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:27:32] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-09-04 19:27:32] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-09-04 19:27:32] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-09-04 19:27:32] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-09-04 19:27:40] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap
+[2026-09-04 19:37:02] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:37:02] [INFO] [ren.security]: Developer capabilities updated: debug=False, tools=True
+[2026-09-04 19:37:02] [INFO] [ren.security]: Developer Mode deactivated.
+[2026-09-04 19:37:02] [WARNING] [ren.security]: Developer Mode: Failed authentication attempt.
+[2026-09-04 19:37:02] [INFO] [ren.security]: Developer Mode: Successful authentication.
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'format': format c: /fs:ntfs
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'mimikatz': mimikatz.exe
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'hydra': hydra -l user -p pass 127.0.0.1 ssh
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'arpspoof': arpspoof -i eth0
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'rmdir /s /q c:\': rmdir /s /q c:\windows
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'sqlmap': sqlmap -u http://example.com
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'msfvenom': msfvenom -p windows/meterpreter
+[2026-09-04 19:37:11] [WARNING] [ren.security]: BLOCKED command matched blacklist pattern 'aircrack-ng': aircrack-ng wpa.cap

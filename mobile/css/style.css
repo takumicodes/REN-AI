@@ -1177,3 +1177,206 @@ html, body {
 .hidden {
     display: none !important;
 }
+
+/* REN 2.0 Mobile Toolbar & Controls */
+.mobile-input-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px 6px 4px;
+    width: 100%;
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-select-mode {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.78rem;
+    padding: 3px 6px;
+    outline: none;
+    font-family: inherit;
+}
+
+.btn-think-hard-mobile {
+    background: rgba(168, 85, 247, 0.12);
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    border-radius: var(--radius-sm);
+    color: #c084fc;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-think-hard-mobile:hover, .btn-think-hard-mobile.active {
+    background: rgba(168, 85, 247, 0.3);
+    border-color: #c084fc;
+    color: #f3e8ff;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+}
+
+.mobile-image-preview {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    font-size: 0.72rem;
+    color: var(--text-primary);
+}
+
+.btn-clear-img {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* Autonomous Initiative Card */
+.autonomous-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    color: #93c5fd;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* Device Indicator Header Badge */
+.device-indicator-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.device-indicator-badge:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+}
+
+/* First-class Image Asset Rendering */
+.ren-image-card {
+    margin: 10px 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-subtle);
+    max-width: 100%;
+}
+
+.ren-rendered-image {
+    width: 100%;
+    max-height: 440px;
+    object-fit: contain;
+    display: block;
+    cursor: pointer;
+    background: #000;
+    transition: opacity 0.2s ease;
+}
+
+.ren-rendered-image:hover {
+    opacity: 0.95;
+}
+
+.ren-image-caption {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.4);
+    border-top: 1px solid var(--border-subtle);
+}
+
+/* Multi-Device Management Panel */
+.device-tab-panel {
+    transition: opacity 0.2s ease;
+}
+
+.device-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    margin-bottom: 8px;
+}
+
+.device-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.device-item-name {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.device-item-meta {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.device-badge-active {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    font-weight: 600;
+}
+
+.device-badge-inactive {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(156, 163, 175, 0.15);
+    color: #9ca3af;
+    font-weight: 600;
+}
+
+.device-action-btn {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    border-radius: var(--radius-sm);
+    padding: 4px 8px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.device-action-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+

@@ -85,11 +85,17 @@
                 </div>
 
                 <div class="footer-secondary-controls">
+                    <button id="btn-open-devices" class="btn btn-ghost btn-sm btn-block" title="Connected Devices & QR Pairing">
+                        <span>📱 Devices & QR Connect</span>
+                    </button>
                     <button id="btn-toggle-dream" class="btn btn-ghost btn-sm btn-block" title="Cognitive Reflection Mode">
                         <span>🌙 Sleep Mode (Dream)</span>
                     </button>
                     <button id="btn-open-awakening" class="btn btn-ghost btn-sm btn-block" title="Calibrate Sensors">
                         <span>⚡ Sensory Calibration</span>
+                    </button>
+                    <button id="btn-open-dev" class="btn btn-ghost btn-sm btn-block" title="Developer & Admin Tools">
+                        <span>🛠️ Developer Mode</span>
                     </button>
                 </div>
 
@@ -119,6 +125,10 @@
                     <div id="status-badge" class="status-badge status-online">
                         <span class="status-dot"></span>
                         <span id="status-label" class="status-label">Online</span>
+                    </div>
+                    <div id="device-badge" class="device-indicator-badge" title="Paired Devices" style="cursor: pointer;">
+                        <span class="device-icon">📱</span>
+                        <span id="device-count-label">1 Device</span>
                     </div>
                 </div>
 
@@ -180,8 +190,27 @@
 
             <!-- Bottom Sticky Chat Input -->
             <div class="input-wrapper">
+                <!-- Mobile Toolbar Controls -->
+                <div class="mobile-input-toolbar">
+                    <div class="toolbar-left">
+                        <select id="mobile-thinking-mode" class="mobile-select-mode">
+                            <option value="FAST">⚡ Fast</option>
+                            <option value="MEDIUM" selected>🎯 Balanced</option>
+                            <option value="HIGH">🔬 High</option>
+                        </select>
+                        <button id="mobile-btn-think-hard" class="btn-think-hard-mobile" title="Deep multi-step reasoning">
+                            <span>🧠 Think Hard</span>
+                        </button>
+                    </div>
+                    <div id="mobile-image-preview" class="mobile-image-preview hidden">
+                        <span id="mobile-preview-name">image.png</span>
+                        <button id="mobile-btn-clear-image" class="btn-clear-img">✕</button>
+                    </div>
+                </div>
+
                 <div class="input-box">
-                    <button id="btn-camera" class="action-btn camera-btn" title="Camera Vision Snapshot" aria-label="Camera">
+                    <input type="file" id="mobile-image-file" accept="image/*" style="display: none;">
+                    <button id="btn-camera" class="action-btn camera-btn" title="Attach Image or Snapshot" aria-label="Camera">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                             <circle cx="12" cy="13" r="4"></circle>
@@ -222,6 +251,36 @@
                 </div>
             </div>
         </main>
+
+        <!-- Developer Mode Modal Sheet -->
+        <div id="dev-modal" class="modal-sheet hidden">
+            <div class="modal-sheet-backdrop" id="dev-backdrop"></div>
+            <div class="modal-sheet-content">
+                <div class="modal-header">
+                    <h3>🛠️ Developer / Admin Mode</h3>
+                    <button id="btn-close-dev" class="icon-btn">✕</button>
+                </div>
+                <div class="modal-body" style="padding: 16px;">
+                    <div id="dev-auth-section">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px;">Enter Developer Secret to unlock admin capabilities.</p>
+                        <input type="password" id="dev-secret-input" placeholder="Developer Secret Key" style="width: 100%; padding: 10px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px;">
+                        <button id="btn-submit-dev-auth" class="btn btn-primary btn-block">Authorize Developer Mode</button>
+                    </div>
+                    <div id="dev-active-section" class="hidden">
+                        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 6px; padding: 10px; margin-bottom: 15px; color: #10b981; font-weight: 600;">
+                            ✓ Developer Mode Authenticated
+                        </div>
+                        <div class="dev-caps-list" style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; color: var(--text-secondary);">
+                            <label><input type="checkbox" id="cap-debug" checked> Verbose Reasoning Logs</label>
+                            <label><input type="checkbox" id="cap-skill-dev" checked> Skill Sandbox Development</label>
+                            <label><input type="checkbox" id="cap-advanced-tools" checked> Advanced Terminal & Execution Tools</label>
+                            <label><input type="checkbox" id="cap-autonomy" checked> Autonomous Initiative Tuning</label>
+                        </div>
+                        <button id="btn-revoke-dev" class="btn btn-secondary btn-block" style="margin-top: 15px;">Deactivate Developer Mode</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Awakening Modal Sheet -->
         <div id="awakening-modal" class="modal-sheet hidden">
@@ -288,6 +347,57 @@
                 </div>
                 <div id="skills-list-container" class="modal-body">
                     <div class="loading-state-mini">Loading skills...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Devices & QR Pairing Modal Sheet -->
+        <div id="devices-modal" class="modal-sheet hidden">
+            <div class="modal-sheet-backdrop" id="devices-backdrop"></div>
+            <div class="modal-sheet-content">
+                <div class="modal-header">
+                    <h3>📱 Multi-Device Ecosystem</h3>
+                    <button id="btn-close-devices" class="icon-btn">✕</button>
+                </div>
+                <div class="modal-body" style="padding: 16px;">
+                    <div class="devices-tab-buttons" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                        <button id="tab-btn-pair-qr" class="btn btn-primary btn-sm" style="flex: 1;">Pair New Device</button>
+                        <button id="tab-btn-paired-list" class="btn btn-secondary btn-sm" style="flex: 1;">Paired Devices</button>
+                    </div>
+
+                    <!-- Tab 1: QR Pairing View -->
+                    <div id="device-view-qr" class="device-tab-panel">
+                        <div style="text-align: center; margin-bottom: 12px;">
+                            <p style="color: var(--text-secondary); font-size: 0.85rem;">Scan this QR code from your phone or enter the challenge code to link your companion.</p>
+                        </div>
+                        <div id="qr-loading" style="text-align: center; padding: 20px; color: var(--text-secondary);">Generating Pairing QR...</div>
+                        <div id="qr-container" class="hidden" style="text-align: center; margin: 10px 0;">
+                            <img id="pairing-qr-img" src="" alt="Pairing QR Code" style="max-width: 200px; border-radius: 12px; border: 2px solid var(--border-subtle); background: #fff; padding: 8px;">
+                            <div style="margin-top: 8px; font-size: 0.85rem; color: var(--text-secondary);">
+                                Challenge Code: <strong id="pairing-code-label" style="color: var(--accent-cyan); font-family: monospace; font-size: 1.05rem; letter-spacing: 1px;">------</strong>
+                            </div>
+                            <div style="margin-top: 4px; font-size: 0.75rem; color: var(--text-secondary);">
+                                Expires in: <span id="pairing-countdown">300s</span>
+                            </div>
+                        </div>
+                        <button id="btn-refresh-qr" class="btn btn-secondary btn-block" style="margin-top: 8px;">🔄 Refresh QR Code</button>
+
+                        <div style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+                            <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">Pair This Device Manually:</div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <input type="text" id="manual-challenge-input" placeholder="Enter Pairing Challenge (e.g. from PC)" style="width: 100%; padding: 8px 12px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-family: monospace;">
+                                <input type="text" id="manual-dev-name" placeholder="Device Name (e.g. Android Phone)" style="width: 100%; padding: 8px 12px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff;">
+                                <button id="btn-submit-pairing" class="btn btn-primary btn-block">Verify & Link This Device</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Paired Devices List -->
+                    <div id="device-view-list" class="device-tab-panel hidden">
+                        <div id="paired-devices-container">
+                            <div class="loading-state-mini">Loading connected devices...</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -56,42 +56,38 @@ class GenerateImageTool(BaseTool):
 
         width = int(kwargs.get("width", 768))
         height = int(kwargs.get("height", 768))
+        user_id = str(kwargs.get("user_id", "default"))
+        provider_name = kwargs.get("provider", "pollinations")
 
         tools_logger.info(f"Generating image for prompt: '{prompt}' ({width}x{height})")
 
-        # Create output directory
-        images_dir = settings.PATHS.DATA_DIR / "generated_images"
-        images_dir.mkdir(parents=True, exist_ok=True)
-
-        encoded_prompt = urllib.parse.quote(prompt)
-        image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width={width}&height={height}&nologo=true"
-        
-        timestamp = int(time.time())
-        local_filename = f"image_{timestamp}.jpg"
-        local_path = images_dir / local_filename
-
         try:
-            # Download copy to local storage
-            req = urllib.request.Request(
-                image_url,
-                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) REN-AI/2.5"}
+            from ren.media.image_asset import image_asset_manager
+            asset = image_asset_manager.generate_image(
+                prompt=prompt,
+                width=width,
+                height=height,
+                provider_name=provider_name,
+                user_id=user_id
             )
-            with urllib.request.urlopen(req, timeout=20) as resp:
-                with open(local_path, "wb") as f:
-                    f.write(resp.read())
 
             output_md = (
                 f"Here is your generated image for **'{prompt}'**:\n\n"
-                f"![{prompt}]({image_url})\n\n"
-                f"*(Image saved locally to `{local_path}`)*"
+                f"![{prompt}]({asset.url})\n\n"
+                f"<!-- ren:image_asset:{asset.id} -->"
             )
-            return ToolResult(success=True, output=output_md, duration=time.time() - start_t)
+            return ToolResult(
+                success=True,
+                output=output_md,
+                duration=time.time() - start_t
+            )
 
         except Exception as e:
-            tools_logger.warning(f"Direct download failed, providing direct URL: {e}")
-            # Fallback to direct web URL
+            tools_logger.warning(f"Direct asset generation error, falling back to direct URL: {e}")
+            encoded_prompt = urllib.parse.quote(prompt)
+            fallback_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width={width}&height={height}&nologo=true"
             output_md = (
                 f"Here is your generated image for **'{prompt}'**:\n\n"
-                f"![{prompt}]({image_url})\n"
+                f"![{prompt}]({fallback_url})\n"
             )
             return ToolResult(success=True, output=output_md, duration=time.time() - start_t)

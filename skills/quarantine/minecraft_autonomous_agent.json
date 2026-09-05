@@ -1,0 +1,20 @@
+{
+  "name": "Minecraft_Autonomous_Agent",
+  "description": "Skill to Minecraft_Autonomous_Agent",
+  "version": "1.0.0",
+  "triggers": [
+    "minecraft_autonomous_agent"
+  ],
+  "capabilities": [
+    "minecraft autonomous agent"
+  ],
+  "dependencies": [],
+  "entrypoint": "main",
+  "parameters": {},
+  "permissions": [],
+  "risk_level": "LOW",
+  "enabled": true,
+  "created_at": "2026-08-30T06:12:52.530306",
+  "source_task": "create a skill which gives u ability to play minecraft on local lan world. You should have curosity, free will, learn like an agi, see everything, and also explore on ur own. Learn many thing on base of reinforment learning",
+  "tested": false
+}
