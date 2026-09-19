@@ -34,5 +34,9 @@ capture_*.jpg
 # Desktop Assistant local data and build artifacts
 Ren_Desktop_Assistant/user_preferences.json
 Ren_Desktop_Assistant/downloads_history.json
+Ren_Desktop_Assistant/change_history.json
+Ren_Desktop_Assistant/benchmarks.json
 Ren_Desktop_Assistant/build/
 Ren_Desktop_Assistant/dist/
+*.bak
+Ren_Desktop_Assistant/*.bak

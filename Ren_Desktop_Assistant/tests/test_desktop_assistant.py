@@ -333,5 +333,219 @@ class TestSystemObserver(unittest.TestCase):
         self.assertFalse(self.obs.is_running)
 
 
+from history import ChangeHistory
+from action_registry import Action, RiskLevel, ActionRegistry, ActionExecutor
+from process_manager import ProcessManager
+from startup_manager import StartupManager
+from services_manager import ServicesManager
+from storage_cleaner import StorageCleaner
+from storage_analyzer import StorageAnalyzer
+from app_manager import AppManager
+from tweaks_manager import TweaksManager
+from privacy_center import PrivacyCenter
+from network_center import NetworkCenter
+from health_diagnostics import HealthDiagnostics
+from restore_center import RestoreCenter
+from benchmark import BenchmarkCenter
+
+
+class TestChangeHistory(unittest.TestCase):
+    """Tests ChangeHistory audit trail and rollback tracking."""
+
+    def setUp(self):
+        self.test_dir = tempfile.mkdtemp()
+        self.hist_file = Path(self.test_dir) / "test_history.json"
+        self.history = ChangeHistory(self.hist_file)
+
+    def tearDown(self):
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
+    def test_record_and_get_history(self):
+        entry = self.history.record_action(
+            action_id="test_act_1",
+            title="Clean Temp",
+            category="Storage",
+            status="executed",
+            verified=True,
+            verification_message="Freed 50 MB",
+            before_state={"bytes": 100},
+            after_state={"bytes": 50},
+        )
+        self.assertIsNotNone(entry["entry_id"])
+        self.assertEqual(entry["title"], "Clean Temp")
+        self.assertTrue(entry["verified"])
+
+        entries = self.history.get_history()
+        self.assertEqual(len(entries), 1)
+
+        # Test rollback marking
+        res = self.history.mark_rolled_back(entry["entry_id"], message="Rolled back test")
+        self.assertTrue(res)
+        updated = self.history.get_entry(entry["entry_id"])
+        self.assertTrue(updated["rolled_back"])
+        self.assertEqual(updated["status"], "rolled_back")
+
+
+class TestActionRegistryAndExecutor(unittest.TestCase):
+    """Tests ActionRegistry, RiskLevel, verification, and rollback."""
+
+    def setUp(self):
+        self.test_dir = tempfile.mkdtemp()
+        self.hist_file = Path(self.test_dir) / "exec_history.json"
+        self.history = ChangeHistory(self.hist_file)
+        self.registry = ActionRegistry()
+        self.executor = ActionExecutor(self.registry, self.history)
+
+    def tearDown(self):
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
+    def test_action_execution_and_rollback(self):
+        state = {"value": "initial"}
+
+        def do_action():
+            state["value"] = "updated"
+            return {"success": True}
+
+        def verify():
+            return state["value"] == "updated"
+
+        def rollback(prev_state):
+            state["value"] = prev_state["value"]
+            return {"success": True}
+
+        act = Action(
+            action_id="act_val_update",
+            title="Update State",
+            description="Updates test state value",
+            category="Test",
+            impact="Changes test state",
+            risk_level=RiskLevel.SAFE,
+            action_fn=do_action,
+            verify_fn=verify,
+            rollback_fn=rollback,
+            get_state_fn=lambda: {"value": state["value"]},
+        )
+        self.registry.register(act)
+
+        # Execute
+        res = self.executor.execute_action(act)
+        self.assertTrue(res["success"])
+        self.assertTrue(res["verified"])
+        self.assertEqual(state["value"], "updated")
+
+        entry_id = res["history_entry_id"]
+        # Rollback
+        rb_res = self.executor.rollback_entry(entry_id)
+        self.assertTrue(rb_res["success"])
+        self.assertEqual(state["value"], "initial")
+
+
+class TestControlCenterModules(unittest.TestCase):
+    """Tests all new v1.3.0 modules for safety, queries, and stability."""
+
+    def test_process_manager(self):
+        pm = ProcessManager()
+        self.assertTrue(pm.is_critical_process("csrss.exe"))
+        self.assertTrue(pm.is_critical_process("explorer.exe"))
+        self.assertFalse(pm.is_critical_process("notepad.exe"))
+
+        procs = pm.get_processes(limit=10)
+        self.assertIsInstance(procs, list)
+        self.assertGreater(len(procs), 0)
+        first = procs[0]
+        self.assertIsInstance(first.pid, int)
+        self.assertIsInstance(first.name, str)
+        self.assertIsInstance(first.memory_mb, float)
+
+        # Critical guard
+        crit_res = pm.terminate_process(pid=4, force=False)
+        self.assertFalse(crit_res["success"])
+
+    def test_startup_manager(self):
+        sm = StartupManager()
+        items = sm.get_startup_items()
+        self.assertIsInstance(items, list)
+
+    def test_services_manager(self):
+        svm = ServicesManager()
+        services = svm.get_services(limit=15)
+        self.assertIsInstance(services, list)
+        self.assertGreater(len(services), 0)
+        # Verify core service shield
+        shield_res = svm.stop_service("RpcSs", force=False)
+        self.assertFalse(shield_res["success"])
+        self.assertTrue(shield_res.get("is_core", False))
+
+    def test_storage_cleaner(self):
+        sc = StorageCleaner()
+        items = sc.scan_all()
+        self.assertIn("user_temp", items)
+        self.assertIn("system_temp", items)
+        self.assertIn("crash_dumps", items)
+        self.assertIsInstance(items["user_temp"].total_mb, float)
+
+    def test_storage_analyzer(self):
+        sa = StorageAnalyzer()
+        drives = sa.get_drives()
+        self.assertIsInstance(drives, list)
+        self.assertGreater(len(drives), 0)
+        c_drive = drives[0]
+        self.assertGreater(c_drive.total_gb, 0.0)
+
+    def test_app_manager(self):
+        am = AppManager()
+        apps = am.get_installed_apps(limit=10)
+        self.assertIsInstance(apps, list)
+
+    def test_tweaks_manager(self):
+        tm = TweaksManager()
+        all_tweaks = tm.get_all_tweaks()
+        self.assertIn("show_file_extensions", all_tweaks)
+        self.assertIn("show_hidden_files", all_tweaks)
+        self.assertIn("compact_view", all_tweaks)
+        self.assertIn("end_task_taskbar", all_tweaks)
+
+    def test_privacy_center(self):
+        pc = PrivacyCenter()
+        settings = pc.get_privacy_settings()
+        self.assertIn("advertising_id", settings)
+        self.assertIn("tailored_experiences", settings)
+        self.assertIn("activity_history", settings)
+
+    def test_network_center(self):
+        nc = NetworkCenter()
+        adapters = nc.get_adapter_info()
+        self.assertIsInstance(adapters, list)
+        conns = nc.get_active_connections(limit=10)
+        self.assertIsInstance(conns, list)
+
+    def test_health_diagnostics(self):
+        hd = HealthDiagnostics()
+        dirty = hd.check_drive_dirty("C:")
+        self.assertIn("is_dirty", dirty)
+        recs = hd.get_integrity_recommendations()
+        self.assertEqual(len(recs), 2)
+
+    def test_restore_center(self):
+        rc = RestoreCenter()
+        pts = rc.get_restore_points()
+        self.assertIsInstance(pts, list)
+
+    def test_benchmark_center(self):
+        bc = BenchmarkCenter()
+        res = bc.run_benchmark()
+        self.assertIn("composite_score", res)
+        self.assertIn("cpu_score", res)
+        self.assertIn("memory_score", res)
+        self.assertIn("disk_score", res)
+        self.assertGreater(res["composite_score"], 0)
+
+    def test_gaming_mode(self):
+        mm = ModesManager()
+        self.assertIn("gaming", mm.modes)
+        desc = mm.get_mode_description("gaming")
+        self.assertEqual(desc["name"], "Gaming Mode")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,8 +10,13 @@ import time
 from typing import Dict, List, Any, Optional, Callable
 try:
     from .preferences import preferences
+    from .history import change_history
 except ImportError:
     from preferences import preferences
+    try:
+        from history import change_history
+    except ImportError:
+        change_history = None
 
 
 class Recommendation:
@@ -102,6 +107,23 @@ class ActionQueue:
 
         # Dynamically learn that user approves this category
         preferences.record_decision(rec.category, approved=result.get("success", True))
+
+        # Record in Change History audit trail
+        if change_history is not None:
+            try:
+                change_history.record_action(
+                    action_id=rec.id,
+                    title=rec.title,
+                    category=rec.category,
+                    status="executed" if result.get("success", True) else "failed",
+                    verified=True,
+                    verification_message=result.get("message", "Approved and applied"),
+                    reversible=True,
+                    details=result,
+                )
+            except Exception:
+                pass
+
         return result
 
     def dismiss(self, rec_id: str) -> bool:

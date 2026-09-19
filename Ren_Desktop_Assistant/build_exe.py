@@ -91,6 +91,20 @@ def build():
         "--hidden-import", "debloat",
         "--hidden-import", "modes",
         "--hidden-import", "actions",
+        "--hidden-import", "history",
+        "--hidden-import", "action_registry",
+        "--hidden-import", "process_manager",
+        "--hidden-import", "startup_manager",
+        "--hidden-import", "services_manager",
+        "--hidden-import", "storage_cleaner",
+        "--hidden-import", "storage_analyzer",
+        "--hidden-import", "app_manager",
+        "--hidden-import", "tweaks_manager",
+        "--hidden-import", "privacy_center",
+        "--hidden-import", "network_center",
+        "--hidden-import", "health_diagnostics",
+        "--hidden-import", "restore_center",
+        "--hidden-import", "benchmark",
         "--hidden-import", "app_gui",
         "--hidden-import", "PIL",
         "--hidden-import", "psutil",
@@ -116,7 +130,18 @@ def build():
 
     # Copy binary directly to ASSISTANT_DIR
     time.sleep(1)
-    shutil.copy2(built_exe, FINAL_EXE)
+    try:
+        shutil.copy2(built_exe, FINAL_EXE)
+    except PermissionError:
+        bak_file = FINAL_EXE.with_suffix(".exe.bak")
+        try:
+            if bak_file.exists():
+                try: bak_file.unlink()
+                except Exception: pass
+            FINAL_EXE.rename(bak_file)
+            shutil.copy2(built_exe, FINAL_EXE)
+        except Exception as ce:
+            print(f"[NOTE] Built executable available at: {built_exe} ({ce})")
 
     size_mb = round(FINAL_EXE.stat().st_size / (1024 * 1024), 2)
     print("=" * 65)

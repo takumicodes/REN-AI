@@ -1,16 +1,20 @@
 """
-REN Desktop Assistant - Full Graphical User Interface (GUI)
-Built with Python Tkinter & ttk with Cyber Dark Styling.
-Features:
-- First-install preferences onboarding page (profession, mode, downloads path).
-- Live real-time dashboard for CPU, RAM, Disk, Battery, Power Plan, and context.
-- Non-intrusive action queue with Approve/Dismiss buttons.
-- Operational Modes tab with Developer Arsenal (winget installer, dev caches cleaner).
-- Safe Downloads Organizer with dry-run preview, execution, and 1-click Undo Rollback.
-- Safe Windows Debloat & Chris Titus Tech Utility (winutil) launcher.
-- Preferences & Settings configuration.
-- Support Page: @cyan_code YouTube channel & GitHub Support & Contribute section.
-- Silent background daemon execution with close-to-background tray behavior.
+REN-AI Windows Control Center - Complete Graphical User Interface (v1.3.0)
+Cyber Dark Styling with 14 Specialized Feature Centers:
+- Dashboard: Real-time hardware telemetry (CPU, RAM, Disk, Power), uptime, and human-driven recommendations.
+- Process Explorer: Live process table (PID, Name, CPU%, RAM MB, Status) with critical OS shields.
+- Power Center: Power plan switcher (Balanced, High Performance, Power Saver, Ultimate), battery reports.
+- Storage & Cleaner: Multi-target cache cleaner (temp, shaders, dumps, recycle bin) & storage analyzer.
+- Startup Manager: Registry (HKCU/HKLM) and folder startup apps with safe disable and rollback.
+- Services Manager: Windows services inspection with core OS shields and startup-type controls.
+- Apps Manager: Installed Win32 & UWP programs with search, details, and safe uninstaller launcher.
+- Tweaks & Privacy: Modern Windows Explorer & System tweaks + Telemetry & Privacy hardening with rollback.
+- Network Center: Adapter telemetry, ping tester, DNS flush with verification, active connections.
+- Health & Restore: Drive dirty checks, Event Log error queries, System Restore points & creator.
+- Modes & Gaming: 4 Modes (Programmer, Gaming, Balanced, Performance), Dev Tools arsenal & Chris Titus WinUtil.
+- Benchmark Center: Deterministic CPU, RAM, and Disk benchmark with composite scoring and history comparison.
+- Change History: Audit trail of all actions with verification status and 1-click rollback engine.
+- Preferences & Support: Settings, downloads path, YouTube @cyan_code channel, and GitHub support.
 """
 
 import os
@@ -29,48 +33,81 @@ try:
         get_system_snapshot,
         set_power_profile,
         get_available_power_schemes,
+        get_battery_info,
     )
     from .system_observer import observer
     from .actions import action_queue
     from .downloads_organizer import organizer
     from .debloat import debloat_manager
     from .modes import modes_manager, DEV_TOOLS_CATALOG
+    from .history import change_history
+    from .action_registry import action_registry, action_executor, Action, RiskLevel
+    from .process_manager import process_manager
+    from .startup_manager import startup_manager
+    from .services_manager import services_manager
+    from .storage_cleaner import storage_cleaner
+    from .storage_analyzer import storage_analyzer
+    from .app_manager import app_manager
+    from .tweaks_manager import tweaks_manager
+    from .privacy_center import privacy_center
+    from .network_center import network_center
+    from .health_diagnostics import health_diagnostics
+    from .restore_center import restore_center
+    from .benchmark import benchmark_center
 except ImportError:
     from preferences import preferences, DEFAULT_PREFERENCES
     from system_status import (
         get_system_snapshot,
         set_power_profile,
         get_available_power_schemes,
+        get_battery_info,
     )
     from system_observer import observer
     from actions import action_queue
     from downloads_organizer import organizer
     from debloat import debloat_manager
     from modes import modes_manager, DEV_TOOLS_CATALOG
+    from history import change_history
+    from action_registry import action_registry, action_executor, Action, RiskLevel
+    from process_manager import process_manager
+    from startup_manager import startup_manager
+    from services_manager import services_manager
+    from storage_cleaner import storage_cleaner
+    from storage_analyzer import storage_analyzer
+    from app_manager import app_manager
+    from tweaks_manager import tweaks_manager
+    from privacy_center import privacy_center
+    from network_center import network_center
+    from health_diagnostics import health_diagnostics
+    from restore_center import restore_center
+    from benchmark import benchmark_center
 
 
-# --- Styling Constants ---
-COLOR_BG = "#0d1117"          # Dark background
-COLOR_PANEL = "#161b22"       # Card / container background
-COLOR_HEADER = "#21262d"      # Tab / header background
-COLOR_BORDER = "#30363d"      # Border lines
-COLOR_TEXT = "#f0f6fc"        # Bright text
-COLOR_MUTED = "#8b949e"       # Muted text
-COLOR_CYAN = "#00e5ff"        # Cyan accent
+# --- Cyber Dark Theme Constants ---
+COLOR_BG = "#0d1117"          # Core dark background
+COLOR_PANEL = "#161b22"       # Container card background
+COLOR_HEADER = "#21262d"      # Section header background
+COLOR_BORDER = "#30363d"      # Subtle boundary lines
+COLOR_TEXT = "#f0f6fc"        # Primary sharp white text
+COLOR_MUTED = "#8b949e"       # Muted subtitle text
+COLOR_CYAN = "#00e5ff"        # Cyber Cyan accent
 COLOR_BLUE = "#58a6ff"        # Primary blue
-COLOR_GREEN = "#2ea043"       # Success / Installed
+COLOR_GREEN = "#2ea043"       # Success / Applied
 COLOR_AMBER = "#d29922"       # Warning / Notice
-COLOR_RED = "#da3633"         # Danger / Revert
-COLOR_PURPLE = "#bc8cff"      # Mode accent
+COLOR_RED = "#da3633"         # Danger / Revert / Critical
+COLOR_PURPLE = "#bc8cff"      # Modes / Gaming accent
+COLOR_SIDEBAR = "#12171f"     # Sidebar navigation background
+COLOR_ACTIVE_NAV = "#1f6feb"  # Active sidebar item
 
 
 class RenDesktopApp:
-    """Main Application Controller for REN Desktop Assistant GUI."""
+    """Main Application Controller for REN-AI Windows Control Center."""
 
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("🪐 REN Desktop Assistant - Autonomous System")
-        self.root.geometry("980x720")
+        self.root.title("🪐 REN-AI Windows Control Center")
+        self.root.geometry("1100x760")
+        self.root.minsize(980, 680)
         self.root.configure(bg=COLOR_BG)
 
         # Set Window Logo / Icon
@@ -99,7 +136,7 @@ class RenDesktopApp:
         if not preferences.get("onboarding_completed", False):
             self.show_onboarding_wizard()
         else:
-            self.show_main_hud()
+            self.show_main_control_center()
 
     # =========================================================================
     # FIRST INSTALL PREFERENCES ONBOARDING WIZARD
@@ -119,7 +156,7 @@ class RenDesktopApp:
 
         lbl_title = tk.Label(
             title_box,
-            text="🪐 Welcome to REN Desktop Assistant",
+            text="🪐 Welcome to REN-AI Windows Control Center",
             font=("Segoe UI", 18, "bold"),
             fg=COLOR_CYAN,
             bg=COLOR_PANEL,
@@ -128,7 +165,7 @@ class RenDesktopApp:
 
         lbl_subtitle = tk.Label(
             title_box,
-            text="Silent, Autonomous Windows Optimization — 100% Human-Driven with Zero AI Slop.\nPlease configure your initial preferences below:",
+            text="Autonomous Windows Control Center — 100% Human-Driven with Zero AI Slop.\nPlease configure your initial preferences below:",
             font=("Segoe UI", 10),
             fg=COLOR_TEXT,
             bg=COLOR_PANEL,
@@ -163,14 +200,6 @@ class RenDesktopApp:
             bg=COLOR_PANEL,
         ).pack(anchor=tk.W, pady=(10, 4))
 
-        tk.Label(
-            scroll_content,
-            text="REN organizes your loose downloads safely into categorized subfolders with full rollback capability.",
-            font=("Segoe UI", 9),
-            fg=COLOR_MUTED,
-            bg=COLOR_PANEL,
-        ).pack(anchor=tk.W, pady=(0, 6))
-
         path_frame = tk.Frame(scroll_content, bg=COLOR_PANEL)
         path_frame.pack(fill=tk.X, pady=(0, 15))
 
@@ -184,8 +213,6 @@ class RenDesktopApp:
             font=("Segoe UI", 9, "bold"),
             bg=COLOR_HEADER,
             fg=COLOR_CYAN,
-            activebackground=COLOR_BORDER,
-            activeforeground=COLOR_CYAN,
             command=self._browse_downloads,
             cursor="hand2",
             padx=12,
@@ -201,20 +228,12 @@ class RenDesktopApp:
             bg=COLOR_PANEL,
         ).pack(anchor=tk.W, pady=(10, 4))
 
-        tk.Label(
-            scroll_content,
-            text="Helps REN tailor developer tools, debloat profiles, and system resource optimization.",
-            font=("Segoe UI", 9),
-            fg=COLOR_MUTED,
-            bg=COLOR_PANEL,
-        ).pack(anchor=tk.W, pady=(0, 6))
-
         self.var_profession = tk.StringVar(value=preferences.get("profession", "Software Engineer"))
         professions = [
             ("Software Engineer / Developer", "Optimizes compile speed, dev tools, and dev cache cleaning"),
             ("Designer / Content Creator", "Optimizes GPU RAM allocation, media downloads, and scratch disks"),
             ("Student / Researcher / Office", "Whisper-quiet operation, documents organization, battery conservation"),
-            ("Gamer / Hardware Power User", "Ultimate performance power plan, max clock boosts, standby RAM purging"),
+            ("Gamer / Hardware Power User", "Ultimate performance power plan, max clock boosts, latency reduction"),
             ("General / Casual User", "Balanced Windows operation with zero clutter and low overhead"),
         ]
 
@@ -253,9 +272,10 @@ class RenDesktopApp:
 
         self.var_mode = tk.StringVar(value=preferences.active_mode)
         modes_info = [
-            ("programmer", "Programmer Mode (Recommended)", "Developer tools compatibility (Git, VS Code, wt), low RAM debloat, battery & compile booster"),
-            ("balanced", "Balanced Mode", "Unobtrusive daily assistant, standard Windows balance, whisper-quiet background monitoring"),
-            ("performance", "Performance Mode", "Maximum hardware performance, high power plan, frees standby memory for heavy workloads"),
+            ("programmer", "Programmer Mode (Recommended)", "Developer tools compatibility (Git, VS Code, wt, Rust), low RAM debloat, compile booster"),
+            ("gaming", "Gaming Mode", "Maximum FPS & latency stability, high performance power, visual optimizations"),
+            ("balanced", "Balanced Mode", "Unobtrusive daily assistant, standard Windows balance, quiet background monitoring"),
+            ("performance", "Performance Mode", "Maximum hardware clock rates, frees standby memory for heavy compute workloads"),
         ]
 
         for m_key, m_title, m_desc in modes_info:
@@ -267,7 +287,7 @@ class RenDesktopApp:
                 variable=self.var_mode,
                 value=m_key,
                 font=("Segoe UI", 10, "bold"),
-                fg=COLOR_PURPLE if m_key == "programmer" else COLOR_TEXT,
+                fg=COLOR_PURPLE if m_key in ("programmer", "gaming") else COLOR_TEXT,
                 bg=COLOR_PANEL,
                 selectcolor="#0d1117",
                 activebackground=COLOR_PANEL,
@@ -285,7 +305,7 @@ class RenDesktopApp:
         # 4. Background Settings
         tk.Label(
             scroll_content,
-            text="🛡️ 4. Silent Background Behavior:",
+            text="🛡️ 4. Background & Control Center Behavior:",
             font=("Segoe UI", 11, "bold"),
             fg=COLOR_CYAN,
             bg=COLOR_PANEL,
@@ -294,7 +314,7 @@ class RenDesktopApp:
         self.var_close_bg = tk.BooleanVar(value=preferences.get("close_to_background", True))
         cb_bg = tk.Checkbutton(
             scroll_content,
-            text="Run silently in background when window is closed (minimize to tray)",
+            text="Run silently in background when window is closed (minimize to system tray)",
             variable=self.var_close_bg,
             font=("Segoe UI", 10),
             fg=COLOR_TEXT,
@@ -305,32 +325,16 @@ class RenDesktopApp:
         )
         cb_bg.pack(anchor=tk.W, pady=2)
 
-        self.var_human_driven = tk.BooleanVar(value=True)
-        cb_hd = tk.Checkbutton(
-            scroll_content,
-            text="100% Human-Driven Mode: Always prompt for confirmation before system-altering actions",
-            variable=self.var_human_driven,
-            font=("Segoe UI", 10),
-            fg=COLOR_TEXT,
-            bg=COLOR_PANEL,
-            selectcolor="#0d1117",
-            activebackground=COLOR_PANEL,
-            activeforeground=COLOR_CYAN,
-        )
-        cb_hd.pack(anchor=tk.W, pady=2)
-
         # Bottom Button Bar
         btn_bar = tk.Frame(wizard_frame, bg=COLOR_BG)
         btn_bar.pack(fill=tk.X, pady=(20, 0))
 
         btn_defaults = tk.Button(
             btn_bar,
-            text="⚡ Use Recommended Programmer Defaults",
+            text="⚡ Use Programmer Defaults",
             font=("Segoe UI", 10),
             bg=COLOR_HEADER,
             fg=COLOR_MUTED,
-            activebackground=COLOR_BORDER,
-            activeforeground=COLOR_TEXT,
             command=self._apply_wizard_defaults,
             cursor="hand2",
             padx=16,
@@ -340,12 +344,11 @@ class RenDesktopApp:
 
         btn_save = tk.Button(
             btn_bar,
-            text="🚀 Initialize Core & Save Preferences",
+            text="🚀 Enter Control Center",
             font=("Segoe UI", 11, "bold"),
             bg="#1f6feb",
             fg="#ffffff",
             activebackground="#388bfd",
-            activeforeground="#ffffff",
             command=self._save_wizard_preferences,
             cursor="hand2",
             padx=20,
@@ -363,7 +366,6 @@ class RenDesktopApp:
         self.var_profession.set("Software Engineer")
         self.var_mode.set("programmer")
         self.var_close_bg.set(True)
-        self.var_human_driven.set(True)
         self._save_wizard_preferences()
 
     def _save_wizard_preferences(self):
@@ -377,44 +379,45 @@ class RenDesktopApp:
             profession=self.var_profession.get(),
             active_mode=self.var_mode.get(),
             close_to_background=self.var_close_bg.get(),
-            human_driven_mode=self.var_human_driven.get(),
             onboarding_completed=True,
         )
-        # Update organizer path
         organizer.folder = Path(downloads_path)
-        # Apply initial mode
         modes_manager.set_mode(self.var_mode.get(), apply_optimizations=True)
-
-        messagebox.showinfo(
-            "REN Initialized",
-            f"Preferences successfully saved!\nActive Mode: {self.var_mode.get().capitalize()}\nProfession: {self.var_profession.get()}\n\nWelcome to REN Desktop Assistant."
-        )
-        self.show_main_hud()
+        self.show_main_control_center()
 
     # =========================================================================
-    # MAIN HUD & SPECIAL TABS
+    # MAIN CONTROL CENTER INTERFACE & SIDEBAR NAVIGATION
     # =========================================================================
 
-    def show_main_hud(self):
-        """Builds and displays the main multi-tab HUD interface."""
+    def show_main_control_center(self):
+        """Constructs the full Windows Control Center UI with sidebar navigation."""
         for w in self.container.winfo_children():
             w.destroy()
 
         # Top Banner / Header
         self.header = tk.Frame(self.container, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        self.header.pack(fill=tk.X, padx=16, pady=(12, 8), ipady=8)
+        self.header.pack(fill=tk.X, padx=12, pady=(10, 6), ipady=6)
 
-        # Header Title
         lbl_h_title = tk.Label(
             self.header,
-            text="🪐 REN-AI DESKTOP ASSISTANT",
+            text="🪐 REN-AI WINDOWS CONTROL CENTER",
             font=("Segoe UI", 13, "bold"),
             fg=COLOR_CYAN,
             bg=COLOR_PANEL,
         )
-        lbl_h_title.pack(side=tk.LEFT, padx=(16, 12))
+        lbl_h_title.pack(side=tk.LEFT, padx=(14, 8))
 
-        # Mode Badge
+        lbl_ver = tk.Label(
+            self.header,
+            text="v1.3.0",
+            font=("Segoe UI", 9, "bold"),
+            fg=COLOR_MUTED,
+            bg="#21262d",
+            padx=6,
+            pady=1,
+        )
+        lbl_ver.pack(side=tk.LEFT, padx=4)
+
         self.lbl_mode_badge = tk.Label(
             self.header,
             text=f"[{preferences.active_mode.upper()} MODE]",
@@ -434,12 +437,11 @@ class RenDesktopApp:
             bg=COLOR_HEADER,
             fg=COLOR_RED,
             activebackground=COLOR_BORDER,
-            activeforeground=COLOR_RED,
             command=self.quit_app_completely,
             cursor="hand2",
             padx=10,
         )
-        btn_exit.pack(side=tk.RIGHT, padx=(6, 16))
+        btn_exit.pack(side=tk.RIGHT, padx=(6, 14))
 
         btn_min = tk.Button(
             self.header,
@@ -448,7 +450,6 @@ class RenDesktopApp:
             bg=COLOR_HEADER,
             fg=COLOR_MUTED,
             activebackground=COLOR_BORDER,
-            activeforeground=COLOR_TEXT,
             command=self.minimize_to_background,
             cursor="hand2",
             padx=10,
@@ -457,793 +458,1384 @@ class RenDesktopApp:
 
         self.lbl_header_metrics = tk.Label(
             self.header,
-            text="Loading metrics...",
+            text="Loading hardware telemetry...",
             font=("Segoe UI", 9),
             fg=COLOR_MUTED,
             bg=COLOR_PANEL,
         )
-        self.lbl_header_metrics.pack(side=tk.RIGHT, padx=16)
+        self.lbl_header_metrics.pack(side=tk.RIGHT, padx=14)
 
-        # Tabs Container
-        style = ttk.Style()
-        style.theme_use("default")
-        style.configure("TNotebook", background=COLOR_BG, borderwidth=0)
-        style.configure("TNotebook.Tab", background=COLOR_PANEL, foreground=COLOR_TEXT, font=("Segoe UI", 10, "bold"), padding=[16, 6])
-        style.map("TNotebook.Tab", background=[("selected", "#1f6feb")], foreground=[("selected", "#ffffff")])
+        # Main Workspace: Left Sidebar + Right Content Area
+        workspace = tk.Frame(self.container, bg=COLOR_BG)
+        workspace.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 10))
 
-        self.notebook = ttk.Notebook(self.container)
-        self.notebook.pack(fill=tk.BOTH, expand=True, padx=16, pady=(0, 12))
+        # --- Sidebar ---
+        self.sidebar = tk.Frame(workspace, bg=COLOR_SIDEBAR, width=220, bd=1, relief=tk.SOLID)
+        self.sidebar.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 8))
+        self.sidebar.pack_propagate(False)
 
-        # Tab 1: Dashboard
-        self.tab_dashboard = tk.Frame(self.notebook, bg=COLOR_BG)
-        self.notebook.add(self.tab_dashboard, text="  📊 Dashboard  ")
-        self._build_dashboard_tab()
+        # --- Content Area ---
+        self.content_area = tk.Frame(workspace, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
+        self.content_area.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        # Tab 2: Operational Modes
-        self.tab_modes = tk.Frame(self.notebook, bg=COLOR_BG)
-        self.notebook.add(self.tab_modes, text="  ⚡ Modes  ")
-        self._build_modes_tab()
+        # Build Sidebar Navigation Buttons
+        self.nav_buttons = {}
+        self.panels = {}
+        self.active_panel_key = None
 
-        # Tab 3: Downloads Organizer
-        self.tab_downloads = tk.Frame(self.notebook, bg=COLOR_BG)
-        self.notebook.add(self.tab_downloads, text="  📁 Downloads  ")
-        self._build_downloads_tab()
+        nav_items = [
+            ("dashboard", "📊 Dashboard"),
+            ("processes", "⚡ Process Explorer"),
+            ("power", "🔋 Power Center"),
+            ("storage", "🧹 Storage & Cleaner"),
+            ("startup", "🚀 Startup Manager"),
+            ("services", "⚙️ Services Manager"),
+            ("apps", "📦 Apps Manager"),
+            ("tweaks", "🛠️ Tweaks & Privacy"),
+            ("network", "🌐 Network Center"),
+            ("health", "🩺 Health & Restore"),
+            ("modes", "🎮 Modes & Gaming"),
+            ("benchmark", "📈 Benchmark Center"),
+            ("history", "📜 Change History"),
+            ("settings", "⚙️ Preferences & Support"),
+        ]
 
-        # Tab 4: Debloat & Optimizations
-        self.tab_debloat = tk.Frame(self.notebook, bg=COLOR_BG)
-        self.notebook.add(self.tab_debloat, text="  🛡️ Debloat  ")
-        self._build_debloat_tab()
+        for key, label in nav_items:
+            btn = tk.Button(
+                self.sidebar,
+                text=f"  {label}",
+                font=("Segoe UI", 9, "bold"),
+                anchor=tk.W,
+                bg=COLOR_SIDEBAR,
+                fg=COLOR_TEXT,
+                activebackground=COLOR_HEADER,
+                activeforeground=COLOR_CYAN,
+                bd=0,
+                cursor="hand2",
+                command=lambda k=key: self.switch_panel(k),
+                padx=12,
+                pady=7,
+            )
+            btn.pack(fill=tk.X, pady=1)
+            self.nav_buttons[key] = btn
 
-        # Tab 5: Settings / Preferences
-        self.tab_settings = tk.Frame(self.notebook, bg=COLOR_BG)
-        self.notebook.add(self.tab_settings, text="  ⚙️ Preferences  ")
-        self._build_settings_tab()
+        # Switch to default panel
+        self.switch_panel("dashboard")
 
-        # Tab 6: Support & Contribute
-        self.tab_support = tk.Frame(self.notebook, bg=COLOR_BG)
-        self.notebook.add(self.tab_support, text="  ❤️ Support & Community  ")
-        self._build_support_tab()
-
-        # Start Periodic GUI Status Refresher
+        # Start 2-second background metrics loop
         self._refresh_gui_loop()
 
-    # -------------------------------------------------------------------------
-    # TAB 1: DASHBOARD
-    # -------------------------------------------------------------------------
+    def switch_panel(self, panel_key: str):
+        """Switches the visible workspace panel and highlights sidebar button."""
+        self.active_panel_key = panel_key
 
-    def _build_dashboard_tab(self):
-        pane = tk.Frame(self.tab_dashboard, bg=COLOR_BG)
-        pane.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
+        # Highlight sidebar buttons
+        for k, btn in self.nav_buttons.items():
+            if k == panel_key:
+                btn.configure(bg=COLOR_ACTIVE_NAV, fg="#ffffff")
+            else:
+                btn.configure(bg=COLOR_SIDEBAR, fg=COLOR_TEXT)
 
-        # Hardware Metrics Grid (Top Half)
-        metrics_grid = tk.Frame(pane, bg=COLOR_BG)
-        metrics_grid.pack(fill=tk.X, pady=(0, 10))
+        # Clear content area
+        for w in self.content_area.winfo_children():
+            w.destroy()
 
-        # Card 1: CPU & RAM
-        card1 = tk.Frame(metrics_grid, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        card1.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 6), ipady=8)
+        # Render selected panel
+        build_methods = {
+            "dashboard": self._build_dashboard_panel,
+            "processes": self._build_processes_panel,
+            "power": self._build_power_panel,
+            "storage": self._build_storage_panel,
+            "startup": self._build_startup_panel,
+            "services": self._build_services_panel,
+            "apps": self._build_apps_panel,
+            "tweaks": self._build_tweaks_panel,
+            "network": self._build_network_panel,
+            "health": self._build_health_panel,
+            "modes": self._build_modes_panel,
+            "benchmark": self._build_benchmark_panel,
+            "history": self._build_history_panel,
+            "settings": self._build_settings_panel,
+        }
 
-        tk.Label(card1, text="💻 PROCESSOR & MEMORY", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=12, pady=(4, 8))
-        self.lbl_cpu = tk.Label(card1, text="CPU: -- %", font=("Segoe UI", 10), fg=COLOR_TEXT, bg=COLOR_PANEL)
-        self.lbl_cpu.pack(anchor=tk.W, padx=12, pady=2)
-        self.bar_cpu = ttk.Progressbar(card1, length=200, mode="determinate")
-        self.bar_cpu.pack(fill=tk.X, padx=12, pady=(0, 8))
+        builder = build_methods.get(panel_key)
+        if builder:
+            builder()
 
-        self.lbl_ram = tk.Label(card1, text="RAM: -- % (-- GB / -- GB)", font=("Segoe UI", 10), fg=COLOR_TEXT, bg=COLOR_PANEL)
-        self.lbl_ram.pack(anchor=tk.W, padx=12, pady=2)
-        self.bar_ram = ttk.Progressbar(card1, length=200, mode="determinate")
-        self.bar_ram.pack(fill=tk.X, padx=12, pady=(0, 4))
+    # =========================================================================
+    # 1. DASHBOARD PANEL
+    # =========================================================================
 
-        # Card 2: Disk & Power
-        card2 = tk.Frame(metrics_grid, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        card2.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=(6, 0), ipady=8)
+    def _build_dashboard_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
 
-        tk.Label(card2, text="⚡ POWER & STORAGE", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=12, pady=(4, 8))
-        self.lbl_disk = tk.Label(card2, text="Primary Disk: -- %", font=("Segoe UI", 10), fg=COLOR_TEXT, bg=COLOR_PANEL)
-        self.lbl_disk.pack(anchor=tk.W, padx=12, pady=2)
-        self.bar_disk = ttk.Progressbar(card2, length=200, mode="determinate")
-        self.bar_disk.pack(fill=tk.X, padx=12, pady=(0, 8))
+        # Hardware Metrics Cards
+        metrics_frame = tk.Frame(pane, bg=COLOR_PANEL)
+        metrics_frame.pack(fill=tk.X, pady=(0, 12))
 
-        self.lbl_bat = tk.Label(card2, text="Battery: --", font=("Segoe UI", 10), fg=COLOR_TEXT, bg=COLOR_PANEL)
-        self.lbl_bat.pack(anchor=tk.W, padx=12, pady=2)
-        self.lbl_plan = tk.Label(card2, text="Power Scheme: --", font=("Segoe UI", 9), fg=COLOR_MUTED, bg=COLOR_PANEL)
-        self.lbl_plan.pack(anchor=tk.W, padx=12, pady=(0, 4))
+        # CPU Card
+        c_cpu = tk.Frame(metrics_frame, bg="#0d1117", bd=1, relief=tk.SOLID)
+        c_cpu.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 6), ipady=6)
+        tk.Label(c_cpu, text="💻 PROCESSOR", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 4))
+        self.lbl_dash_cpu = tk.Label(c_cpu, text="CPU: -- %", font=("Segoe UI", 10), fg=COLOR_TEXT, bg="#0d1117")
+        self.lbl_dash_cpu.pack(anchor=tk.W, padx=10)
+        self.bar_dash_cpu = ttk.Progressbar(c_cpu, length=140, mode="determinate")
+        self.bar_dash_cpu.pack(fill=tk.X, padx=10, pady=(2, 6))
 
-        # Bottom Half: Human-Driven Recommendations
-        rec_card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        rec_card.pack(fill=tk.BOTH, expand=True, pady=(4, 0))
+        # RAM Card
+        c_ram = tk.Frame(metrics_frame, bg="#0d1117", bd=1, relief=tk.SOLID)
+        c_ram.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=3, ipady=6)
+        tk.Label(c_ram, text="🧠 MEMORY", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 4))
+        self.lbl_dash_ram = tk.Label(c_ram, text="RAM: -- %", font=("Segoe UI", 10), fg=COLOR_TEXT, bg="#0d1117")
+        self.lbl_dash_ram.pack(anchor=tk.W, padx=10)
+        self.bar_dash_ram = ttk.Progressbar(c_ram, length=140, mode="determinate")
+        self.bar_dash_ram.pack(fill=tk.X, padx=10, pady=(2, 6))
 
-        rec_header = tk.Frame(rec_card, bg=COLOR_HEADER)
-        rec_header.pack(fill=tk.X, ipady=6)
+        # Disk Card
+        c_disk = tk.Frame(metrics_frame, bg="#0d1117", bd=1, relief=tk.SOLID)
+        c_disk.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(6, 0), ipady=6)
+        tk.Label(c_disk, text="💾 PRIMARY STORAGE", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 4))
+        self.lbl_dash_disk = tk.Label(c_disk, text="Disk: -- %", font=("Segoe UI", 10), fg=COLOR_TEXT, bg="#0d1117")
+        self.lbl_dash_disk.pack(anchor=tk.W, padx=10)
+        self.bar_dash_disk = ttk.Progressbar(c_disk, length=140, mode="determinate")
+        self.bar_dash_disk.pack(fill=tk.X, padx=10, pady=(2, 6))
 
-        tk.Label(rec_header, text="⚡ PENDING RECOMMENDATIONS (HUMAN-DRIVEN)", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=12)
+        # System Context & Quick Stats
+        ctx_box = tk.Frame(pane, bg=COLOR_HEADER, bd=1, relief=tk.SOLID)
+        ctx_box.pack(fill=tk.X, pady=(0, 12), ipady=4)
+        self.lbl_dash_ctx = tk.Label(
+            ctx_box,
+            text="System Context: General | Active Power Profile: Balanced | Observer: Silent BG Active",
+            font=("Segoe UI", 9),
+            fg=COLOR_TEXT,
+            bg=COLOR_HEADER,
+        )
+        self.lbl_dash_ctx.pack(side=tk.LEFT, padx=12)
 
-        btn_refresh = tk.Button(
-            rec_header,
+        # Human-Driven Pending Recommendations
+        rec_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        rec_card.pack(fill=tk.BOTH, expand=True)
+
+        rec_head = tk.Frame(rec_card, bg=COLOR_HEADER)
+        rec_head.pack(fill=tk.X, ipady=6)
+        tk.Label(rec_head, text="⚡ PENDING RECOMMENDATIONS (HUMAN-DRIVEN)", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=12)
+
+        btn_ref_rec = tk.Button(
+            rec_head,
             text="🔄 Refresh",
             font=("Segoe UI", 8, "bold"),
             bg="#30363d",
             fg=COLOR_TEXT,
-            command=self._refresh_recommendations_ui,
+            command=self._render_dashboard_recs,
             cursor="hand2",
             padx=8,
         )
-        btn_refresh.pack(side=tk.RIGHT, padx=12)
+        btn_ref_rec.pack(side=tk.RIGHT, padx=12)
 
-        self.rec_scroll_frame = tk.Frame(rec_card, bg=COLOR_PANEL)
-        self.rec_scroll_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=8)
+        self.dash_rec_scroll = tk.Frame(rec_card, bg="#0d1117")
+        self.dash_rec_scroll.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
+        self._render_dashboard_recs()
 
-        self._refresh_recommendations_ui()
+    def _render_dashboard_recs(self):
+        if not hasattr(self, "dash_rec_scroll") or not self.dash_rec_scroll.winfo_exists():
+            return
 
-    def _refresh_recommendations_ui(self):
-        for w in self.rec_scroll_frame.winfo_children():
+        for w in self.dash_rec_scroll.winfo_children():
             w.destroy()
 
         recs = action_queue.get_pending()
         if not recs:
             lbl_empty = tk.Label(
-                self.rec_scroll_frame,
-                text="✓ All system metrics optimal. No pending interventions required.\nREN is observing silently with zero disruptions.",
+                self.dash_rec_scroll,
+                text="✓ All system metrics optimal. No interventions pending.\nREN is observing silently with zero background disruptions.",
                 font=("Segoe UI", 10),
                 fg=COLOR_MUTED,
-                bg=COLOR_PANEL,
+                bg="#0d1117",
                 justify=tk.CENTER,
             )
-            lbl_empty.pack(expand=True, pady=30)
+            lbl_empty.pack(expand=True, pady=40)
             return
 
         for rec in recs:
-            item = tk.Frame(self.rec_scroll_frame, bg="#0d1117", bd=1, relief=tk.SOLID)
+            item = tk.Frame(self.dash_rec_scroll, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
             item.pack(fill=tk.X, pady=4, padx=4, ipady=4)
 
-            top_row = tk.Frame(item, bg="#0d1117")
+            top_row = tk.Frame(item, bg=COLOR_PANEL)
             top_row.pack(fill=tk.X, padx=8, pady=(4, 2))
+            tk.Label(top_row, text=rec.title, font=("Segoe UI", 10, "bold"), fg=COLOR_TEXT, bg=COLOR_PANEL).pack(side=tk.LEFT)
+            tk.Label(top_row, text=f"[{rec.category.upper()}]", font=("Segoe UI", 8), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(side=tk.LEFT, padx=6)
 
-            tk.Label(top_row, text=rec.title, font=("Segoe UI", 10, "bold"), fg=COLOR_TEXT, bg="#0d1117").pack(side=tk.LEFT)
-            tk.Label(top_row, text=f"[{rec.category.upper()}]", font=("Segoe UI", 8), fg=COLOR_CYAN, bg="#0d1117").pack(side=tk.LEFT, padx=6)
+            tk.Label(item, text=f"Impact: {rec.impact}", font=("Segoe UI", 9), fg=COLOR_GREEN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=8)
+            tk.Label(item, text=f"Rationale: {rec.description}", font=("Segoe UI", 8), fg=COLOR_MUTED, bg=COLOR_PANEL).pack(anchor=tk.W, padx=8)
 
-            # Impact & Rationale
-            tk.Label(item, text=f"Impact: {rec.impact}", font=("Segoe UI", 9), fg=COLOR_GREEN, bg="#0d1117").pack(anchor=tk.W, padx=8)
-            tk.Label(item, text=f"Rationale: {rec.description}", font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(anchor=tk.W, padx=8)
-
-            btn_row = tk.Frame(item, bg="#0d1117")
+            btn_row = tk.Frame(item, bg=COLOR_PANEL)
             btn_row.pack(fill=tk.X, padx=8, pady=(4, 4))
-
-            rec_id = rec.id
-            btn_approve = tk.Button(
+            r_id = rec.id
+            btn_app = tk.Button(
                 btn_row,
                 text="✓ Approve & Apply",
                 font=("Segoe UI", 8, "bold"),
                 bg=COLOR_GREEN,
                 fg="#ffffff",
-                activebackground="#3fb950",
-                command=lambda r=rec_id: self._approve_recommendation(r),
+                command=lambda rid=r_id: self._approve_recommendation(rid),
                 cursor="hand2",
                 padx=8,
             )
-            btn_approve.pack(side=tk.LEFT, padx=(0, 6))
+            btn_app.pack(side=tk.LEFT, padx=(0, 6))
 
-            btn_dismiss = tk.Button(
+            btn_dis = tk.Button(
                 btn_row,
                 text="✗ Dismiss",
                 font=("Segoe UI", 8),
                 bg=COLOR_HEADER,
                 fg=COLOR_MUTED,
-                activebackground=COLOR_BORDER,
-                command=lambda r=rec_id: self._dismiss_recommendation(r),
+                command=lambda rid=r_id: self._dismiss_recommendation(rid),
                 cursor="hand2",
                 padx=8,
             )
-            btn_dismiss.pack(side=tk.LEFT)
+            btn_dis.pack(side=tk.LEFT)
 
     def _approve_recommendation(self, rec_id: str):
         res = action_queue.approve(rec_id)
-        self._refresh_recommendations_ui()
-        messagebox.showinfo("Action Executed", res.get("message", "Action applied successfully."))
+        self._render_dashboard_recs()
+        messagebox.showinfo("Action Applied", res.get("message", "Approved successfully."))
 
     def _dismiss_recommendation(self, rec_id: str):
         action_queue.dismiss(rec_id)
-        self._refresh_recommendations_ui()
+        self._render_dashboard_recs()
 
-    # -------------------------------------------------------------------------
-    # TAB 2: OPERATIONAL MODES & DEVELOPER ARSENAL
-    # -------------------------------------------------------------------------
+    # =========================================================================
+    # 2. PROCESS EXPLORER PANEL
+    # =========================================================================
 
-    def _build_modes_tab(self):
-        pane = tk.Frame(self.tab_modes, bg=COLOR_BG)
-        pane.pack(fill=tk.BOTH, expand=True, padx=12, pady=10)
+    def _build_processes_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
 
-        # Mode Selection Cards
-        tk.Label(pane, text="⚡ SELECT OPERATING MODE", font=("Segoe UI", 11, "bold"), fg=COLOR_CYAN, bg=COLOR_BG).pack(anchor=tk.W, pady=(0, 6))
+        # Toolbar
+        tool_bar = tk.Frame(pane, bg=COLOR_PANEL)
+        tool_bar.pack(fill=tk.X, pady=(0, 8))
 
-        modes_frame = tk.Frame(pane, bg=COLOR_BG)
-        modes_frame.pack(fill=tk.X, pady=(0, 12))
+        tk.Label(tool_bar, text="Search Process:", font=("Segoe UI", 9, "bold"), fg=COLOR_TEXT, bg=COLOR_PANEL).pack(side=tk.LEFT, padx=(0, 6))
+        self.var_proc_search = tk.StringVar()
+        ent_search = tk.Entry(tool_bar, textvariable=self.var_proc_search, font=("Segoe UI", 9), bg="#0d1117", fg=COLOR_TEXT, insertbackground=COLOR_TEXT, width=22)
+        ent_search.pack(side=tk.LEFT, padx=(0, 8), ipady=2)
+        ent_search.bind("<KeyRelease>", lambda e: self._refresh_processes_table())
 
-        modes = [
-            ("programmer", "🛠️ Programmer Mode", "Best compatibility for developers.\nInstalls dev tools, debloats Windows for low RAM, tunes power plan for compilation."),
-            ("balanced", "⚖️ Balanced Mode", "Unobtrusive everyday assistant.\nStandard Windows balance, quiet downloads housekeeping, silent monitoring."),
-            ("performance", "🚀 Performance Mode", "Maximum sustained clock speeds.\nHigh power plan, frees standby memory, zero throttling for heavy workloads."),
-        ]
+        btn_ref = tk.Button(tool_bar, text="🔄 Refresh", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._refresh_processes_table, cursor="hand2", padx=8)
+        btn_ref.pack(side=tk.LEFT, padx=(0, 10))
 
-        self.mode_buttons = {}
-        for m_key, m_name, m_desc in modes:
-            card = tk.Frame(modes_frame, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-            card.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=4, ipady=6)
+        btn_term = tk.Button(tool_bar, text="⚠️ Terminate Selected", font=("Segoe UI", 8, "bold"), bg=COLOR_RED, fg="#ffffff", command=self._terminate_selected_process, cursor="hand2", padx=10)
+        btn_term.pack(side=tk.RIGHT)
 
-            tk.Label(card, text=m_name, font=("Segoe UI", 10, "bold"), fg=COLOR_TEXT, bg=COLOR_PANEL).pack(anchor=tk.W, padx=10, pady=(4, 2))
-            tk.Label(card, text=m_desc, font=("Segoe UI", 8), fg=COLOR_MUTED, bg=COLOR_PANEL, justify=tk.LEFT, wraplength=240).pack(anchor=tk.W, padx=10, pady=(0, 6))
+        # Treeview Process Table
+        cols = ("pid", "name", "cpu", "mem", "status", "critical")
+        self.proc_tree = ttk.Treeview(pane, columns=cols, show="headings", selectmode="browse")
+        self.proc_tree.heading("pid", text="PID", command=lambda: self._sort_proc_col("pid"))
+        self.proc_tree.heading("name", text="Process Name", command=lambda: self._sort_proc_col("name"))
+        self.proc_tree.heading("cpu", text="CPU %", command=lambda: self._sort_proc_col("cpu_percent"))
+        self.proc_tree.heading("mem", text="RAM (MB)", command=lambda: self._sort_proc_col("memory_mb"))
+        self.proc_tree.heading("status", text="Status")
+        self.proc_tree.heading("critical", text="Protection")
 
-            btn = tk.Button(
-                card,
-                text="Activate Mode",
-                font=("Segoe UI", 9, "bold"),
-                bg="#1f6feb" if preferences.active_mode == m_key else COLOR_HEADER,
-                fg="#ffffff" if preferences.active_mode == m_key else COLOR_MUTED,
-                activebackground="#388bfd",
-                command=lambda m=m_key: self._activate_mode(m),
-                cursor="hand2",
-                padx=10,
-                pady=4,
+        self.proc_tree.column("pid", width=70, anchor=tk.CENTER)
+        self.proc_tree.column("name", width=220, anchor=tk.W)
+        self.proc_tree.column("cpu", width=80, anchor=tk.E)
+        self.proc_tree.column("mem", width=100, anchor=tk.E)
+        self.proc_tree.column("status", width=90, anchor=tk.CENTER)
+        self.proc_tree.column("critical", width=110, anchor=tk.CENTER)
+
+        tree_scroll = ttk.Scrollbar(pane, orient="vertical", command=self.proc_tree.yview)
+        self.proc_tree.configure(yscrollcommand=tree_scroll.set)
+
+        self.proc_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        tree_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.proc_sort_by = "memory_mb"
+        self._refresh_processes_table()
+
+    def _sort_proc_col(self, col_key: str):
+        self.proc_sort_by = col_key
+        self._refresh_processes_table()
+
+    def _refresh_processes_table(self):
+        if not hasattr(self, "proc_tree") or not self.proc_tree.winfo_exists():
+            return
+
+        for item in self.proc_tree.get_children():
+            self.proc_tree.delete(item)
+
+        query = self.var_proc_search.get().strip()
+        procs = process_manager.get_processes(sort_by=self.proc_sort_by, search_query=query, limit=120)
+
+        for p in procs:
+            crit_label = "🛡️ CORE SYSTEM" if p.is_critical else "Standard App"
+            self.proc_tree.insert(
+                "",
+                tk.END,
+                values=(p.pid, p.name, f"{p.cpu_percent}%", f"{p.memory_mb} MB", p.status, crit_label),
             )
-            btn.pack(anchor=tk.W, padx=10, pady=4)
-            self.mode_buttons[m_key] = btn
 
-        # Developer Tools Arsenal (Programmer Mode Section)
-        dev_card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        dev_card.pack(fill=tk.BOTH, expand=True, pady=(4, 0))
+    def _terminate_selected_process(self):
+        sel = self.proc_tree.selection()
+        if not sel:
+            messagebox.showwarning("No Selection", "Please select a process from the table to terminate.")
+            return
 
-        dev_top = tk.Frame(dev_card, bg=COLOR_HEADER)
-        dev_top.pack(fill=tk.X, ipady=6)
+        vals = self.proc_tree.item(sel[0])["values"]
+        pid = int(vals[0])
+        name = str(vals[1])
+        is_crit = "CORE" in str(vals[5])
 
-        tk.Label(dev_top, text="🛠️ PROGRAMMER MODE: DEVELOPER TOOLS ARSENAL (WINGET)", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=12)
+        if is_crit:
+            messagebox.showerror(
+                "Critical Process Shield",
+                f"Cannot terminate '{name}' (PID {pid}).\nThis is a critical Windows system component. Terminating it may destabilize the OS or cause a BSOD."
+            )
+            return
 
-        btn_clean_cache = tk.Button(
-            dev_top,
-            text="🧹 Purge Dev Caches",
-            font=("Segoe UI", 8, "bold"),
-            bg="#30363d",
-            fg=COLOR_AMBER,
-            command=self._clean_dev_caches,
-            cursor="hand2",
-            padx=8,
-        )
-        btn_clean_cache.pack(side=tk.RIGHT, padx=12)
-
-        self.dev_tools_list_frame = tk.Frame(dev_card, bg=COLOR_PANEL)
-        self.dev_tools_list_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=10)
-
-        self._refresh_dev_tools_ui()
-
-    def _activate_mode(self, mode_name: str):
-        res = modes_manager.set_mode(mode_name, apply_optimizations=True)
-        self.lbl_mode_badge.config(text=f"[{mode_name.upper()} MODE]")
-        for m_key, btn in self.mode_buttons.items():
-            if m_key == mode_name:
-                btn.config(bg="#1f6feb", fg="#ffffff", text="Active Mode")
+        if messagebox.askyesno("Confirm Termination", f"Are you sure you want to terminate '{name}' (PID {pid})?"):
+            res = process_manager.terminate_process(pid)
+            if res.get("success"):
+                messagebox.showinfo("Terminated", res.get("message"))
+                self._refresh_processes_table()
             else:
-                btn.config(bg=COLOR_HEADER, fg=COLOR_MUTED, text="Activate Mode")
-        messagebox.showinfo("Mode Activated", res.get("message", f"Switched to {mode_name.capitalize()} Mode."))
+                messagebox.showwarning("Termination Failed", res.get("message"))
 
-    def _refresh_dev_tools_ui(self):
-        for w in self.dev_tools_list_frame.winfo_children():
-            w.destroy()
+    # =========================================================================
+    # 3. POWER CENTER PANEL
+    # =========================================================================
 
-        tools_status = modes_manager.check_developer_tools()
+    def _build_power_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
 
-        # Tools Grid
-        for tool in tools_status["installed"] + tools_status["missing"]:
-            t_row = tk.Frame(self.dev_tools_list_frame, bg="#0d1117", bd=1, relief=tk.SOLID)
-            t_row.pack(fill=tk.X, pady=3, padx=2, ipady=3)
+        # Section 1: Power Schemes
+        card1 = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card1.pack(fill=tk.X, pady=(0, 12), ipady=8)
 
-            is_inst = tool["is_installed"]
-            badge_fg = COLOR_GREEN if is_inst else COLOR_AMBER
-            badge_text = "✓ INSTALLED" if is_inst else "⚠ MISSING"
+        tk.Label(card1, text="⚡ ACTIVE WINDOWS POWER SCHEME", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(4, 6))
 
-            tk.Label(t_row, text=badge_text, font=("Segoe UI", 8, "bold"), fg=badge_fg, bg="#0d1117", width=12, anchor=tk.W).pack(side=tk.LEFT, padx=8)
-            tk.Label(t_row, text=tool["name"], font=("Segoe UI", 9, "bold"), fg=COLOR_TEXT, bg="#0d1117", width=24, anchor=tk.W).pack(side=tk.LEFT)
-            tk.Label(t_row, text=tool["description"], font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(side=tk.LEFT, padx=6)
+        schemes = get_available_power_schemes()
+        self.var_power_plan = tk.StringVar(value=schemes.get("active", "Balanced"))
 
-            if not is_inst:
-                btn_inst = tk.Button(
-                    t_row,
-                    text="Install (winget)",
-                    font=("Segoe UI", 8, "bold"),
-                    bg="#1f6feb",
-                    fg="#ffffff",
-                    activebackground="#388bfd",
-                    command=lambda k=tool["key"]: self._install_dev_tool(k),
-                    cursor="hand2",
-                    padx=8,
-                )
-                btn_inst.pack(side=tk.RIGHT, padx=8)
+        p_row = tk.Frame(card1, bg="#0d1117")
+        p_row.pack(fill=tk.X, padx=12, pady=4)
 
-        if tools_status["missing_count"] > 0:
-            btn_inst_all = tk.Button(
-                self.dev_tools_list_frame,
-                text=f"⚡ Install All Missing Tools ({tools_status['missing_count']}) via Winget",
+        for plan_name in ("Balanced", "High Performance", "Power Saver", "Ultimate Performance"):
+            rb = tk.Radiobutton(
+                p_row,
+                text=plan_name,
+                variable=self.var_power_plan,
+                value=plan_name,
                 font=("Segoe UI", 9, "bold"),
-                bg="#1f6feb",
-                fg="#ffffff",
-                command=self._install_all_missing_tools,
-                cursor="hand2",
-                pady=4,
+                fg=COLOR_TEXT,
+                bg="#0d1117",
+                selectcolor=COLOR_PANEL,
+                command=self._on_power_plan_selected,
             )
-            btn_inst_all.pack(anchor=tk.W, pady=(10, 0), padx=2)
+            rb.pack(side=tk.LEFT, padx=(0, 16))
 
-    def _install_dev_tool(self, key: str):
-        tool = DEV_TOOLS_CATALOG.get(key, {})
-        if messagebox.askyesno("Confirm Install", f"Install {tool.get('name', key)} using official winget package?"):
-            threading.Thread(target=self._run_tool_install_async, args=(key,), daemon=True).start()
+        # Section 2: Battery Telemetry & Reports
+        card2 = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card2.pack(fill=tk.X, pady=(0, 12), ipady=8)
 
-    def _run_tool_install_async(self, key: str):
-        res = modes_manager.install_tool(key)
-        self.root.after(0, lambda: self._on_tool_installed(res))
+        tk.Label(card2, text="🔋 BATTERY HEALTH & DIAGNOSTICS", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(4, 4))
 
-    def _on_tool_installed(self, res: dict):
-        self._refresh_dev_tools_ui()
-        messagebox.showinfo("Tool Installer", res.get("message", "Done"))
+        bat = get_battery_info()
+        bat_text = f"Battery State: {bat['percent']}% {'(Plugged in / AC)' if bat['is_plugged'] else '(Discharging on Battery)'}" if bat["has_battery"] else "Device is connected directly to AC wall power (No battery installed)."
+        tk.Label(card2, text=bat_text, font=("Segoe UI", 9), fg=COLOR_TEXT, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(0, 6))
 
-    def _install_all_missing_tools(self):
-        cmd = modes_manager.generate_winget_install_command()
-        if messagebox.askyesno("Confirm Batch Install", f"Execute following command in PowerShell?\n\n{cmd}"):
-            try:
-                import subprocess
-                subprocess.Popen(["powershell.exe", "-NoExit", "-Command", cmd])
-            except Exception as e:
-                messagebox.showerror("Execution Error", str(e))
-
-    def _clean_dev_caches(self):
-        res = modes_manager.clean_dev_caches()
-        messagebox.showinfo("Dev Cache Cleaner", res.get("message", "Caches cleaned."))
-
-    # -------------------------------------------------------------------------
-    # TAB 3: DOWNLOADS ORGANIZER
-    # -------------------------------------------------------------------------
-
-    def _build_downloads_tab(self):
-        pane = tk.Frame(self.tab_downloads, bg=COLOR_BG)
-        pane.pack(fill=tk.BOTH, expand=True, padx=12, pady=10)
-
-        # Folder Header
-        hdr = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        hdr.pack(fill=tk.X, pady=(0, 10), ipady=8)
-
-        tk.Label(hdr, text="📁 DOWNLOADS FOLDER AUTOMATION", font=("Segoe UI", 11, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=12, pady=(2, 4))
-
-        p_row = tk.Frame(hdr, bg=COLOR_PANEL)
-        p_row.pack(fill=tk.X, padx=12, pady=2)
-
-        self.lbl_curr_downloads = tk.Label(p_row, text=f"Active Path: {preferences.get('downloads_folder')}", font=("Segoe UI", 9), fg=COLOR_TEXT, bg=COLOR_PANEL)
-        self.lbl_curr_downloads.pack(side=tk.LEFT)
-
-        btn_ch_folder = tk.Button(
-            p_row,
-            text="Change Path...",
-            font=("Segoe UI", 8, "bold"),
-            bg=COLOR_HEADER,
-            fg=COLOR_CYAN,
-            command=self._change_downloads_path,
-            cursor="hand2",
-            padx=8,
-        )
-        btn_ch_folder.pack(side=tk.RIGHT)
-
-        # Actions & Rollback Bar
-        act_bar = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        act_bar.pack(fill=tk.X, pady=(0, 10), ipady=8, padx=0)
-
-        tk.Label(act_bar, text="SAFE ORGANIZATION ACTIONS & ROLLBACK", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=12, pady=(0, 6))
-
-        btn_box = tk.Frame(act_bar, bg=COLOR_PANEL)
-        btn_box.pack(fill=tk.X, padx=12)
-
-        btn_prev = tk.Button(
-            btn_box,
-            text="👁️ Dry-Run Preview",
+        btn_report = tk.Button(
+            card2,
+            text="📑 Generate Windows Battery Report (HTML)",
             font=("Segoe UI", 9, "bold"),
             bg=COLOR_HEADER,
-            fg=COLOR_TEXT,
-            command=self._preview_downloads,
+            fg=COLOR_CYAN,
+            command=self._generate_battery_report,
             cursor="hand2",
             padx=12,
             pady=4,
         )
-        btn_prev.pack(side=tk.LEFT, padx=(0, 8))
+        btn_report.pack(anchor=tk.W, padx=12)
 
-        btn_org = tk.Button(
-            btn_box,
-            text="⚡ Organize Downloads Now",
-            font=("Segoe UI", 9, "bold"),
-            bg="#1f6feb",
-            fg="#ffffff",
-            command=self._execute_downloads_organization,
-            cursor="hand2",
-            padx=14,
-            pady=4,
+        # Section 3: Power Optimization Tips
+        card3 = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card3.pack(fill=tk.BOTH, expand=True, ipady=8)
+        tk.Label(card3, text="💡 POWER OPTIMIZATION TIPS", font=("Segoe UI", 10, "bold"), fg=COLOR_PURPLE, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(4, 4))
+        tips = (
+            "• Programmer Mode automatically applies Ultimate Performance on AC and Balanced on battery.\n"
+            "• Gaming Mode locks high CPU clocks to reduce 1% low frame stutter.\n"
+            "• REN provides 1-click verified powercfg rollback whenever you switch profiles."
         )
-        btn_org.pack(side=tk.LEFT, padx=(0, 8))
+        tk.Label(card3, text=tips, font=("Segoe UI", 9), fg=COLOR_MUTED, bg="#0d1117", justify=tk.LEFT).pack(anchor=tk.W, padx=12)
 
-        # Rollback button prominently featured
-        btn_undo = tk.Button(
-            btn_box,
-            text="⏪ Rollback / Undo Last Batch",
+    def _on_power_plan_selected(self):
+        plan = self.var_power_plan.get()
+        res = set_power_profile(plan)
+        messagebox.showinfo("Power Profile", f"Power scheme configured to: {plan}")
+
+    def _generate_battery_report(self):
+        res = health_diagnostics.generate_battery_report()
+        if res.get("success"):
+            fp = res.get("file_path")
+            if messagebox.askyesno("Battery Report Generated", f"Report saved at:\n{fp}\n\nOpen report in your web browser now?"):
+                webbrowser.open(f"file:///{fp}")
+        else:
+            messagebox.showwarning("Report Failed", res.get("message"))
+
+    # =========================================================================
+    # 4. STORAGE & CLEANER PANEL
+    # =========================================================================
+
+    def _build_storage_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        # Top Buttons Bar
+        btn_bar = tk.Frame(pane, bg=COLOR_PANEL)
+        btn_bar.pack(fill=tk.X, pady=(0, 8))
+
+        btn_scan = tk.Button(
+            btn_bar,
+            text="🔍 Scan Cleanable Junk",
             font=("Segoe UI", 9, "bold"),
             bg=COLOR_HEADER,
-            fg=COLOR_AMBER,
-            activebackground=COLOR_BORDER,
-            activeforeground=COLOR_AMBER,
-            command=self._undo_downloads_organization,
+            fg=COLOR_CYAN,
+            command=self._scan_storage_items,
+            cursor="hand2",
+            padx=12,
+            pady=4,
+        )
+        btn_scan.pack(side=tk.LEFT, padx=(0, 8))
+
+        btn_clean_all = tk.Button(
+            btn_bar,
+            text="🧹 Clean All Selected",
+            font=("Segoe UI", 9, "bold"),
+            bg=COLOR_GREEN,
+            fg="#ffffff",
+            command=self._clean_storage_items,
             cursor="hand2",
             padx=14,
             pady=4,
         )
-        btn_undo.pack(side=tk.RIGHT)
+        btn_clean_all.pack(side=tk.LEFT, padx=(0, 8))
 
-        # Output / Preview Card
-        prev_card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        prev_card.pack(fill=tk.BOTH, expand=True)
+        btn_recycle = tk.Button(
+            btn_bar,
+            text="🗑️ Empty Recycle Bin",
+            font=("Segoe UI", 9),
+            bg=COLOR_HEADER,
+            fg=COLOR_TEXT,
+            command=self._empty_recycle_bin,
+            cursor="hand2",
+            padx=10,
+            pady=4,
+        )
+        btn_recycle.pack(side=tk.LEFT)
 
-        tk.Label(prev_card, text="STATUS & CATEGORY PREVIEW", font=("Segoe UI", 10, "bold"), fg=COLOR_MUTED, bg=COLOR_PANEL).pack(anchor=tk.W, padx=12, pady=(6, 4))
+        # Storage Cleaner Items Frame
+        self.cleaner_list_frame = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        self.cleaner_list_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
 
-        self.txt_downloads_log = tk.Text(prev_card, bg="#0d1117", fg=COLOR_TEXT, font=("Consolas", 9), bd=0, wrap=tk.WORD)
-        self.txt_downloads_log.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 10))
+        # Drives Overview Bar (Bottom)
+        drives_card = tk.Frame(pane, bg=COLOR_HEADER, bd=1, relief=tk.SOLID)
+        drives_card.pack(fill=tk.X, ipady=4)
+        tk.Label(drives_card, text="CONNECTED DRIVES OVERVIEW:", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=10)
 
-        self._preview_downloads()
+        drives_str_list = []
+        for d in storage_analyzer.get_drives():
+            drives_str_list.append(f"{d.mountpoint} ({d.free_gb} GB free / {d.total_gb} GB total - {d.percent}%)")
+        tk.Label(drives_card, text=" | ".join(drives_str_list), font=("Segoe UI", 9), fg=COLOR_TEXT, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=6)
 
-    def _change_downloads_path(self):
-        f = filedialog.askdirectory(title="Select Downloads Folder")
-        if f:
-            preferences.set("downloads_folder", f)
-            organizer.folder = Path(f)
-            self.lbl_curr_downloads.config(text=f"Active Path: {f}")
-            self._preview_downloads()
+        self._scan_storage_items()
 
-    def _preview_downloads(self):
-        self.txt_downloads_log.delete("1.0", tk.END)
-        prev = organizer.preview_organization(ignore_recent_minutes=0)
-        self.txt_downloads_log.insert(tk.END, f"Downloads Path: {organizer.folder}\n")
-        self.txt_downloads_log.insert(tk.END, f"Unorganized files found: {prev['total_files']} ({prev['total_size_mb']} MB)\n\n")
-
-        if not prev["categories"]:
-            self.txt_downloads_log.insert(tk.END, "✓ Downloads directory is clean! No loose unorganized files.\n")
+    def _scan_storage_items(self):
+        if not hasattr(self, "cleaner_list_frame") or not self.cleaner_list_frame.winfo_exists():
             return
 
-        for cat, items in prev["categories"].items():
-            self.txt_downloads_log.insert(tk.END, f"[{cat}] ({len(items)} files):\n")
-            for item in items[:8]:
-                self.txt_downloads_log.insert(tk.END, f"  • {item['name']} ({item['size_mb']} MB)\n")
-            if len(items) > 8:
-                self.txt_downloads_log.insert(tk.END, f"  ... and {len(items) - 8} more files\n")
-            self.txt_downloads_log.insert(tk.END, "\n")
+        for w in self.cleaner_list_frame.winfo_children():
+            w.destroy()
 
-    def _execute_downloads_organization(self):
-        res = organizer.organize(dry_run=False, ignore_recent_minutes=0)
-        self._preview_downloads()
-        messagebox.showinfo("Organization Complete", f"Successfully categorized {res.get('moved_count', 0)} files into subfolders.")
+        items = storage_cleaner.scan_all()
+        total_mb = sum(i.total_mb for i in items.values())
 
-    def _undo_downloads_organization(self):
-        res = organizer.undo_last()
-        self._preview_downloads()
-        if res.get("success"):
-            messagebox.showinfo("Rollback Complete", f"Restored {res.get('restored_count', 0)} files to original loose locations.")
+        head_row = tk.Frame(self.cleaner_list_frame, bg=COLOR_HEADER)
+        head_row.pack(fill=tk.X, ipady=4)
+        tk.Label(head_row, text=f"SCAN RESULTS: Total Reclaimable Space: {round(total_mb, 1)} MB", font=("Segoe UI", 9, "bold"), fg=COLOR_GREEN, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=10)
+
+        for key, item in items.items():
+            row = tk.Frame(self.cleaner_list_frame, bg="#0d1117", bd=1, relief=tk.SOLID)
+            row.pack(fill=tk.X, padx=8, pady=3, ipady=3)
+
+            tk.Label(row, text=item.title, font=("Segoe UI", 9, "bold"), fg=COLOR_TEXT, bg="#0d1117").pack(side=tk.LEFT, padx=8)
+            tk.Label(row, text=f"{item.file_count} files | {item.total_mb} MB", font=("Segoe UI", 9), fg=COLOR_CYAN, bg="#0d1117").pack(side=tk.LEFT, padx=10)
+            tk.Label(row, text=item.description, font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(side=tk.LEFT, padx=10)
+
+            btn_one = tk.Button(
+                row,
+                text="Clean",
+                font=("Segoe UI", 8, "bold"),
+                bg=COLOR_HEADER,
+                fg=COLOR_TEXT,
+                command=lambda k=key: self._clean_single_target(k),
+                cursor="hand2",
+                padx=8,
+            )
+            btn_one.pack(side=tk.RIGHT, padx=8)
+
+    def _clean_single_target(self, target_key: str):
+        res = storage_cleaner.clean_target(target_key)
+        messagebox.showinfo("Storage Cleaned", res.get("message"))
+        self._scan_storage_items()
+
+    def _clean_storage_items(self):
+        res = storage_cleaner.clean_all()
+        messagebox.showinfo("Storage Cleanup Complete", res.get("message"))
+        self._scan_storage_items()
+
+    def _empty_recycle_bin(self):
+        if messagebox.askyesno("Empty Recycle Bin", "Permanently empty all files in the Windows Recycle Bin?"):
+            res = storage_cleaner.empty_recycle_bin()
+            messagebox.showinfo("Recycle Bin", res.get("message"))
+            self._scan_storage_items()
+
+    # =========================================================================
+    # 5. STARTUP MANAGER PANEL
+    # =========================================================================
+
+    def _build_startup_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        # Toolbar
+        bar = tk.Frame(pane, bg=COLOR_PANEL)
+        bar.pack(fill=tk.X, pady=(0, 8))
+
+        btn_ref = tk.Button(bar, text="🔄 Refresh List", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._refresh_startup_table, cursor="hand2", padx=8)
+        btn_ref.pack(side=tk.LEFT, padx=(0, 8))
+
+        btn_toggle = tk.Button(bar, text="⚡ Toggle Enabled / Disabled", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_PURPLE, command=self._toggle_selected_startup, cursor="hand2", padx=10)
+        btn_toggle.pack(side=tk.LEFT)
+
+        cols = ("name", "status", "source", "command")
+        self.startup_tree = ttk.Treeview(pane, columns=cols, show="headings", selectmode="browse")
+        self.startup_tree.heading("name", text="Program Name")
+        self.startup_tree.heading("status", text="Status")
+        self.startup_tree.heading("source", text="Location")
+        self.startup_tree.heading("command", text="Command Path")
+
+        self.startup_tree.column("name", width=180)
+        self.startup_tree.column("status", width=90, anchor=tk.CENTER)
+        self.startup_tree.column("source", width=140)
+        self.startup_tree.column("command", width=360)
+
+        s_scroll = ttk.Scrollbar(pane, orient="vertical", command=self.startup_tree.yview)
+        self.startup_tree.configure(yscrollcommand=s_scroll.set)
+
+        self.startup_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        s_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self._refresh_startup_table()
+
+    def _refresh_startup_table(self):
+        if not hasattr(self, "startup_tree") or not self.startup_tree.winfo_exists():
+            return
+
+        for item in self.startup_tree.get_children():
+            self.startup_tree.delete(item)
+
+        items = startup_manager.get_startup_items()
+        for i in items:
+            st = "✓ Enabled" if i.enabled else "✗ Disabled"
+            self.startup_tree.insert("", tk.END, values=(i.name, st, i.source, i.command))
+
+    def _toggle_selected_startup(self):
+        sel = self.startup_tree.selection()
+        if not sel:
+            messagebox.showwarning("No Selection", "Select an item to enable or disable.")
+            return
+
+        vals = self.startup_tree.item(sel[0])["values"]
+        name = str(vals[0])
+        status = str(vals[1])
+        source = str(vals[2])
+
+        if "Enabled" in status:
+            res = startup_manager.disable_startup_item(name, source)
         else:
-            messagebox.showwarning("Rollback Notice", res.get("message", "No history to rollback."))
+            res = startup_manager.enable_startup_item(name)
 
-    # -------------------------------------------------------------------------
-    # TAB 4: WINDOWS DEBLOAT & CHRIS TITUS TECH UTILITY
-    # -------------------------------------------------------------------------
+        messagebox.showinfo("Startup Manager", res.get("message"))
+        self._refresh_startup_table()
 
-    def _build_debloat_tab(self):
-        pane = tk.Frame(self.tab_debloat, bg=COLOR_BG)
-        pane.pack(fill=tk.BOTH, expand=True, padx=12, pady=10)
+    # =========================================================================
+    # 6. SERVICES MANAGER PANEL
+    # =========================================================================
 
-        # Top Card: Chris Titus Tech (CTT) Windows Utility Script
-        ctt_card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        ctt_card.pack(fill=tk.X, pady=(0, 12), ipady=8)
+    def _build_services_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
 
-        ctt_top = tk.Frame(ctt_card, bg=COLOR_PANEL)
-        ctt_top.pack(fill=tk.X, padx=12, pady=(2, 4))
+        # Toolbar
+        bar = tk.Frame(pane, bg=COLOR_PANEL)
+        bar.pack(fill=tk.X, pady=(0, 8))
 
-        tk.Label(ctt_top, text="🔥 CHRIS TITUS TECH WINDOWS UTILITY (WINUTIL)", font=("Segoe UI", 11, "bold"), fg=COLOR_AMBER, bg=COLOR_PANEL).pack(side=tk.LEFT)
+        tk.Label(bar, text="Filter:", font=("Segoe UI", 9, "bold"), fg=COLOR_TEXT, bg=COLOR_PANEL).pack(side=tk.LEFT, padx=(0, 4))
+        self.var_svc_search = tk.StringVar()
+        ent = tk.Entry(bar, textvariable=self.var_svc_search, font=("Segoe UI", 9), bg="#0d1117", fg=COLOR_TEXT, insertbackground=COLOR_TEXT, width=18)
+        ent.pack(side=tk.LEFT, padx=(0, 8), ipady=2)
+        ent.bind("<KeyRelease>", lambda e: self._refresh_services_table())
 
-        btn_launch_ctt = tk.Button(
-            ctt_top,
-            text="🚀 Launch CTT Winutil (PowerShell)",
+        btn_ref = tk.Button(bar, text="🔄 Refresh", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._refresh_services_table, cursor="hand2", padx=8)
+        btn_ref.pack(side=tk.LEFT, padx=(0, 8))
+
+        btn_start = tk.Button(bar, text="▶ Start", font=("Segoe UI", 8, "bold"), bg=COLOR_GREEN, fg="#ffffff", command=lambda: self._service_action("start"), cursor="hand2", padx=8)
+        btn_start.pack(side=tk.LEFT, padx=(0, 4))
+
+        btn_stop = tk.Button(bar, text="⏹ Stop", font=("Segoe UI", 8, "bold"), bg=COLOR_RED, fg="#ffffff", command=lambda: self._service_action("stop"), cursor="hand2", padx=8)
+        btn_stop.pack(side=tk.LEFT, padx=(0, 4))
+
+        btn_restart = tk.Button(bar, text="🔁 Restart", font=("Segoe UI", 8), bg=COLOR_HEADER, fg=COLOR_TEXT, command=lambda: self._service_action("restart"), cursor="hand2", padx=8)
+        btn_restart.pack(side=tk.LEFT)
+
+        cols = ("name", "disp", "status", "start_type", "category", "core")
+        self.svc_tree = ttk.Treeview(pane, columns=cols, show="headings", selectmode="browse")
+        self.svc_tree.heading("name", text="Service Name")
+        self.svc_tree.heading("disp", text="Display Name")
+        self.svc_tree.heading("status", text="Status")
+        self.svc_tree.heading("start_type", text="Startup Type")
+        self.svc_tree.heading("category", text="Category")
+        self.svc_tree.heading("core", text="Shield")
+
+        self.svc_tree.column("name", width=140)
+        self.svc_tree.column("disp", width=220)
+        self.svc_tree.column("status", width=80, anchor=tk.CENTER)
+        self.svc_tree.column("start_type", width=90, anchor=tk.CENTER)
+        self.svc_tree.column("category", width=90, anchor=tk.CENTER)
+        self.svc_tree.column("core", width=90, anchor=tk.CENTER)
+
+        s_scroll = ttk.Scrollbar(pane, orient="vertical", command=self.svc_tree.yview)
+        self.svc_tree.configure(yscrollcommand=s_scroll.set)
+
+        self.svc_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        s_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self._refresh_services_table()
+
+    def _refresh_services_table(self):
+        if not hasattr(self, "svc_tree") or not self.svc_tree.winfo_exists():
+            return
+
+        for item in self.svc_tree.get_children():
+            self.svc_tree.delete(item)
+
+        query = self.var_svc_search.get().strip()
+        services = services_manager.get_services(search_query=query, limit=120)
+
+        for s in services:
+            shield_lbl = "🛡️ Core Windows" if s.is_core else "Standard"
+            self.svc_tree.insert("", tk.END, values=(s.name, s.display_name, s.status, s.start_type, s.category.upper(), shield_lbl))
+
+    def _service_action(self, action_type: str):
+        sel = self.svc_tree.selection()
+        if not sel:
+            messagebox.showwarning("No Selection", "Select a service from the table.")
+            return
+
+        name = str(self.svc_tree.item(sel[0])["values"][0])
+        if action_type == "start":
+            res = services_manager.start_service(name)
+        elif action_type == "stop":
+            res = services_manager.stop_service(name)
+        else:
+            res = services_manager.restart_service(name)
+
+        messagebox.showinfo("Service Action", res.get("message"))
+        self._refresh_services_table()
+
+    # =========================================================================
+    # 7. APPS MANAGER PANEL
+    # =========================================================================
+
+    def _build_apps_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        bar = tk.Frame(pane, bg=COLOR_PANEL)
+        bar.pack(fill=tk.X, pady=(0, 8))
+
+        tk.Label(bar, text="Search Apps:", font=("Segoe UI", 9, "bold"), fg=COLOR_TEXT, bg=COLOR_PANEL).pack(side=tk.LEFT, padx=(0, 4))
+        self.var_app_search = tk.StringVar()
+        ent = tk.Entry(bar, textvariable=self.var_app_search, font=("Segoe UI", 9), bg="#0d1117", fg=COLOR_TEXT, insertbackground=COLOR_TEXT, width=20)
+        ent.pack(side=tk.LEFT, padx=(0, 8), ipady=2)
+        ent.bind("<KeyRelease>", lambda e: self._refresh_apps_table())
+
+        btn_ref = tk.Button(bar, text="🔄 Refresh", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._refresh_apps_table, cursor="hand2", padx=8)
+        btn_ref.pack(side=tk.LEFT, padx=(0, 8))
+
+        btn_uninst = tk.Button(bar, text="🗑️ Launch Uninstaller", font=("Segoe UI", 8, "bold"), bg=COLOR_RED, fg="#ffffff", command=self._uninstall_selected_app, cursor="hand2", padx=10)
+        btn_uninst.pack(side=tk.RIGHT)
+
+        cols = ("name", "version", "publisher", "size", "date")
+        self.apps_tree = ttk.Treeview(pane, columns=cols, show="headings", selectmode="browse")
+        self.apps_tree.heading("name", text="Application Name")
+        self.apps_tree.heading("version", text="Version")
+        self.apps_tree.heading("publisher", text="Publisher")
+        self.apps_tree.heading("size", text="Est. Size (MB)")
+        self.apps_tree.heading("date", text="Install Date")
+
+        self.apps_tree.column("name", width=260)
+        self.apps_tree.column("version", width=100)
+        self.apps_tree.column("publisher", width=160)
+        self.apps_tree.column("size", width=90, anchor=tk.E)
+        self.apps_tree.column("date", width=90, anchor=tk.CENTER)
+
+        s_scroll = ttk.Scrollbar(pane, orient="vertical", command=self.apps_tree.yview)
+        self.apps_tree.configure(yscrollcommand=s_scroll.set)
+
+        self.apps_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        s_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self._refresh_apps_table()
+
+    def _refresh_apps_table(self):
+        if not hasattr(self, "apps_tree") or not self.apps_tree.winfo_exists():
+            return
+
+        for item in self.apps_tree.get_children():
+            self.apps_tree.delete(item)
+
+        query = self.var_app_search.get().strip()
+        apps = app_manager.get_installed_apps(search_query=query, limit=150)
+
+        for a in apps:
+            sz_str = f"{a.estimated_size_mb} MB" if a.estimated_size_mb > 0 else "N/A"
+            self.apps_tree.insert("", tk.END, values=(a.name, a.version, a.publisher, sz_str, a.install_date))
+
+    def _uninstall_selected_app(self):
+        sel = self.apps_tree.selection()
+        if not sel:
+            messagebox.showwarning("No Selection", "Select an app to uninstall.")
+            return
+
+        app_name = str(self.apps_tree.item(sel[0])["values"][0])
+        if messagebox.askyesno("Confirm Uninstallation", f"Are you sure you want to launch the uninstaller for:\n'{app_name}'?"):
+            res = app_manager.launch_uninstall(app_name)
+            messagebox.showinfo("Uninstaller Launched", res.get("message"))
+
+    # =========================================================================
+    # 8. TWEAKS & PRIVACY PANEL
+    # =========================================================================
+
+    def _build_tweaks_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        # Tabs: Explorer & System Tweaks vs Privacy & Telemetry
+        notebook = ttk.Notebook(pane)
+        notebook.pack(fill=tk.BOTH, expand=True)
+
+        tab_sys = tk.Frame(notebook, bg="#0d1117")
+        tab_priv = tk.Frame(notebook, bg="#0d1117")
+        notebook.add(tab_sys, text="  🛠️ Explorer & System Tweaks  ")
+        notebook.add(tab_priv, text="  🛡️ Privacy & Telemetry Hardening  ")
+
+        # 1. System Tweaks
+        tweaks = tweaks_manager.get_all_tweaks()
+        for tid, tinfo in tweaks.items():
+            card = tk.Frame(tab_sys, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
+            card.pack(fill=tk.X, padx=10, pady=4, ipady=4)
+
+            tk.Label(card, text=tinfo["title"], font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=10, pady=(2, 1))
+            tk.Label(card, text=f"Impact: {tinfo['impact']}", font=("Segoe UI", 8), fg=COLOR_MUTED, bg=COLOR_PANEL).pack(anchor=tk.W, padx=10)
+
+            btn_box = tk.Frame(card, bg=COLOR_PANEL)
+            btn_box.pack(fill=tk.X, padx=10, pady=(4, 2))
+
+            status_txt = "STATUS: APPLIED" if tinfo["is_applied"] else "STATUS: DEFAULT (NOT APPLIED)"
+            fg_col = COLOR_GREEN if tinfo["is_applied"] else COLOR_MUTED
+            tk.Label(btn_box, text=status_txt, font=("Segoe UI", 8, "bold"), fg=fg_col, bg=COLOR_PANEL).pack(side=tk.LEFT)
+
+            if tinfo["is_applied"]:
+                btn_revert = tk.Button(btn_box, text="Revert to Default", font=("Segoe UI", 8), bg=COLOR_HEADER, fg=COLOR_RED, command=lambda t=tid: self._revert_tweak_ui(t), cursor="hand2", padx=8)
+                btn_revert.pack(side=tk.RIGHT)
+            else:
+                btn_apply = tk.Button(btn_box, text="✓ Apply Tweak", font=("Segoe UI", 8, "bold"), bg=COLOR_GREEN, fg="#ffffff", command=lambda t=tid: self._apply_tweak_ui(t), cursor="hand2", padx=8)
+                btn_apply.pack(side=tk.RIGHT)
+
+        # 2. Privacy Tweaks
+        priv_items = privacy_center.get_privacy_settings()
+        for pid, pinfo in priv_items.items():
+            card = tk.Frame(tab_priv, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
+            card.pack(fill=tk.X, padx=10, pady=4, ipady=4)
+
+            tk.Label(card, text=pinfo["title"], font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=10, pady=(2, 1))
+            tk.Label(card, text=f"Benefit: {pinfo['privacy_benefit']}", font=("Segoe UI", 8), fg=COLOR_GREEN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=10)
+            tk.Label(card, text=f"Data Collected: {pinfo['data_collected']}", font=("Segoe UI", 8), fg=COLOR_MUTED, bg=COLOR_PANEL).pack(anchor=tk.W, padx=10)
+
+            btn_box = tk.Frame(card, bg=COLOR_PANEL)
+            btn_box.pack(fill=tk.X, padx=10, pady=(4, 2))
+
+            status_txt = "STATUS: PROTECTED" if pinfo["is_protected"] else "STATUS: STANDARD TELEMETRY ACTIVE"
+            fg_col = COLOR_GREEN if pinfo["is_protected"] else COLOR_AMBER
+            tk.Label(btn_box, text=status_txt, font=("Segoe UI", 8, "bold"), fg=fg_col, bg=COLOR_PANEL).pack(side=tk.LEFT)
+
+            if pinfo["is_protected"]:
+                btn_revert = tk.Button(btn_box, text="Restore Default", font=("Segoe UI", 8), bg=COLOR_HEADER, fg=COLOR_MUTED, command=lambda p=pid: self._toggle_privacy_ui(p, False), cursor="hand2", padx=8)
+                btn_revert.pack(side=tk.RIGHT)
+            else:
+                btn_protect = tk.Button(btn_box, text="🛡️ Enable Protection", font=("Segoe UI", 8, "bold"), bg=COLOR_GREEN, fg="#ffffff", command=lambda p=pid: self._toggle_privacy_ui(p, True), cursor="hand2", padx=8)
+                btn_protect.pack(side=tk.RIGHT)
+
+    def _apply_tweak_ui(self, tweak_id: str):
+        res = tweaks_manager.apply_tweak(tweak_id)
+        messagebox.showinfo("Tweak Applied", res.get("message"))
+        self._build_tweaks_panel()
+
+    def _revert_tweak_ui(self, tweak_id: str):
+        res = tweaks_manager.revert_tweak(tweak_id)
+        messagebox.showinfo("Tweak Reverted", res.get("message"))
+        self._build_tweaks_panel()
+
+    def _toggle_privacy_ui(self, privacy_id: str, enable: bool):
+        res = privacy_center.set_protection(privacy_id, enable)
+        messagebox.showinfo("Privacy Setting", res.get("message"))
+        self._build_tweaks_panel()
+
+    # =========================================================================
+    # 9. NETWORK CENTER PANEL
+    # =========================================================================
+
+    def _build_network_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        # Adapter Telemetry Card
+        ad_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        ad_card.pack(fill=tk.X, pady=(0, 10), ipady=6)
+        tk.Label(ad_card, text="🌐 NETWORK ADAPTERS", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 4))
+
+        adapters = network_center.get_adapter_info()
+        for a in adapters:
+            st = "CONNECTED" if a["is_up"] else "DISCONNECTED"
+            tk.Label(ad_card, text=f"• {a['name']}: IPv4: {a['ipv4']} | MAC: {a['mac']} | Status: {st}", font=("Segoe UI", 9), fg=COLOR_TEXT, bg="#0d1117").pack(anchor=tk.W, padx=12)
+
+        # Ping Latency Tester & DNS Flush
+        diag_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        diag_card.pack(fill=tk.X, pady=(0, 10), ipady=8)
+        tk.Label(diag_card, text="⚡ LATENCY TEST & DNS ACTIONS", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 6))
+
+        d_row = tk.Frame(diag_card, bg="#0d1117")
+        d_row.pack(fill=tk.X, padx=10, pady=2)
+
+        tk.Label(d_row, text="Ping Host:", font=("Segoe UI", 9), fg=COLOR_TEXT, bg="#0d1117").pack(side=tk.LEFT, padx=(0, 4))
+        self.var_ping_host = tk.StringVar(value="1.1.1.1")
+        ent_host = tk.Entry(d_row, textvariable=self.var_ping_host, font=("Segoe UI", 9), bg=COLOR_PANEL, fg=COLOR_TEXT, width=16)
+        ent_host.pack(side=tk.LEFT, padx=(0, 8))
+
+        btn_ping = tk.Button(d_row, text="Run Ping Test", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._run_ping_test, cursor="hand2", padx=8)
+        btn_ping.pack(side=tk.LEFT, padx=(0, 12))
+
+        btn_flush = tk.Button(d_row, text="🧹 Flush DNS Resolver Cache", font=("Segoe UI", 8, "bold"), bg=COLOR_GREEN, fg="#ffffff", command=self._flush_dns_ui, cursor="hand2", padx=10)
+        btn_flush.pack(side=tk.LEFT)
+
+        self.lbl_ping_res = tk.Label(diag_card, text="Ping results will appear here.", font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117")
+        self.lbl_ping_res.pack(anchor=tk.W, padx=10, pady=(6, 2))
+
+        # Active Network Connections
+        conns_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        conns_card.pack(fill=tk.BOTH, expand=True)
+        tk.Label(conns_card, text="🔌 ACTIVE NETWORK SOCKETS (ESTABLISHED)", font=("Segoe UI", 9, "bold"), fg=COLOR_PURPLE, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(4, 4))
+
+        cols = ("pid", "local", "remote", "status")
+        self.net_tree = ttk.Treeview(conns_card, columns=cols, show="headings", selectmode="browse", height=8)
+        self.net_tree.heading("pid", text="PID")
+        self.net_tree.heading("local", text="Local Address")
+        self.net_tree.heading("remote", text="Remote Address")
+        self.net_tree.heading("status", text="Status")
+
+        self.net_tree.column("pid", width=70, anchor=tk.CENTER)
+        self.net_tree.column("local", width=220)
+        self.net_tree.column("remote", width=220)
+        self.net_tree.column("status", width=120, anchor=tk.CENTER)
+
+        self.net_tree.pack(fill=tk.BOTH, expand=True, padx=8, pady=(0, 6))
+        self._refresh_net_conns()
+
+    def _run_ping_test(self):
+        host = self.var_ping_host.get().strip()
+        self.lbl_ping_res.config(text=f"Pinging {host} (4 packets)...", fg=COLOR_CYAN)
+        self.root.update_idletasks()
+
+        def do_ping():
+            res = network_center.ping_test(host)
+            if res.get("success"):
+                self.lbl_ping_res.config(text=f"✓ Ping {host}: Avg Latency = {res['avg_latency_ms']} ms | Packet Loss = {res['packet_loss_percent']}%", fg=COLOR_GREEN)
+            else:
+                self.lbl_ping_res.config(text=f"✗ Ping failed: {res.get('message', 'Host unreachable')}", fg=COLOR_RED)
+
+        threading.Thread(target=do_ping, daemon=True).start()
+
+    def _flush_dns_ui(self):
+        res = network_center.flush_dns()
+        messagebox.showinfo("Flush DNS", res.get("message"))
+
+    def _refresh_net_conns(self):
+        if not hasattr(self, "net_tree") or not self.net_tree.winfo_exists():
+            return
+        for item in self.net_tree.get_children():
+            self.net_tree.delete(item)
+        for c in network_center.get_active_connections(limit=30):
+            self.net_tree.insert("", tk.END, values=(c["pid"], c["local_addr"], c["remote_addr"], c["status"]))
+
+    # =========================================================================
+    # 10. HEALTH & RESTORE PANEL
+    # =========================================================================
+
+    def _build_health_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        # Health & Drive Integrity Card
+        card1 = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card1.pack(fill=tk.X, pady=(0, 10), ipady=6)
+
+        tk.Label(card1, text="🩺 SYSTEM INTEGRITY & DIAGNOSTICS", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 4))
+        dirty = health_diagnostics.check_drive_dirty("C:")
+        tk.Label(card1, text=f"• Drive C: Health Status: {dirty['message']}", font=("Segoe UI", 9), fg=COLOR_GREEN if not dirty["is_dirty"] else COLOR_RED, bg="#0d1117").pack(anchor=tk.W, padx=12)
+
+        recs_box = tk.Frame(card1, bg="#0d1117")
+        recs_box.pack(fill=tk.X, padx=12, pady=4)
+        for r in health_diagnostics.get_integrity_recommendations():
+            tk.Label(recs_box, text=f"• {r['title']}: Run '{r['command']}' in Admin Terminal ({r['description']})", font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(anchor=tk.W)
+
+        # Windows Event Log Recent Errors
+        card2 = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card2.pack(fill=tk.X, pady=(0, 10), ipady=6)
+        tk.Label(card2, text="📋 RECENT WINDOWS SYSTEM EVENT LOG ERRORS", font=("Segoe UI", 9, "bold"), fg=COLOR_AMBER, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 4))
+
+        errs = health_diagnostics.get_recent_event_errors(limit=4)
+        if errs:
+            for e in errs:
+                tk.Label(card2, text=f"[{e['time']}] {e['source']}: {e['message']}", font=("Segoe UI", 8), fg=COLOR_TEXT, bg="#0d1117").pack(anchor=tk.W, padx=12)
+        else:
+            tk.Label(card2, text="✓ No critical Windows system errors logged in recent event queries.", font=("Segoe UI", 9), fg=COLOR_GREEN, bg="#0d1117").pack(anchor=tk.W, padx=12)
+
+        # System Restore Points Card
+        card3 = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card3.pack(fill=tk.BOTH, expand=True, ipady=6)
+
+        head_r = tk.Frame(card3, bg="#0d1117")
+        head_r.pack(fill=tk.X, padx=10, pady=(2, 4))
+        tk.Label(head_r, text="🛡️ WINDOWS SYSTEM RESTORE CHECKPOINTS", font=("Segoe UI", 9, "bold"), fg=COLOR_PURPLE, bg="#0d1117").pack(side=tk.LEFT)
+
+        btn_create_rp = tk.Button(
+            head_r,
+            text="➕ Create Restore Point Now",
+            font=("Segoe UI", 8, "bold"),
+            bg=COLOR_ACTIVE_NAV,
+            fg="#ffffff",
+            command=self._create_restore_point_ui,
+            cursor="hand2",
+            padx=10,
+        )
+        btn_create_rp.pack(side=tk.RIGHT)
+
+        pts = restore_center.get_restore_points()
+        if pts:
+            for p in pts[:5]:
+                tk.Label(card3, text=f"• #{p['seq']}: {p['description']} ({p['creation_time']})", font=("Segoe UI", 9), fg=COLOR_TEXT, bg="#0d1117").pack(anchor=tk.W, padx=12)
+        else:
+            tk.Label(card3, text="No existing restore points found or System Protection is disabled on drive C:.", font=("Segoe UI", 9), fg=COLOR_MUTED, bg="#0d1117").pack(anchor=tk.W, padx=12)
+
+    def _create_restore_point_ui(self):
+        desc = "REN-AI Manual Safety Checkpoint"
+        if messagebox.askyesno("Create Restore Point", f"Create a new Windows System Restore checkpoint named:\n'{desc}'?\n(Requires running as Administrator)"):
+            res = restore_center.create_restore_point(desc)
+            if res.get("success"):
+                messagebox.showinfo("Restore Point Created", res.get("message"))
+                self._build_health_panel()
+            else:
+                messagebox.showwarning("Restore Point", res.get("message"))
+
+    # =========================================================================
+    # 11. MODES & GAMING PANEL
+    # =========================================================================
+
+    def _build_modes_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        # 4 Operational Modes Selector Card
+        card_m = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card_m.pack(fill=tk.X, pady=(0, 10), ipady=8)
+
+        tk.Label(card_m, text="🎮 OPERATIONAL PROFILES", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(2, 6))
+
+        m_box = tk.Frame(card_m, bg="#0d1117")
+        m_box.pack(fill=tk.X, padx=12, pady=2)
+
+        for mode_key in ("programmer", "gaming", "balanced", "performance"):
+            desc = modes_manager.get_mode_description(mode_key)
+            is_active = preferences.active_mode == mode_key
+
+            b_frame = tk.Frame(m_box, bg="#161b22" if is_active else "#0d1117", bd=1, relief=tk.SOLID)
+            b_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=3, pady=2, ipady=4)
+
+            tk.Label(b_frame, text=desc["name"], font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN if is_active else COLOR_TEXT, bg=b_frame["bg"]).pack(pady=(2, 1))
+            status_txt = "ACTIVE" if is_active else "Select"
+            btn = tk.Button(
+                b_frame,
+                text=status_txt,
+                font=("Segoe UI", 8, "bold"),
+                bg=COLOR_ACTIVE_NAV if is_active else COLOR_HEADER,
+                fg="#ffffff" if is_active else COLOR_MUTED,
+                command=lambda m=mode_key: self._activate_mode_ui(m),
+                cursor="hand2",
+                padx=8,
+            )
+            btn.pack(pady=4)
+
+        # Developer Tools Arsenal
+        card_dev = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card_dev.pack(fill=tk.BOTH, expand=True, pady=(0, 10), ipady=6)
+
+        head_d = tk.Frame(card_dev, bg="#0d1117")
+        head_d.pack(fill=tk.X, padx=12, pady=(2, 6))
+        tk.Label(head_d, text="🛠️ DEVELOPER TOOLS ARSENAL (WINGET)", font=("Segoe UI", 10, "bold"), fg=COLOR_PURPLE, bg="#0d1117").pack(side=tk.LEFT)
+
+        btn_dev_clean = tk.Button(
+            head_d,
+            text="🧹 Clean Dev Caches (__pycache__)",
+            font=("Segoe UI", 8, "bold"),
+            bg=COLOR_HEADER,
+            fg=COLOR_CYAN,
+            command=self._clean_dev_caches_ui,
+            cursor="hand2",
+            padx=8,
+        )
+        btn_dev_clean.pack(side=tk.RIGHT)
+
+        dev_status = modes_manager.check_developer_tools()
+        tools_grid = tk.Frame(card_dev, bg="#0d1117")
+        tools_grid.pack(fill=tk.BOTH, expand=True, padx=12)
+
+        for t in dev_status["installed"]:
+            row = tk.Frame(tools_grid, bg="#0d1117")
+            row.pack(fill=tk.X, pady=1)
+            tk.Label(row, text=f"✓ {t['name']}", font=("Segoe UI", 9), fg=COLOR_GREEN, bg="#0d1117").pack(side=tk.LEFT)
+            tk.Label(row, text=t["description"], font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(side=tk.LEFT, padx=8)
+
+        for t in dev_status["missing"]:
+            row = tk.Frame(tools_grid, bg="#0d1117")
+            row.pack(fill=tk.X, pady=1)
+            tk.Label(row, text=f"✗ {t['name']}", font=("Segoe UI", 9), fg=COLOR_AMBER, bg="#0d1117").pack(side=tk.LEFT)
+            tk.Label(row, text=f"Winget: {t['winget_id']}", font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(side=tk.LEFT, padx=8)
+            tk.Button(row, text="Install", font=("Segoe UI", 7, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=lambda k=t["key"]: self._install_dev_tool_ui(k), cursor="hand2", padx=6).pack(side=tk.RIGHT)
+
+        # Chris Titus Tech WinUtil Launcher Card
+        card_ctt = tk.Frame(pane, bg=COLOR_HEADER, bd=1, relief=tk.SOLID)
+        card_ctt.pack(fill=tk.X, ipady=6)
+
+        tk.Label(card_ctt, text="CHRIS TITUS TECH WINDOWS UTILITY (WINUTIL)", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(anchor=tk.W, padx=12, pady=(2, 1))
+        tk.Label(card_ctt, text="Launches the famous open-source WinUtil script in an elevated PowerShell session for deep debloat and tweaks.", font=("Segoe UI", 8), fg=COLOR_TEXT, bg=COLOR_HEADER).pack(anchor=tk.W, padx=12)
+
+        btn_ctt = tk.Button(
+            card_ctt,
+            text="🚀 Launch Chris Titus WinUtil",
             font=("Segoe UI", 9, "bold"),
             bg="#1f6feb",
             fg="#ffffff",
-            activebackground="#388bfd",
-            command=self._launch_ctt_winutil,
+            command=self._launch_ctt_ui,
             cursor="hand2",
             padx=12,
             pady=3,
         )
-        btn_launch_ctt.pack(side=tk.RIGHT)
+        btn_ctt.pack(anchor=tk.W, padx=12, pady=(4, 2))
 
-        tk.Label(
-            ctt_card,
-            text="The premier open-source Windows optimization suite by Chris Titus Tech.\nExecutes: 'irm https://christitus.com/win | iex' in an elevated PowerShell session to debloat, install apps, and tune Windows features.",
-            font=("Segoe UI", 8),
-            fg=COLOR_TEXT,
-            bg=COLOR_PANEL,
-            justify=tk.LEFT,
-        ).pack(anchor=tk.W, padx=12, pady=(0, 4))
+    def _activate_mode_ui(self, mode_name: str):
+        res = modes_manager.set_mode(mode_name, apply_optimizations=True)
+        self.lbl_mode_badge.config(text=f"[{mode_name.upper()} MODE]")
+        messagebox.showinfo("Mode Activated", res.get("message"))
+        self._build_modes_panel()
 
-        # Safe Built-in Debloat Tweaks Card
-        tweak_card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        tweak_card.pack(fill=tk.BOTH, expand=True, ipady=6)
+    def _clean_dev_caches_ui(self):
+        res = modes_manager.clean_dev_caches()
+        messagebox.showinfo("Dev Caches Purged", res.get("message"))
 
-        tw_header = tk.Frame(tweak_card, bg=COLOR_HEADER)
-        tw_header.pack(fill=tk.X, ipady=6)
+    def _install_dev_tool_ui(self, tool_key: str):
+        tool = DEV_TOOLS_CATALOG.get(tool_key, {})
+        name = tool.get("name", tool_key)
+        if messagebox.askyesno("Install Developer Tool", f"Run winget to install {name}?"):
+            res = modes_manager.install_tool(tool_key)
+            messagebox.showinfo("Installation", res.get("message"))
+            self._build_modes_panel()
 
-        tk.Label(tw_header, text="🛡️ SAFE BUILT-IN WINDOWS DEBLOATING & LOW RAM OPTIMIZATION", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=12)
-
-        # Rollback All button
-        btn_roll_all = tk.Button(
-            tw_header,
-            text="⏪ Rollback All Tweaks",
-            font=("Segoe UI", 8, "bold"),
-            bg="#30363d",
-            fg=COLOR_RED,
-            activebackground=COLOR_BORDER,
-            command=self._rollback_all_debloat_tweaks,
-            cursor="hand2",
-            padx=8,
+    def _launch_ctt_ui(self):
+        msg = (
+            "You are about to launch Chris Titus Tech Windows Utility (winutil).\n\n"
+            "Command executed: irm https://christitus.com/win | iex\n"
+            "This will open an interactive PowerShell window.\n\n"
+            "Proceed?"
         )
-        btn_roll_all.pack(side=tk.RIGHT, padx=12)
-
-        btn_apply_all = tk.Button(
-            tw_header,
-            text="⚡ Apply Programmer Debloat",
-            font=("Segoe UI", 8, "bold"),
-            bg="#1f6feb",
-            fg="#ffffff",
-            command=self._apply_all_debloat_tweaks,
-            cursor="hand2",
-            padx=8,
-        )
-        btn_apply_all.pack(side=tk.RIGHT, padx=(0, 6))
-
-        self.tweaks_list_frame = tk.Frame(tweak_card, bg=COLOR_PANEL)
-        self.tweaks_list_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=10)
-
-        self._refresh_tweaks_ui()
-
-    def _refresh_tweaks_ui(self):
-        for w in self.tweaks_list_frame.winfo_children():
-            w.destroy()
-
-        tweaks = debloat_manager.get_tweak_definitions()
-        for key, info in tweaks.items():
-            row = tk.Frame(self.tweaks_list_frame, bg="#0d1117", bd=1, relief=tk.SOLID)
-            row.pack(fill=tk.X, pady=3, padx=2, ipady=4)
-
-            is_app = info["is_applied"]
-            badge_fg = COLOR_GREEN if is_app else COLOR_MUTED
-            badge_text = "✓ APPLIED" if is_app else "READY"
-
-            tk.Label(row, text=badge_text, font=("Segoe UI", 8, "bold"), fg=badge_fg, bg="#0d1117", width=10, anchor=tk.W).pack(side=tk.LEFT, padx=8)
-            tk.Label(row, text=info["title"], font=("Segoe UI", 9, "bold"), fg=COLOR_TEXT, bg="#0d1117", width=32, anchor=tk.W).pack(side=tk.LEFT)
-            tk.Label(row, text=info["impact"], font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(side=tk.LEFT, padx=4)
-
-            btn_box = tk.Frame(row, bg="#0d1117")
-            btn_box.pack(side=tk.RIGHT, padx=8)
-
-            if key == "clean_temp_caches":
-                btn = tk.Button(
-                    btn_box,
-                    text="Purge Temp Now",
-                    font=("Segoe UI", 8, "bold"),
-                    bg="#30363d",
-                    fg=COLOR_AMBER,
-                    command=self._clean_temp_caches_action,
-                    cursor="hand2",
-                    padx=6,
-                )
-                btn.pack(side=tk.RIGHT)
-            elif is_app:
-                btn_rev = tk.Button(
-                    btn_box,
-                    text="Rollback",
-                    font=("Segoe UI", 8),
-                    bg=COLOR_HEADER,
-                    fg=COLOR_RED,
-                    command=lambda k=key: self._rollback_single_tweak(k),
-                    cursor="hand2",
-                    padx=6,
-                )
-                btn_rev.pack(side=tk.RIGHT)
-            else:
-                btn_app = tk.Button(
-                    btn_box,
-                    text="Apply",
-                    font=("Segoe UI", 8, "bold"),
-                    bg="#1f6feb",
-                    fg="#ffffff",
-                    command=lambda k=key: self._apply_single_tweak(k),
-                    cursor="hand2",
-                    padx=6,
-                )
-                btn_app.pack(side=tk.RIGHT)
-
-    def _launch_ctt_winutil(self):
-        if messagebox.askyesno(
-            "Launch CTT Winutil",
-            "This will launch the official Chris Titus Tech Windows Utility in an interactive PowerShell window.\n\nCommand: irm https://christitus.com/win | iex\n\nDo you wish to proceed?"
-        ):
+        if messagebox.askyesno("Launch CTT WinUtil", msg):
             res = debloat_manager.launch_ctt_winutil()
-            messagebox.showinfo("Winutil Launched", res.get("message", "PowerShell opened."))
+            messagebox.showinfo("CTT Winutil", res.get("message"))
 
-    def _apply_single_tweak(self, key: str):
-        fn = getattr(debloat_manager, key, None)
-        if fn:
-            res = fn()
-            self._refresh_tweaks_ui()
-            messagebox.showinfo("Tweak Applied", res.get("message", "Completed."))
+    # =========================================================================
+    # 12. BENCHMARK CENTER PANEL
+    # =========================================================================
 
-    def _rollback_single_tweak(self, key: str):
-        fn = getattr(debloat_manager, f"rollback_{key}", None)
-        if fn:
-            res = fn()
-            self._refresh_tweaks_ui()
-            messagebox.showinfo("Rollback Complete", res.get("message", "Reverted to default."))
+    def _build_benchmark_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
 
-    def _clean_temp_caches_action(self):
-        res = debloat_manager.clean_temp_caches()
-        messagebox.showinfo("Clean Caches", res.get("message", "Cleaned."))
+        # Top Action Bar
+        bar = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        bar.pack(fill=tk.X, pady=(0, 10), ipady=8)
 
-    def _apply_all_debloat_tweaks(self):
-        res = debloat_manager.apply_programmer_mode_debloat()
-        self._refresh_tweaks_ui()
-        messagebox.showinfo("Debloat Complete", res.get("summary", "Applied."))
+        tk.Label(bar, text="📈 DETERMINISTIC SYSTEM BENCHMARK", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(2, 4))
+        tk.Label(bar, text="Tests CPU hashing throughput, Memory copy bandwidth, and Disk sequential write/read speeds.", font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(anchor=tk.W, padx=12)
 
-    def _rollback_all_debloat_tweaks(self):
-        if messagebox.askyesno("Confirm Rollback", "Revert all debloat tweaks to standard Windows defaults?"):
-            res = debloat_manager.rollback_all_tweaks()
-            self._refresh_tweaks_ui()
-            messagebox.showinfo("Rollback Complete", res.get("message", "Rolled back."))
-
-    # -------------------------------------------------------------------------
-    # TAB 5: PREFERENCES & SETTINGS
-    # -------------------------------------------------------------------------
-
-    def _build_settings_tab(self):
-        pane = tk.Frame(self.tab_settings, bg=COLOR_BG)
-        pane.pack(fill=tk.BOTH, expand=True, padx=20, pady=16)
-
-        card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        card.pack(fill=tk.BOTH, expand=True, padx=0, pady=0, ipady=12)
-
-        tk.Label(card, text="⚙️ SYSTEM CONFIGURATION & PREFERENCES", font=("Segoe UI", 12, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=20, pady=(12, 16))
-
-        # Profession
-        tk.Label(card, text="User Profession:", font=("Segoe UI", 10, "bold"), fg=COLOR_TEXT, bg=COLOR_PANEL).pack(anchor=tk.W, padx=20, pady=(4, 2))
-        self.set_prof = tk.StringVar(value=preferences.get("profession", "Software Engineer"))
-        cb_prof = ttk.Combobox(card, textvariable=self.set_prof, values=["Software Engineer", "Designer", "Student", "Gamer", "General"], state="readonly", width=30)
-        cb_prof.pack(anchor=tk.W, padx=20, pady=(0, 12))
-
-        # Mode
-        tk.Label(card, text="Active Mode:", font=("Segoe UI", 10, "bold"), fg=COLOR_TEXT, bg=COLOR_PANEL).pack(anchor=tk.W, padx=20, pady=(4, 2))
-        self.set_mode = tk.StringVar(value=preferences.active_mode)
-        cb_mode = ttk.Combobox(card, textvariable=self.set_mode, values=["programmer", "balanced", "performance"], state="readonly", width=30)
-        cb_mode.pack(anchor=tk.W, padx=20, pady=(0, 12))
-
-        # Downloads Clutter Threshold
-        tk.Label(card, text="Downloads Clutter Threshold (files):", font=("Segoe UI", 10, "bold"), fg=COLOR_TEXT, bg=COLOR_PANEL).pack(anchor=tk.W, padx=20, pady=(4, 2))
-        self.set_thresh = tk.IntVar(value=preferences.get("downloads_clutter_threshold", 15))
-        sp_thresh = tk.Spinbox(card, from_=5, to=100, textvariable=self.set_thresh, width=10, bg="#0d1117", fg=COLOR_TEXT)
-        sp_thresh.pack(anchor=tk.W, padx=20, pady=(0, 12))
-
-        # Checkboxes
-        self.set_bg = tk.BooleanVar(value=preferences.get("close_to_background", True))
-        tk.Checkbutton(
-            card,
-            text="Minimize to background when window is closed",
-            variable=self.set_bg,
-            font=("Segoe UI", 10),
-            fg=COLOR_TEXT,
-            bg=COLOR_PANEL,
-            selectcolor="#0d1117",
-            activebackground=COLOR_PANEL,
-            activeforeground=COLOR_CYAN,
-        ).pack(anchor=tk.W, padx=20, pady=4)
-
-        # Buttons
-        b_box = tk.Frame(card, bg=COLOR_PANEL)
-        b_box.pack(anchor=tk.W, padx=20, pady=(20, 0))
-
-        btn_save = tk.Button(
-            b_box,
-            text="💾 Save Preferences",
+        btn_run = tk.Button(
+            bar,
+            text="🚀 Run Benchmark Now (Takes ~3s)",
             font=("Segoe UI", 10, "bold"),
-            bg="#1f6feb",
+            bg=COLOR_ACTIVE_NAV,
             fg="#ffffff",
-            command=self._save_settings_tab,
+            command=self._run_benchmark_ui,
             cursor="hand2",
             padx=14,
             pady=4,
         )
-        btn_save.pack(side=tk.LEFT, padx=(0, 10))
+        btn_run.pack(anchor=tk.W, padx=12, pady=(6, 4))
 
-        btn_rerun = tk.Button(
-            b_box,
-            text="🔄 Relaunch Initial Setup Wizard",
-            font=("Segoe UI", 10),
-            bg=COLOR_HEADER,
-            fg=COLOR_MUTED,
-            command=self.show_onboarding_wizard,
+        self.lbl_bench_status = tk.Label(bar, text="", font=("Segoe UI", 9, "bold"), fg=COLOR_GREEN, bg="#0d1117")
+        self.lbl_bench_status.pack(anchor=tk.W, padx=12)
+
+        # Past Benchmark Runs Table
+        card_hist = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card_hist.pack(fill=tk.BOTH, expand=True)
+
+        tk.Label(card_hist, text="HISTORICAL BENCHMARK SCORES", font=("Segoe UI", 9, "bold"), fg=COLOR_PURPLE, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(6, 4))
+
+        cols = ("date", "composite", "cpu", "mem", "disk", "duration")
+        self.bench_tree = ttk.Treeview(card_hist, columns=cols, show="headings", selectmode="browse", height=8)
+        self.bench_tree.heading("date", text="Date & Time")
+        self.bench_tree.heading("composite", text="Composite Score")
+        self.bench_tree.heading("cpu", text="CPU Score")
+        self.bench_tree.heading("mem", text="Memory (MB/s)")
+        self.bench_tree.heading("disk", text="Disk Write (MB/s)")
+        self.bench_tree.heading("duration", text="Duration")
+
+        self.bench_tree.column("date", width=160)
+        self.bench_tree.column("composite", width=120, anchor=tk.CENTER)
+        self.bench_tree.column("cpu", width=100, anchor=tk.CENTER)
+        self.bench_tree.column("mem", width=120, anchor=tk.CENTER)
+        self.bench_tree.column("disk", width=120, anchor=tk.CENTER)
+        self.bench_tree.column("duration", width=80, anchor=tk.CENTER)
+
+        self.bench_tree.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 8))
+        self._refresh_bench_history()
+
+    def _refresh_bench_history(self):
+        if not hasattr(self, "bench_tree") or not self.bench_tree.winfo_exists():
+            return
+        for item in self.bench_tree.get_children():
+            self.bench_tree.delete(item)
+        for h in benchmark_center.get_history():
+            self.bench_tree.insert(
+                "",
+                tk.END,
+                values=(
+                    h.get("datetime", ""),
+                    f"🏆 {h.get('composite_score', 0)}",
+                    h.get("cpu_score", 0),
+                    f"{h.get('memory_speed_mb_s', 0)} MB/s",
+                    f"{h.get('disk_write_mb_s', 0)} MB/s",
+                    f"{h.get('duration_seconds', 0)}s",
+                ),
+            )
+
+    def _run_benchmark_ui(self):
+        self.lbl_bench_status.config(text="Running benchmark tests across CPU, Memory, and Disk...", fg=COLOR_CYAN)
+        self.root.update_idletasks()
+
+        def do_bench():
+            res = benchmark_center.run_benchmark()
+            self.lbl_bench_status.config(
+                text=f"✓ Benchmark Complete! Composite Score: {res['composite_score']} (CPU: {res['cpu_score']}, RAM: {res['memory_speed_mb_s']} MB/s, Disk: {res['disk_write_mb_s']} MB/s)",
+                fg=COLOR_GREEN,
+            )
+            self._refresh_bench_history()
+
+        threading.Thread(target=do_bench, daemon=True).start()
+
+    # =========================================================================
+    # 13. CHANGE HISTORY & ROLLBACK PANEL
+    # =========================================================================
+
+    def _build_history_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        bar = tk.Frame(pane, bg=COLOR_PANEL)
+        bar.pack(fill=tk.X, pady=(0, 8))
+
+        tk.Label(bar, text="📜 SYSTEM AUDIT TRAIL & VERIFIED ROLLBACK", font=("Segoe UI", 10, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(side=tk.LEFT)
+
+        btn_rollback = tk.Button(
+            bar,
+            text="↩️ Rollback Selected Action",
+            font=("Segoe UI", 8, "bold"),
+            bg=COLOR_RED,
+            fg="#ffffff",
+            command=self._rollback_selected_history,
             cursor="hand2",
-            padx=14,
-            pady=4,
+            padx=12,
         )
-        btn_rerun.pack(side=tk.LEFT)
+        btn_rollback.pack(side=tk.RIGHT)
 
-    def _save_settings_tab(self):
-        preferences.update(
-            profession=self.set_prof.get(),
-            active_mode=self.set_mode.get(),
-            downloads_clutter_threshold=self.set_thresh.get(),
-            close_to_background=self.set_bg.get(),
-        )
-        modes_manager.set_mode(self.set_mode.get(), apply_optimizations=True)
-        self.lbl_mode_badge.config(text=f"[{self.set_mode.get().upper()} MODE]")
-        messagebox.showinfo("Saved", "Preferences successfully updated.")
+        btn_ref = tk.Button(bar, text="🔄 Refresh", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_TEXT, command=self._refresh_history_table, cursor="hand2", padx=8)
+        btn_ref.pack(side=tk.RIGHT, padx=8)
 
-    # -------------------------------------------------------------------------
-    # TAB 6: SUPPORT & CONTRIBUTE
-    # -------------------------------------------------------------------------
+        cols = ("eid", "time", "title", "category", "status", "verified")
+        self.hist_tree = ttk.Treeview(pane, columns=cols, show="headings", selectmode="browse")
+        self.hist_tree.heading("eid", text="Entry ID")
+        self.hist_tree.heading("time", text="Date & Time")
+        self.hist_tree.heading("title", text="Action Performed")
+        self.hist_tree.heading("category", text="Category")
+        self.hist_tree.heading("status", text="Status")
+        self.hist_tree.heading("verified", text="Verification")
 
-    def _build_support_tab(self):
-        pane = tk.Frame(self.tab_support, bg=COLOR_BG)
-        pane.pack(fill=tk.BOTH, expand=True, padx=16, pady=12)
+        self.hist_tree.column("eid", width=120)
+        self.hist_tree.column("time", width=140)
+        self.hist_tree.column("title", width=260)
+        self.hist_tree.column("category", width=100, anchor=tk.CENTER)
+        self.hist_tree.column("status", width=90, anchor=tk.CENTER)
+        self.hist_tree.column("verified", width=110, anchor=tk.CENTER)
 
-        # YouTube Section
-        yt_card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        yt_card.pack(fill=tk.X, pady=(0, 12), ipady=8)
+        h_scroll = ttk.Scrollbar(pane, orient="vertical", command=self.hist_tree.yview)
+        self.hist_tree.configure(yscrollcommand=h_scroll.set)
 
-        tk.Label(yt_card, text="📺 YOUTUBE CHANNEL: @cyan_code", font=("Segoe UI", 11, "bold"), fg="#ff4444", bg=COLOR_PANEL).pack(anchor=tk.W, padx=16, pady=(4, 2))
-        tk.Label(
-            yt_card,
-            text="Follow Cyan Code on YouTube for development updates, AI tutorials, devlogs, and showcase demonstrations of REN-AI.",
-            font=("Segoe UI", 9),
-            fg=COLOR_TEXT,
-            bg=COLOR_PANEL,
-        ).pack(anchor=tk.W, padx=16, pady=(0, 8))
+        self.hist_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        h_scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
+        self._refresh_history_table()
+
+    def _refresh_history_table(self):
+        if not hasattr(self, "hist_tree") or not self.hist_tree.winfo_exists():
+            return
+        for item in self.hist_tree.get_children():
+            self.hist_tree.delete(item)
+
+        for entry in change_history.get_history(limit=80):
+            st = "Rolled Back" if entry.get("rolled_back") else entry.get("status", "executed").capitalize()
+            vf = "✓ Verified" if entry.get("verified") else "Unverified"
+            self.hist_tree.insert(
+                "",
+                tk.END,
+                values=(entry.get("entry_id"), entry.get("datetime"), entry.get("title"), entry.get("category"), st, vf),
+            )
+
+    def _rollback_selected_history(self):
+        sel = self.hist_tree.selection()
+        if not sel:
+            messagebox.showwarning("No Selection", "Select an action from the history table to roll back.")
+            return
+
+        eid = str(self.hist_tree.item(sel[0])["values"][0])
+        entry = change_history.get_entry(eid)
+        if not entry:
+            messagebox.showerror("Error", "Selected entry not found.")
+            return
+
+        if entry.get("rolled_back"):
+            messagebox.showinfo("Already Rolled Back", f"Action '{entry.get('title')}' is already marked as rolled back.")
+            return
+
+        title = entry.get("title", "")
+        if messagebox.askyesno("Confirm Rollback", f"Are you sure you want to roll back:\n'{title}'?"):
+            res = action_executor.rollback_entry(eid)
+            if res.get("success"):
+                messagebox.showinfo("Rollback Complete", res.get("message"))
+                self._refresh_history_table()
+            else:
+                # Fallback manual reversal attempt if standard registry tweak
+                act_id = entry.get("action_id", "")
+                if act_id.startswith("tweak_"):
+                    twk_key = act_id[6:]
+                    rev_res = tweaks_manager.revert_tweak(twk_key)
+                    change_history.mark_rolled_back(eid, message=rev_res.get("message", "Reverted"))
+                    messagebox.showinfo("Rollback Complete", rev_res.get("message"))
+                    self._refresh_history_table()
+                elif act_id.startswith("privacy_"):
+                    priv_key = act_id[8:]
+                    rev_res = privacy_center.set_protection(priv_key, enable=False)
+                    change_history.mark_rolled_back(eid, message=rev_res.get("message", "Restored default"))
+                    messagebox.showinfo("Rollback Complete", rev_res.get("message"))
+                    self._refresh_history_table()
+                else:
+                    messagebox.showwarning("Rollback Notice", res.get("message"))
+
+    # =========================================================================
+    # 14. PREFERENCES & SUPPORT PANEL
+    # =========================================================================
+
+    def _build_settings_panel(self):
+        pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
+        pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
+
+        # Downloads Folder Config Card
+        card_dl = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card_dl.pack(fill=tk.X, pady=(0, 10), ipady=8)
+
+        tk.Label(card_dl, text="📁 DOWNLOADS FOLDER CONFIGURATION", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(2, 4))
+        p_row = tk.Frame(card_dl, bg="#0d1117")
+        p_row.pack(fill=tk.X, padx=12, pady=2)
+
+        self.var_set_dl = tk.StringVar(value=preferences.get("downloads_folder", str(Path.home() / "Downloads")))
+        ent_dl = tk.Entry(p_row, textvariable=self.var_set_dl, font=("Segoe UI", 9), bg=COLOR_PANEL, fg=COLOR_TEXT, insertbackground=COLOR_TEXT)
+        ent_dl.pack(side=tk.LEFT, fill=tk.X, expand=True, ipady=3, padx=(0, 8))
+
+        btn_browse = tk.Button(p_row, text="Browse...", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._browse_set_dl, cursor="hand2", padx=10)
+        btn_browse.pack(side=tk.RIGHT)
+
+        btn_save_dl = tk.Button(card_dl, text="Save Folder Path", font=("Segoe UI", 8, "bold"), bg=COLOR_ACTIVE_NAV, fg="#ffffff", command=self._save_downloads_pref, cursor="hand2", padx=10)
+        btn_save_dl.pack(anchor=tk.W, padx=12, pady=(4, 2))
+
+        # Support Page Card: YouTube @cyan_code & GitHub Section
+        card_sup = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        card_sup.pack(fill=tk.X, pady=(0, 10), ipady=8)
+
+        tk.Label(card_sup, text="❤️ SUPPORT, COMMUNITY & CREATOR", font=("Segoe UI", 10, "bold"), fg=COLOR_PURPLE, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(2, 4))
+        tk.Label(card_sup, text="REN-AI is proudly human-driven, transparent, and created to liberate Windows from bloat and AI slop.", font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117").pack(anchor=tk.W, padx=12, pady=(0, 6))
+
+        s_btn_row = tk.Frame(card_sup, bg="#0d1117")
+        s_btn_row.pack(fill=tk.X, padx=12, pady=2)
+
+        # YouTube Channel Link
         btn_yt = tk.Button(
-            yt_card,
-            text="🔴 Open @cyan_code on YouTube",
+            s_btn_row,
+            text="📺 YouTube Channel @cyan_code",
             font=("Segoe UI", 9, "bold"),
             bg="#cc0000",
             fg="#ffffff",
             activebackground="#ff0000",
-            activeforeground="#ffffff",
-            command=lambda: webbrowser.open("https://www.youtube.com/@cyan_code"),
+            command=lambda: webbrowser.open("https://youtube.com/@cyan_code"),
             cursor="hand2",
-            padx=14,
+            padx=12,
             pady=4,
         )
-        btn_yt.pack(anchor=tk.W, padx=16, pady=(0, 4))
+        btn_yt.pack(side=tk.LEFT, padx=(0, 10))
 
-        # GitHub Section
-        gh_card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        gh_card.pack(fill=tk.X, pady=(0, 12), ipady=8)
-
-        tk.Label(gh_card, text="⭐ GITHUB SUPPORT & CONTRIBUTE: takumicodes/REN-AI", font=("Segoe UI", 11, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=16, pady=(4, 2))
-        tk.Label(
-            gh_card,
-            text="REN-AI is an open-source cognitive desktop assistant. Help build the future of local, human-driven AI by starring the repo, reporting bugs, or contributing code skills.",
-            font=("Segoe UI", 9),
-            fg=COLOR_TEXT,
-            bg=COLOR_PANEL,
-        ).pack(anchor=tk.W, padx=16, pady=(0, 8))
-
-        gh_btn_box = tk.Frame(gh_card, bg=COLOR_PANEL)
-        gh_btn_box.pack(anchor=tk.W, padx=16, pady=(0, 4))
-
+        # GitHub Repo Link
         btn_gh = tk.Button(
-            gh_btn_box,
-            text="⭐ Star on GitHub",
+            s_btn_row,
+            text="⭐ GitHub Repository",
             font=("Segoe UI", 9, "bold"),
             bg="#238636",
             fg="#ffffff",
@@ -1253,10 +1845,11 @@ class RenDesktopApp:
             padx=12,
             pady=4,
         )
-        btn_gh.pack(side=tk.LEFT, padx=(0, 8))
+        btn_gh.pack(side=tk.LEFT, padx=(0, 10))
 
+        # Issues Link
         btn_issues = tk.Button(
-            gh_btn_box,
+            s_btn_row,
             text="🐛 Report an Issue",
             font=("Segoe UI", 9),
             bg=COLOR_HEADER,
@@ -1266,40 +1859,41 @@ class RenDesktopApp:
             padx=10,
             pady=4,
         )
-        btn_issues.pack(side=tk.LEFT, padx=(0, 8))
+        btn_issues.pack(side=tk.LEFT)
 
-        btn_pr = tk.Button(
-            gh_btn_box,
-            text="🤝 Submit Pull Request",
-            font=("Segoe UI", 9),
-            bg=COLOR_HEADER,
-            fg=COLOR_TEXT,
-            command=lambda: webbrowser.open("https://github.com/takumicodes/REN-AI/pulls"),
-            cursor="hand2",
-            padx=10,
-            pady=4,
+        # Philosophy & Safety Invariants Card
+        card_phil = tk.Frame(pane, bg=COLOR_HEADER, bd=1, relief=tk.SOLID)
+        card_phil.pack(fill=tk.BOTH, expand=True, ipady=6)
+
+        tk.Label(card_phil, text="THE REN-AI PHILOSOPHY (ZERO AI-SLOP)", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(anchor=tk.W, padx=12, pady=(2, 2))
+        phil_text = (
+            "• Observe -> Understand -> Explain -> Recommend -> Ask User -> Execute -> Verify -> Rollback.\n"
+            "• Never mutates your system without explicit human consent.\n"
+            "• Preserves full before-state backups so any modification can be reversed in 1 click.\n"
+            "• Tailored specifically for developers, power users, and gamers wanting maximum PC performance."
         )
-        btn_pr.pack(side=tk.LEFT)
+        tk.Label(card_phil, text=phil_text, font=("Segoe UI", 8), fg=COLOR_TEXT, bg=COLOR_HEADER, justify=tk.LEFT).pack(anchor=tk.W, padx=12)
 
-        # Vision Card
-        vis_card = tk.Frame(pane, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
-        vis_card.pack(fill=tk.BOTH, expand=True, ipady=6)
+    def _browse_set_dl(self):
+        f = filedialog.askdirectory(initialdir=self.var_set_dl.get(), title="Select Downloads Folder")
+        if f:
+            self.var_set_dl.set(f)
 
-        tk.Label(vis_card, text="🧭 THE REN PHILOSOPHY", font=("Segoe UI", 10, "bold"), fg=COLOR_PURPLE, bg=COLOR_PANEL).pack(anchor=tk.W, padx=16, pady=(4, 2))
-        philosophy_text = (
-            "• 100% Human-Driven: REN never mutates your system without explicit confirmation.\n"
-            "• Zero AI Slop: No unprompted chatbot babble, hallucinations, or disruptive popups.\n"
-            "• Developer-First: Built to give programmers maximum RAM headroom and compile speed.\n"
-            "• Safe & Reversible: Every action includes full preview and 1-click rollback history."
-        )
-        tk.Label(vis_card, text=philosophy_text, font=("Segoe UI", 9), fg=COLOR_TEXT, bg=COLOR_PANEL, justify=tk.LEFT).pack(anchor=tk.W, padx=16, pady=4)
+    def _save_downloads_pref(self):
+        val = self.var_set_dl.get().strip()
+        if val and Path(val).exists():
+            preferences.set("downloads_folder", val)
+            organizer.folder = Path(val)
+            messagebox.showinfo("Saved", f"Downloads folder path updated to:\n{val}")
+        else:
+            messagebox.showwarning("Invalid Path", "Please select an existing folder path.")
 
     # =========================================================================
     # REFRESH LOOP & BACKGROUND TRAY HANDLING
     # =========================================================================
 
     def _refresh_gui_loop(self):
-        """Updates hardware metrics dynamically every 2 seconds."""
+        """Periodically refreshes hardware telemetry safely."""
         try:
             snapshot = get_system_snapshot()
             cpu = snapshot["cpu_percent"]
@@ -1308,27 +1902,29 @@ class RenDesktopApp:
             bat = snapshot["battery"]
             plan = snapshot["power_profile"]
 
-            # Header mini status
-            bat_str = f"{bat['percent']}% {'(AC)' if bat['is_plugged'] else '(Discharging)'}" if bat["has_battery"] else "AC Wall Power"
-            self.lbl_header_metrics.config(text=f"CPU: {cpu}% | RAM: {ram['percent_used']}% | Disk: {disk}% | Power: {plan}")
+            # Header text
+            self.lbl_header_metrics.config(
+                text=f"CPU: {cpu}% | RAM: {ram['percent_used']}% | Disk: {disk}% | Power: {plan}"
+            )
 
-            # Dashboard widgets
-            if hasattr(self, "lbl_cpu"):
-                self.lbl_cpu.config(text=f"CPU Utilization: {cpu}%")
-                self.bar_cpu["value"] = min(100, max(0, cpu))
+            # Dashboard widgets if dashboard is currently active
+            if hasattr(self, "lbl_dash_cpu") and self.lbl_dash_cpu.winfo_exists():
+                self.lbl_dash_cpu.config(text=f"CPU Utilization: {cpu}%")
+                self.bar_dash_cpu["value"] = min(100, max(0, cpu))
 
-                self.lbl_ram.config(text=f"RAM: {ram['percent_used']}% ({ram['used_gb']} GB used / {ram['total_gb']} GB total)")
-                self.bar_ram["value"] = min(100, max(0, ram["percent_used"]))
+                self.lbl_dash_ram.config(text=f"RAM: {ram['percent_used']}% ({ram['used_gb']} GB used / {ram['total_gb']} GB)")
+                self.bar_dash_ram["value"] = min(100, max(0, ram["percent_used"]))
 
-                self.lbl_disk.config(text=f"Primary Storage: {disk}% used")
-                self.bar_disk["value"] = min(100, max(0, disk))
+                self.lbl_dash_disk.config(text=f"Storage: {disk}% used")
+                self.bar_dash_disk["value"] = min(100, max(0, disk))
 
-                self.lbl_bat.config(text=f"Battery: {bat_str}")
-                self.lbl_plan.config(text=f"Power Scheme: {plan} | Context: {snapshot['context']['category'].upper()}")
+                ctx_cat = snapshot.get("context", {}).get("category", "general").upper()
+                self.lbl_dash_ctx.config(
+                    text=f"Context: {ctx_cat} | Active Power Scheme: {plan} | Silent Observer: ACTIVE"
+                )
         except Exception:
             pass
 
-        # Schedule next update
         self.root.after(2000, self._refresh_gui_loop)
 
     def on_close_window(self):
@@ -1341,35 +1937,34 @@ class RenDesktopApp:
     def minimize_to_background(self):
         """Hides the GUI window while keeping the background observer running."""
         self.root.withdraw()
-        # Show Windows balloon / prompt if desired, or restore controller
         try:
             self._ensure_restore_controller()
         except Exception:
             pass
 
     def _ensure_restore_controller(self):
-        """Creates a small top-level controller or notification so the user can easily restore."""
+        """Creates a small top-level controller so the user can easily restore."""
         if hasattr(self, "tray_top") and self.tray_top.winfo_exists():
             return
 
         self.tray_top = tk.Toplevel(self.root)
         self.tray_top.title("REN Running in BG")
-        self.tray_top.geometry("300x110+50+50")
+        self.tray_top.geometry("310x120+40+40")
         self.tray_top.configure(bg=COLOR_PANEL)
         self.tray_top.resizable(False, False)
         self.tray_top.attributes("-topmost", True)
 
         tk.Label(
             self.tray_top,
-            text="🪐 REN is observing in background",
+            text="🪐 REN-AI Control Center in BG",
             font=("Segoe UI", 9, "bold"),
             fg=COLOR_CYAN,
             bg=COLOR_PANEL,
-        ).pack(pady=(10, 4))
+        ).pack(pady=(10, 2))
 
         tk.Label(
             self.tray_top,
-            text="Silent background observation active.",
+            text="Silent observer active. Window minimized.",
             font=("Segoe UI", 8),
             fg=COLOR_MUTED,
             bg=COLOR_PANEL,
@@ -1380,7 +1975,7 @@ class RenDesktopApp:
 
         btn_restore = tk.Button(
             btn_row,
-            text="Open GUI",
+            text="Open Control Center",
             font=("Segoe UI", 8, "bold"),
             bg="#1f6feb",
             fg="#ffffff",
@@ -1412,14 +2007,14 @@ class RenDesktopApp:
 
     def quit_app_completely(self):
         """Completely terminates background observer and destroys GUI."""
-        if messagebox.askyesno("Exit REN", "Are you sure you want to completely stop REN Desktop Assistant and exit?"):
+        if messagebox.askyesno("Exit REN", "Are you sure you want to completely stop REN-AI Control Center and exit?"):
             observer.stop()
             self.root.destroy()
             sys.exit(0)
 
 
 def launch_gui():
-    """Main function to start REN Desktop Assistant GUI."""
+    """Main function to launch REN-AI Windows Control Center."""
     root = tk.Tk()
     app = RenDesktopApp(root)
     root.mainloop()

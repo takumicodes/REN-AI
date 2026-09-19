@@ -61,6 +61,18 @@ DEV_TOOLS_CATALOG: Dict[str, Dict[str, str]] = {
         "command_check": "7z",
         "description": "Fast archive utility for compressed developer packages.",
     },
+    "rust": {
+        "name": "Rust (rustup & cargo)",
+        "winget_id": "Rustlang.Rustup",
+        "command_check": "rustc",
+        "description": "Rust systems programming language toolchain.",
+    },
+    "docker": {
+        "name": "Docker Desktop",
+        "winget_id": "Docker.DockerDesktop",
+        "command_check": "docker",
+        "description": "Container platform for developing and running microservices.",
+    },
 }
 
 
@@ -68,7 +80,7 @@ class ModesManager:
     """Manages switching and enforcing features across the 3 modes."""
 
     def __init__(self):
-        self.modes = ("programmer", "balanced", "performance")
+        self.modes = ("programmer", "balanced", "performance", "gaming")
 
     @property
     def current_mode(self) -> str:
@@ -100,6 +112,14 @@ class ModesManager:
                 "power_plan_battery": "High Performance",
                 "debloat_profile": "High Performance (Temp files cleaned, standby RAM purged)",
                 "ram_target": "Freed RAM prioritized for active foreground workload",
+            },
+            "gaming": {
+                "name": "Gaming Mode",
+                "tagline": "Maximum frame stability. Unlocks full GPU/CPU power, reduces desktop latency, suppresses background telemetries.",
+                "power_plan_ac": "Ultimate Performance",
+                "power_plan_battery": "High Performance",
+                "debloat_profile": "Gaming (Caches purged, telemetry silenced, visual latency trimmed)",
+                "ram_target": "Maximum RAM dedicated to active 3D game process",
             },
         }
         return descriptions.get(mode, descriptions["balanced"])
@@ -138,6 +158,13 @@ class ModesManager:
                 set_power_profile("Ultimate Performance")
                 debloat_manager.clean_temp_caches()
                 actions_taken.append("Power plan set to 'Ultimate Performance' and caches cleared")
+
+            elif mode_name == "gaming":
+                target_plan = "Ultimate Performance" if is_plugged else "High Performance"
+                set_power_profile(target_plan)
+                debloat_manager.clean_temp_caches()
+                debloat_manager.optimize_visual_effects()
+                actions_taken.append(f"Gaming profile active: Power plan set to '{target_plan}', caches cleared, visual latency minimized")
 
         return {
             "success": True,

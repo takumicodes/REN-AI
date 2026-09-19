@@ -6,18 +6,25 @@
 
 ## 🚀 Key Features
 
-### 1. 🖥️ REN Desktop Assistant (`Ren_Desktop_Assistant/`)
-* **Pure Windows Native GUI & Standalone EXE:** Launch `Ren Desktop Assistant.exe` for an instant, high-DPI cyber HUD without command-line dependencies.
-* **First-Install Preferences Wizard:** Set your downloads folder path, select your profession (Software Engineer, Designer, Student, Gamer, General), pick your preferred mode, and configure background behavior.
-* **100% Human-Driven Agency:** Never mutates your system or takes destructive actions without explicit user review. No unsolicited chatbot hallucinations or annoying popups like Copilot.
-* **Silent Background Observation:** Non-blocking background daemon tracking CPU, RAM, multi-partition storage health, battery drain, AC power status, and foreground context (`PROGRAMMING`, `BROWSING`, `GAMING`, `MEDIA`).
-* **3 Intelligent Operational Modes:**
-  * 🛠️ **Programmer Mode (Default):** Developer tools inspector & winget installer (Git, VS Code, Python 3, Windows Terminal, Node.js LTS, 7-Zip), low-RAM Windows debloat, compile power boost on AC, and battery saver when mobile.
-  * ⚖️ **Balanced Mode:** Whisper-quiet everyday assistant maintaining standard Windows balance.
-  * 🚀 **Performance Mode:** Maximum sustained hardware clock boost, high power plan, and standby RAM purging for heavy workloads.
-* **Safe Downloads Organizer with Rollback:** Categorizes loose files into Code, Documents, Images, Media, Archives, and Installers. Features dry-run preview, 15-minute protection for active downloads, and **1-click Undo / Rollback** to restore files to their exact original locations.
-* **Windows Debloater & Chris Titus Tech Utility (winutil):** Safe toggles to disable Bing Start search, turn off Copilot background processes, tune visual animations for low RAM, clean `%TEMP%` caches, and launch the famous **Chris Titus Tech Windows Utility** (`irm https://christitus.com/win | iex`) in an elevated PowerShell session.
-* **Close-to-Background Tray Operation:** When the window is closed, it minimizes to the background and continues observing silently.
+### 1. 🖥️ REN-AI Windows Control Center (`Ren_Desktop_Assistant/`) [v1.3.0]
+* **Pure Windows Native GUI & Standalone EXE:** Launch `Ren Desktop Assistant.exe` for an instant, high-DPI cyber Control Center without command-line dependencies or external runtimes.
+* **14 Specialized Control Centers:**
+  * 📊 **Dashboard:** Real-time hardware telemetry (CPU, RAM, Disk, Power), active context detection, and pending human-driven recommendations.
+  * ⚡ **Process Explorer:** Interactive process viewer with CPU/RAM sorting, search, and core Windows system shields preventing accidental OS termination.
+  * 🔋 **Power Center:** 1-click power scheme switcher (Balanced, High Performance, Power Saver, Ultimate) and official HTML battery report generator.
+  * 🧹 **Storage & Cleaner:** Multi-target scan (User temp, Windows temp, shader caches, crash dumps, Delivery Optimization, thumbnail cache) + 1-click Recycle Bin purge and storage analyzer.
+  * 🚀 **Startup Manager:** Registry (HKCU/HKLM) and folder startup apps inspector with safe disable/enable toggles and rollback preservation.
+  * ⚙️ **Services Manager:** Enumerate services with standard user registry fallback, core service protection, and startup type management.
+  * 📦 **Apps Manager:** Installed Win32 & UWP programs inspector with publisher, version, size, and uninstaller launcher.
+  * 🛠️ **Tweaks & Privacy:** Explorer tweaks (extensions, hidden files, compact view, taskbar end task) + Privacy hardening (Ad ID, telemetry, activity history) with 1-click rollback.
+  * 🌐 **Network Center:** Adapter telemetry, ping latency test, DNS resolver cache flush with verification, and active socket connections monitor.
+  * 🩺 **Health & Restore:** Drive dirty queries, Windows System Event Log error queries, file integrity guides (SFC/DISM), and System Restore points manager & creator.
+  * 🎮 **Modes & Gaming:** 4 operational profiles (Programmer, Gaming, Balanced, Performance), Developer Arsenal (winget installer, dev caches cleaner), and Chris Titus WinUtil integration.
+  * 📈 **Benchmark Center:** Deterministic, offline 3-part benchmark (CPU SHA-256 rounds, RAM copy bandwidth, Disk sequential write/read) with composite scores and history tracking.
+  * 📜 **Change History & Rollback:** Persistent audit log of all system changes with pre/post-state capture and 1-click rollback execution.
+  * ⚙️ **Preferences & Support:** Downloads folder settings with category organization and undo, YouTube @cyan_code channel link, and GitHub community links.
+* **100% Human-Driven Agency:** `Observe -> Understand -> Explain -> Recommend -> Ask User -> Execute -> Verify -> Rollback`. Zero unsolicited chatbot slop.
+* **Single-Instance Enforcement & System Tray:** Named Windows Mutex prevents multiple copies; closing to tray continues whisper-quiet background monitoring.
 
 ### 2. 🌌 Autonomous Core HUD & Cognitive Systems
 * **Neon Cyber HUD:** High-performance frontend built with Vanilla HTML/CSS/JS via Pywebview, featuring sliding control panels, status LEDs, dynamic diagnostics indicators, and a center-stage particle dynosphere.
