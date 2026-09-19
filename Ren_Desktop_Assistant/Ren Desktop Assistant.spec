@@ -3,7 +3,7 @@
 
 a = Analysis(
     ['D:/Coding projects/REN-AI-main (1)/REN-AI-main/Ren_Desktop_Assistant/main.py'],
-    pathex=[],
+    pathex=['D:/Coding projects/REN-AI-main (1)/REN-AI-main/Ren_Desktop_Assistant'],
     binaries=[],
     datas=[('D:/Coding projects/REN-AI-main (1)/REN-AI-main/Ren_Desktop_Assistant/ren_logo.ico', '.'), ('D:/Coding projects/REN-AI-main (1)/REN-AI-main/Ren_Desktop_Assistant/ren_logo.png', '.')],
     hiddenimports=['preferences', 'system_status', 'system_info', 'system_observer', 'downloads_organizer', 'debloat', 'modes', 'actions', 'app_gui', 'PIL', 'psutil', 'powerplan', 'tkinter', 'tkinter.ttk', 'tkinter.filedialog', 'tkinter.messagebox'],

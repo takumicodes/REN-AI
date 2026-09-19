@@ -29,12 +29,18 @@ FINAL_EXE = ASSISTANT_DIR / (EXE_NAME + ".exe")
 
 
 def clean_previous_builds():
-    """Completely cleans build directories and old executables to prevent corruption."""
+    """Completely cleans build directories, spec files, and old executables to prevent corruption."""
     print("[*] Cleaning build caches and previous artifacts...")
     if BUILD_DIR.exists():
         shutil.rmtree(BUILD_DIR, ignore_errors=True)
     if DIST_DIR.exists():
         shutil.rmtree(DIST_DIR, ignore_errors=True)
+    spec_file = ASSISTANT_DIR / (EXE_NAME + ".spec")
+    if spec_file.exists():
+        try:
+            spec_file.unlink()
+        except Exception:
+            pass
     if FINAL_EXE.exists():
         try:
             FINAL_EXE.unlink()
@@ -63,6 +69,8 @@ def build():
         EXE_NAME,
         "--icon",
         str(ICON_FILE),
+        "--paths",
+        str(ASSISTANT_DIR),
         "--add-data",
         f"{ICON_FILE};.",
         "--add-data",

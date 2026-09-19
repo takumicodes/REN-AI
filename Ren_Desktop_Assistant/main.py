@@ -10,10 +10,33 @@ import sys
 import argparse
 from pathlib import Path
 
+# Safe stdout/stderr initialization for Windows windowed mode
+if sys.stdout is None:
+    class DummyStream:
+        def write(self, *a, **k): pass
+        def flush(self, *a, **k): pass
+    sys.stdout = DummyStream()
+if sys.stderr is None:
+    class DummyStream:
+        def write(self, *a, **k): pass
+        def flush(self, *a, **k): pass
+    sys.stderr = DummyStream()
+
 # Add current directory to path
 CURRENT_DIR = Path(__file__).resolve().parent
 if str(CURRENT_DIR) not in sys.path:
     sys.path.insert(0, str(CURRENT_DIR))
+
+# Core module imports for PyInstaller bundling
+import preferences
+import system_status
+import system_info
+import system_observer
+import downloads_organizer
+import debloat
+import modes
+import actions
+import app_gui
 
 # Enable Windows High-DPI Awareness for razor-sharp rendering
 if sys.platform == "win32":
