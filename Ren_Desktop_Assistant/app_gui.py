@@ -71,8 +71,20 @@ class RenDesktopApp:
         self.root = root
         self.root.title("🪐 REN Desktop Assistant - Autonomous System")
         self.root.geometry("980x720")
-        self.root.minsize(860, 620)
         self.root.configure(bg=COLOR_BG)
+
+        # Set Window Logo / Icon
+        try:
+            base_path = Path(sys._MEIPASS) if getattr(sys, "frozen", False) else Path(__file__).parent
+            icon_ico = base_path / "ren_logo.ico"
+            icon_png = base_path / "ren_logo.png"
+            if icon_ico.exists():
+                self.root.iconbitmap(str(icon_ico))
+            elif icon_png.exists():
+                logo_img = tk.PhotoImage(file=str(icon_png))
+                self.root.iconphoto(True, logo_img)
+        except Exception:
+            pass
 
         # Intercept close ('X') button to minimize to background
         self.root.protocol("WM_DELETE_WINDOW", self.on_close_window)

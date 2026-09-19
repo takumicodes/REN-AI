@@ -218,7 +218,48 @@ class ModesManager:
             else:
                 return {"success": False, "message": f"Installation failed with code {res.returncode}: {res.stderr[:200]}"}
         except Exception as e:
-            return {"success": False, "message": str(e)}
+            return {"success": False, "message": f"Error running winget: {str(e)}"}
+
+    def is_system_python_installed(self) -> bool:
+        """Checks if Python is installed on host system PATH."""
+        for bin_name in ("python", "python3", "py"):
+            if shutil.which(bin_name):
+                return True
+        return False
+
+    def install_system_python(self) -> Dict[str, Any]:
+        """
+        Installs Python 3 on the host system if not already installed.
+        Uses winget first, falling back to official python.org installer.
+        """
+        if self.is_system_python_installed():
+            return {"success": True, "message": "Python 3 is already installed on this machine."}
+
+        winget_path = shutil.which("winget")
+        if winget_path:
+            try:
+                cmd = [winget_path, "install", "--id", "Python.Python.3.11", "-e", "--accept-source-agreements", "--accept-package-agreements"]
+                res = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+                if res.returncode == 0:
+                    return {"success": True, "message": "Python 3.11 installed successfully via winget."}
+            except Exception:
+                pass
+
+        try:
+            ps_cmd = (
+                "$url = 'https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe'; "
+                "$installer = [System.IO.Path]::Combine($env:TEMP, 'python_installer.exe'); "
+                "Invoke-WebRequest -Uri $url -OutFile $installer; "
+                "Start-Process -FilePath $installer -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1' -Wait; "
+                "Remove-Item $installer -Force"
+            )
+            res = subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", ps_cmd], capture_output=True, text=True, timeout=360)
+            if res.returncode == 0:
+                return {"success": True, "message": "Python 3.11 downloaded and installed successfully."}
+        except Exception as e:
+            return {"success": False, "message": f"Python install failed: {e}"}
+
+        return {"success": False, "message": "Could not install Python automatically. Please download from https://python.org"}
 
     # --- Programmer Cache Cleaner ---
 

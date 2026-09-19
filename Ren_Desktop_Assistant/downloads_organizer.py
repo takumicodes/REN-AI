@@ -40,7 +40,12 @@ CATEGORIES: Dict[str, List[str]] = {
     ],
 }
 
-HISTORY_FILE = Path(__file__).parent / "downloads_history.json"
+try:
+    from .preferences import get_data_dir
+except ImportError:
+    from preferences import get_data_dir
+
+HISTORY_FILE = get_data_dir() / "downloads_history.json"
 
 
 class DownloadsOrganizer:

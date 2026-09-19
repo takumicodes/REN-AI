@@ -1,0 +1,12 @@
+# Force binary files to never undergo CRLF line ending transformation
+*.exe binary
+*.dll binary
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.db binary
+*.sqlite binary
+
+# Default text files
+* text=auto

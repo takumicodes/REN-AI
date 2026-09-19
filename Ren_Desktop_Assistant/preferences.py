@@ -10,7 +10,27 @@ import time
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
-PREFERENCES_FILE = Path(__file__).parent / "user_preferences.json"
+import sys
+
+def get_data_dir() -> Path:
+    """Returns persistent, writable data directory for preferences on any drive/PC."""
+    if getattr(sys, "frozen", False):
+        exe_dir = Path(sys.executable).parent
+        portable_flag = exe_dir / "user_preferences.json"
+        if portable_flag.exists():
+            return exe_dir
+        appdata = os.environ.get("LOCALAPPDATA")
+        target = Path(appdata) / "RenDesktopAssistant" if appdata else Path.home() / ".ren_desktop_assistant"
+    else:
+        target = Path(__file__).parent
+
+    try:
+        os.makedirs(str(target), exist_ok=True)
+    except Exception:
+        pass
+    return target
+
+PREFERENCES_FILE = get_data_dir() / "user_preferences.json"
 
 DEFAULT_PREFERENCES: Dict[str, Any] = {
     "version": "2.0",

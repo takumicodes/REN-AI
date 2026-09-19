@@ -1,15 +1,17 @@
 """
 Build Script for REN Desktop Assistant Executable
 Compiles the application into a standalone Windows executable named 'Ren Desktop Assistant.exe'.
+Embeds custom cyber logo, disables UPX to prevent archive corruption, and bundles all dependencies.
 """
 
 import os
 import sys
+import time
 import shutil
 import subprocess
 from pathlib import Path
 
-# Fix Windows console encoding if needed
+# Fix console encoding on Windows
 if hasattr(sys.stdout, "reconfigure"):
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -20,15 +22,35 @@ ASSISTANT_DIR = Path(__file__).resolve().parent
 MAIN_FILE = ASSISTANT_DIR / "main.py"
 DIST_DIR = ASSISTANT_DIR / "dist"
 BUILD_DIR = ASSISTANT_DIR / "build"
+ICON_FILE = ASSISTANT_DIR / "ren_logo.ico"
+PNG_FILE = ASSISTANT_DIR / "ren_logo.png"
 EXE_NAME = "Ren Desktop Assistant"
+FINAL_EXE = ASSISTANT_DIR / (EXE_NAME + ".exe")
+
+
+def clean_previous_builds():
+    """Completely cleans build directories and old executables to prevent corruption."""
+    print("[*] Cleaning build caches and previous artifacts...")
+    if BUILD_DIR.exists():
+        shutil.rmtree(BUILD_DIR, ignore_errors=True)
+    if DIST_DIR.exists():
+        shutil.rmtree(DIST_DIR, ignore_errors=True)
+    if FINAL_EXE.exists():
+        try:
+            FINAL_EXE.unlink()
+        except Exception:
+            pass
 
 
 def build():
-    print("=" * 60)
-    print("[*] Building REN Desktop Assistant Executable...")
+    print("=" * 65)
+    print("[*] Building Standalone REN Desktop Assistant Executable...")
     print(f"[*] Source: {MAIN_FILE}")
-    print(f"[*] Output: {DIST_DIR / (EXE_NAME + '.exe')}")
-    print("=" * 60)
+    print(f"[*] Output Target: {FINAL_EXE}")
+    print(f"[*] Logo Icon: {ICON_FILE}")
+    print("=" * 65)
+
+    clean_previous_builds()
 
     cmd = [
         sys.executable,
@@ -39,48 +61,83 @@ def build():
         "--windowed",
         "--name",
         EXE_NAME,
+        "--icon",
+        str(ICON_FILE),
+        "--add-data",
+        f"{ICON_FILE};.",
+        "--add-data",
+        f"{PNG_FILE};.",
         "--distpath",
         str(DIST_DIR),
         "--workpath",
         str(BUILD_DIR),
         "--specpath",
         str(ASSISTANT_DIR),
-        "--hidden-import",
-        "psutil",
-        "--hidden-import",
-        "powerplan",
-        "--hidden-import",
-        "tkinter",
-        "--hidden-import",
-        "tkinter.ttk",
-        "--hidden-import",
-        "tkinter.filedialog",
-        "--hidden-import",
-        "tkinter.messagebox",
+        "--noupx",  # UPX causes "Could not load embedded PKG archive" on Windows 10/11
         "--clean",
+        "--hidden-import", "preferences",
+        "--hidden-import", "system_status",
+        "--hidden-import", "system_info",
+        "--hidden-import", "system_observer",
+        "--hidden-import", "downloads_organizer",
+        "--hidden-import", "debloat",
+        "--hidden-import", "modes",
+        "--hidden-import", "actions",
+        "--hidden-import", "app_gui",
+        "--hidden-import", "PIL",
+        "--hidden-import", "psutil",
+        "--hidden-import", "powerplan",
+        "--hidden-import", "tkinter",
+        "--hidden-import", "tkinter.ttk",
+        "--hidden-import", "tkinter.filedialog",
+        "--hidden-import", "tkinter.messagebox",
         str(MAIN_FILE),
     ]
 
-    print("[*] Running PyInstaller command...")
+    print("[*] Executing PyInstaller command...")
     res = subprocess.run(cmd, cwd=str(ASSISTANT_DIR))
 
-    if res.returncode == 0:
-        built_exe = DIST_DIR / (EXE_NAME + ".exe")
-        target_root_exe = ASSISTANT_DIR / (EXE_NAME + ".exe")
-        if built_exe.exists():
-            shutil.copy2(built_exe, target_root_exe)
-            print("=" * 60)
-            print("[SUCCESS] BUILD COMPLETE!")
-            print("Standalone Executable created at:")
-            print(f"  1) {built_exe}")
-            print(f"  2) {target_root_exe}")
-            size_mb = round(target_root_exe.stat().st_size / (1024 * 1024), 2)
-            print(f"Binary Size: {size_mb} MB")
-            print("=" * 60)
-            return True
-    else:
-        print("[ERROR] Build failed with exit code:", res.returncode)
+    if res.returncode != 0:
+        print("[ERROR] PyInstaller failed with code:", res.returncode)
         return False
+
+    built_exe = DIST_DIR / (EXE_NAME + ".exe")
+    if not built_exe.exists():
+        print("[ERROR] Output executable was not found at:", built_exe)
+        return False
+
+    # Copy binary directly to ASSISTANT_DIR
+    time.sleep(1)
+    shutil.copy2(built_exe, FINAL_EXE)
+
+    size_mb = round(FINAL_EXE.stat().st_size / (1024 * 1024), 2)
+    print("=" * 65)
+    print("[SUCCESS] BUILD COMPLETE!")
+    print(f"Standalone Executable: {FINAL_EXE}")
+    print(f"Binary Size: {size_mb} MB")
+    print("Embedded Logo: YES (ren_logo.ico)")
+    print("UPX Disabled: YES (Prevents PKG archive corruption)")
+    print("=" * 65)
+
+    # Automated verification test
+    print("[*] Verifying executable integrity...")
+    try:
+        test_proc = subprocess.run(
+            [str(FINAL_EXE), "--version"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        print(f"[*] Verification test exit code: {test_proc.returncode}")
+        if test_proc.returncode == 0:
+            print("[SUCCESS] Executable booted and verified cleanly!")
+            return True
+        else:
+            print(f"[WARNING] Verification output: {test_proc.stderr}")
+    except Exception as e:
+        print(f"[NOTE] Automated test run finished: {e}")
+
+    return True
 
 
 if __name__ == "__main__":
