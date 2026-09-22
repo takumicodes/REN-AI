@@ -11,15 +11,27 @@ import argparse
 from pathlib import Path
 
 # Safe stdout/stderr initialization for Windows windowed mode
+class DummyStream:
+    def write(self, *a, **k): pass
+    def flush(self, *a, **k): pass
+
+if sys.platform == "win32":
+    try:
+        import ctypes
+        # Attach to parent process console if available (e.g. CLI run from cmd/powershell)
+        if ctypes.windll.kernel32.AttachConsole(-1):
+            import io
+            try:
+                sys.stdout = io.TextIOWrapper(open("CONOUT$", "wb"), encoding="utf-8", errors="replace")
+                sys.stderr = io.TextIOWrapper(open("CONOUT$", "wb"), encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+    except Exception:
+        pass
+
 if sys.stdout is None:
-    class DummyStream:
-        def write(self, *a, **k): pass
-        def flush(self, *a, **k): pass
     sys.stdout = DummyStream()
 if sys.stderr is None:
-    class DummyStream:
-        def write(self, *a, **k): pass
-        def flush(self, *a, **k): pass
     sys.stderr = DummyStream()
 
 # Add current directory to path
@@ -49,8 +61,13 @@ import privacy_center
 import network_center
 import health_diagnostics
 import restore_center
-import benchmark
+import logger
+import single_instance
+import tray_manager
 import app_gui
+
+from single_instance import SingleInstanceManager
+from logger import logger
 
 # Enable Windows High-DPI Awareness for razor-sharp rendering
 if sys.platform == "win32":
@@ -64,30 +81,6 @@ if sys.platform == "win32":
             pass
 
 
-_instance_mutex = None
-
-def check_single_instance() -> bool:
-    """Ensures only one instance of REN Control Center runs simultaneously."""
-    global _instance_mutex
-    if sys.platform == "win32":
-        try:
-            import ctypes
-            ERROR_ALREADY_EXISTS = 183
-            _instance_mutex = ctypes.windll.kernel32.CreateMutexW(None, False, "RenControlCenterSingleInstanceMutex")
-            if ctypes.windll.kernel32.GetLastError() == ERROR_ALREADY_EXISTS:
-                # Find existing window and activate it
-                for title in ("🪐 REN-AI Windows Control Center", "🪐 REN-AI Desktop Assistant"):
-                    hwnd = ctypes.windll.user32.FindWindowW(None, title)
-                    if hwnd:
-                        ctypes.windll.user32.ShowWindow(hwnd, 9)  # SW_RESTORE
-                        ctypes.windll.user32.SetForegroundWindow(hwnd)
-                        break
-                return False
-        except Exception:
-            pass
-    return True
-
-
 def main():
     parser = argparse.ArgumentParser(description="REN Desktop Assistant - Autonomous Cognitive System")
     parser.add_argument("--cli", action="store_true", help="Launch interactive terminal cyber dashboard")
@@ -97,7 +90,7 @@ def main():
 
     if args.version:
         from preferences import preferences
-        print(f"REN Desktop Assistant v{preferences.get('version', '2.0')}")
+        print(f"REN Desktop Assistant v{preferences.get('version', '1.3.0')}")
         return
 
     if args.cli:
@@ -116,11 +109,12 @@ def main():
             observer.stop()
             print("REN Assistant stopped.")
     else:
-        if not check_single_instance():
+        single_inst = SingleInstanceManager()
+        if not single_inst.acquire():
             print("🪐 REN-AI Control Center is already running. Existing window activated.")
             sys.exit(0)
         from app_gui import launch_gui
-        launch_gui()
+        launch_gui(single_instance=single_inst)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # 🪐 REN-AI Windows Control Center (v1.3.0)
 
-**REN-AI Windows Control Center** is a modern, lightweight, autonomous Windows management and optimization platform. Combining the power of modern Windows utilities (like Wintoys and PowerToys) with REN's cyber aesthetic and zero-slop architecture, it gives developers, power users, and gamers granular, transparent control over their entire Windows operating system.
+**REN-AI Windows Control Center** is a modern, lightweight, autonomous Windows management, tuning, and optimization platform. Combining the power of modern Windows utility suites (like Wintoys, PowerToys, and Process Explorer) with REN's cyber aesthetic and zero-slop architecture, it gives developers, power users, and gamers granular, transparent control over their entire Windows operating system.
 
 ---
 
@@ -14,37 +14,55 @@ Observe ──> Understand ──> Explain ──> Recommend ──> Ask User �
 
 * **Human Agency First:** REN never alters system settings, terminates processes, or cleans files without explicit human confirmation.
 * **Explainable Transparency:** Every single action explains what it does, why it is recommended, measurable impact, and exact command preview before execution.
-* **Post-Execution Verification:** Confirms that registry keys, services, or reclaimed disk bytes actually took effect.
+* **Post-Execution Verification:** Confirms that registry keys, services, or reclaimed disk bytes actually took effect through real Windows query APIs.
 * **1-Click Audit & Rollback:** Every modification captures pre-state and post-state snapshots, stored in a persistent local audit history (`change_history.json`). Any action can be reversed in 1 click.
-* **Whisper-Quiet Background Daemon:** Runs silently in the system tray, consuming virtually zero CPU cycles.
+* **Genuine System Tray Daemon:** Runs silently in the Windows notification area tray with zero popup clutter, consuming virtually zero CPU cycles.
 
 ---
 
 ## 📦 Standalone Executable & Distribution
 
-Compiled into a standalone, portable Windows 64-bit executable with embedded cyber logo and zero dependencies:
+Compiled into a standalone, portable Windows 64-bit executable with embedded cyber logo and zero external dependencies:
 ```
 Ren_Desktop_Assistant/Ren Desktop Assistant.exe
 ```
 
 * **Zero External Dependencies:** Self-contained executable with embedded Python runtime and native Windows API bindings.
 * **Portable & High-DPI Aware:** Runs from any folder or USB drive with crisp rendering on 1080p, 2K, and 4K displays.
-* **Single-Instance Enforcement:** Protected by a native Windows Mutex; launching a second instance automatically activates and brings the existing window to the front.
-* **System Tray Behavior:** Closing the window (`X`) minimizes to the system tray while the background observer monitors health silently.
+* **Single-Instance Enforcement & Socket Wakeup:** Protected by Windows Named Mutex (`RenControlCenterSingleInstanceMutex`) and a local loopback IPC server (`127.0.0.1:52418`). Launching a second instance automatically signals the running instance to wake up, de-minimize, and come to the front—even when minimized or hidden in the system tray.
+* **Genuine Windows System Tray Integration:** Powered by `pystray` and `Pillow`. Closing the main window (`X`) minimizes cleanly to the system notification area icon instead of terminating or showing floating GUI windows.
+
+---
+
+## 🔔 Native System Tray Features
+
+* **Live Hover Tooltip Telemetry:** Hovering over the system tray icon dynamically displays real-time system metrics:
+  ```
+  REN-AI Control Center | CPU: 12.4% | RAM: 48.1% | Disk: 64.2%
+  ```
+  *(Tooltips are automatically clamped to Windows 127-character limits).*
+* **Left-Click Quick Action:** Left-clicking the tray icon toggles window visibility (instantly restores to the foreground or minimizes to tray).
+* **Right-Click Tray Menu:**
+  * 🪐 **Open Control Center:** Restores and focuses the main GUI window.
+  * ⏸️ **Pause Background Observer:** Temporarily halts background metric evaluations and sensor queries.
+  * ▶️ **Resume Background Observer:** Resumes continuous system monitoring.
+  * ⚙️ **Settings & Preferences:** Opens preferences panel directly.
+  * ❌ **Exit REN:** Safely terminates the background daemon, cleans up locks, and shuts down the application.
 
 ---
 
 ## 🖥️ The 14 Control Center Modules
 
 ### 1. 📊 Dashboard
-* **Hardware Telemetry Gauges:** Real-time meters for CPU utilization, RAM usage (used / available GB), primary drive space, and battery status.
+* **Hardware Telemetry Gauges:** Real-time progress meters for CPU utilization, RAM usage (used / available GB), primary drive space, and battery status.
+* **Live Cyber Sparkline Chart:** 60-second bounded telemetry ring buffers rendered on a smooth Canvas sparkline showing real-time CPU (Cyan `#00f3ff`) and RAM (Purple `#bc13fe`) trends with min/max/average stats.
 * **System Context Sensor:** Automatically detects active workload (`PROGRAMMING`, `GAMING`, `BROWSING`, `MEDIA`, `GENERAL`).
 * **Human-Driven Recommendations Queue:** Anti-spam, rate-limited optimization proposals with interactive `[✓ Approve & Apply]` and `[✗ Dismiss]` buttons.
 
 ### 2. ⚡ Process Explorer
 * Real-time process table displaying PID, Process Name, CPU%, RAM (MB), and Status.
 * Sort by memory, CPU, or name with instantaneous live search filtering.
-* **🛡️ Critical OS Process Shield:** Identifies and prevents terminating core Windows processes (`csrss.exe`, `lsass.exe`, `services.exe`, `explorer.exe`, etc.) to protect against system crashes or BSODs.
+* **🛡️ Critical OS Process Shield:** Identifies and prevents terminating core Windows processes (`csrss.exe`, `lsass.exe`, `services.exe`, `explorer.exe`, `dwm.exe`, etc.) to protect against system crashes or BSODs.
 
 ### 3. 🔋 Power Center
 * 1-click power scheme switcher (`Balanced`, `High Performance`, `Power Saver`, `Ultimate Performance`).
@@ -61,8 +79,8 @@ Ren_Desktop_Assistant/Ren Desktop Assistant.exe
   * Windows Explorer Thumbnail Cache
   * Windows Recycle Bin
 * **Zero-Destruction Cleaning:** Gracefully handles active file locks without crashing.
-* **Post-Clean Verification:** Confirms actual megabytes reclaimed.
-* **Storage Analyzer:** Overview of all connected drives and top space consumers.
+* **Post-Clean Verification:** Queries filesystem to confirm actual megabytes reclaimed.
+* **Storage Analyzer & Directory Inspector:** Overview of all connected drives and top space consumers, with file type distribution breakdown and large files (>10MB) discovery.
 
 ### 5. 🚀 Startup Apps Manager
 * Scans all Windows startup locations: `HKCU\Software\...\Run`, `HKLM\Software\...\Run`, and User Startup folders.
@@ -92,12 +110,15 @@ Ren_Desktop_Assistant/Ren Desktop Assistant.exe
   * Disable Tailored Experiences with diagnostic data
   * Disable Activity Feed cloud synchronization
   * Set Feedback prompt frequency to Never
-* All tweaks backed by registry read/write with 1-click instant rollback.
+* All tweaks backed by registry pre/post state capture with 1-click instant rollback.
 
 ### 9. 🌐 Network Center
 * Network adapter telemetry: active interface name, IPv4 address, MAC address, connection status, and link speed.
-* **Ping Latency Tester:** Tests latency and packet loss against any target host (default `1.1.1.1`).
+* **Ping Latency Tester:** Asynchronous thread-safe latency and packet loss testing against any target host.
+* **DNS Lookup Utility:** Resolves domain names to IP addresses directly in the UI.
 * **Flush DNS Resolver Cache:** Runs `ipconfig /flushdns` with execution confirmation.
+* **Network Stack Resets:** 1-click execution for Winsock catalog reset (`netsh winsock reset`) and TCP/IP stack reset (`netsh int ip reset`).
+* **Firewall & Proxy Status:** Displays active Windows Firewall domain/private/public profiles and WinINet proxy settings.
 * Active Network Sockets monitor inspecting `ESTABLISHED` connections.
 
 ### 10. 🩺 Health & System Restore Center
@@ -128,8 +149,8 @@ Ren_Desktop_Assistant/Ren Desktop Assistant.exe
 * Historical scores table to compare PC performance before and after optimizations.
 
 ### 13. 📜 Change History & Rollback Center
-* Complete audit trail of all changes performed by REN-AI.
-* Records entry ID, timestamp, action title, category, execution status, and verification status.
+* Complete audit trail of all changes performed by REN-AI (`change_history.json`).
+* Schema: `entry_id`, `timestamp`, `action_id`, `action_title`, `category`, `status`, `before_state`, `after_state`, `verification_result`, `rollback_available`, `rollback_result`.
 * **`[↩️ Rollback Selected Action]` Button:** Automatically reverses the change using captured before-state snapshots.
 
 ### 14. ⚙️ Preferences & Community Support
@@ -160,14 +181,30 @@ python Ren_Desktop_Assistant/main.py --bg
 python Ren_Desktop_Assistant/main.py --version
 ```
 
----
-
-## 🧪 Comprehensive Test Suite
-
-All modules are accompanied by unit tests verifying safety invariants, fallback behavior, critical shields, and rollback mechanics:
-
-```bash
-python -m unittest Ren_Desktop_Assistant/tests/test_desktop_assistant.py
+Or run via the compiled binary:
+```powershell
+.\Ren_Desktop_Assistant\"Ren Desktop Assistant.exe" --version
 ```
 
-* 36 unit tests covering all hardware monitors, actions, verification, change history, and control center modules.
+---
+
+## 🧪 Comprehensive Test Suite (52/52 Passing)
+
+All modules are accompanied by rigorous unit tests verifying safety invariants, fallback behavior, critical shields, system tray behavior, single-instance socket IPC, and rollback mechanics:
+
+```bash
+python -m unittest discover -s Ren_Desktop_Assistant/tests
+```
+
+* **52 total unit tests** across `test_desktop_assistant.py` and `test_v13_hardening.py` with **100% pass rate**:
+  * Hardware monitors (CPU, RAM, Disk, Battery, Network, GPU)
+  * Process manager, critical system shields, and search filters
+  * Action registry, universal action execution, and execute-once state machine
+  * Real Windows state verification queries and failed verification detection
+  * Pre-state snapshot capture and 1-click rollback restoration
+  * System tray tooltip clamping (<=127 chars) and graceful shutdown
+  * Single instance mutex and loopback IPC socket wakeup
+  * Background observer pause/resume behavior and sensor fault tolerance
+  * Directory storage analyzer (read-only distribution)
+  * Ping tester, DNS resolver, and network stack resets
+  * Telemetry ring buffers (bounded deque maxlen=60)

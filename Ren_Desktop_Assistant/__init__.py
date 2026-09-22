@@ -144,6 +144,20 @@ from .benchmark import (
     benchmark_center,
 )
 
+from .logger import (
+    logger,
+    setup_logger,
+    get_logger,
+)
+
+from .single_instance import (
+    SingleInstanceManager,
+)
+
+from .tray_manager import (
+    TrayManager,
+)
+
 __all__ = [
     # v1.2.0 Core Exports (Strict Preservation)
     "get_cpu_info",
@@ -221,4 +235,10 @@ __all__ = [
     "restore_center",
     "BenchmarkCenter",
     "benchmark_center",
+    # Hardening & Infrastructure Exports
+    "logger",
+    "setup_logger",
+    "get_logger",
+    "SingleInstanceManager",
+    "TrayManager",
 ]

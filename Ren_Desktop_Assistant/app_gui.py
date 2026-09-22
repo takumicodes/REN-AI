@@ -23,7 +23,9 @@ import time
 import shutil
 import threading
 import webbrowser
+from collections import deque
 from pathlib import Path
+from typing import Optional, Dict, Any, List
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 
@@ -54,6 +56,9 @@ try:
     from .health_diagnostics import health_diagnostics
     from .restore_center import restore_center
     from .benchmark import benchmark_center
+    from .logger import logger
+    from .tray_manager import TrayManager
+    from .single_instance import SingleInstanceManager
 except ImportError:
     from preferences import preferences, DEFAULT_PREFERENCES
     from system_status import (
@@ -81,6 +86,9 @@ except ImportError:
     from health_diagnostics import health_diagnostics
     from restore_center import restore_center
     from benchmark import benchmark_center
+    from logger import logger
+    from tray_manager import TrayManager
+    from single_instance import SingleInstanceManager
 
 
 # --- Cyber Dark Theme Constants ---
@@ -103,12 +111,22 @@ COLOR_ACTIVE_NAV = "#1f6feb"  # Active sidebar item
 class RenDesktopApp:
     """Main Application Controller for REN-AI Windows Control Center."""
 
-    def __init__(self, root: tk.Tk):
+    def __init__(self, root: tk.Tk, single_instance: Optional[SingleInstanceManager] = None):
         self.root = root
+        self.single_instance = single_instance
         self.root.title("🪐 REN-AI Windows Control Center")
         self.root.geometry("1100x760")
         self.root.minsize(980, 680)
         self.root.configure(bg=COLOR_BG)
+
+        # Connect inter-process wakeup listener
+        if self.single_instance:
+            self.single_instance.on_wake_callback = lambda: self.root.after(0, self.restore_from_background)
+
+        # Initialize bounded 60-second in-memory performance telemetry ring buffers
+        self.cpu_history: deque = deque(maxlen=60)
+        self.ram_history: deque = deque(maxlen=60)
+        self.disk_history: deque = deque(maxlen=60)
 
         # Set Window Logo / Icon
         try:
@@ -120,11 +138,21 @@ class RenDesktopApp:
             elif icon_png.exists():
                 logo_img = tk.PhotoImage(file=str(icon_png))
                 self.root.iconphoto(True, logo_img)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Could not load window icon: {e}")
 
         # Intercept close ('X') button to minimize to background
         self.root.protocol("WM_DELETE_WINDOW", self.on_close_window)
+
+        # Start genuine Windows system tray notification area icon
+        self.tray_manager = TrayManager(
+            on_open_callback=lambda: self.root.after(0, self.restore_from_background),
+            on_pause_callback=lambda: observer.pause(),
+            on_resume_callback=lambda: observer.resume(),
+            on_settings_callback=lambda: self.root.after(0, self._open_settings_panel),
+            on_exit_callback=lambda: self.root.after(0, self.force_quit_app),
+        )
+        self.tray_manager.start()
 
         # Start silent observer thread
         observer.start_background()
@@ -603,7 +631,7 @@ class RenDesktopApp:
 
         # System Context & Quick Stats
         ctx_box = tk.Frame(pane, bg=COLOR_HEADER, bd=1, relief=tk.SOLID)
-        ctx_box.pack(fill=tk.X, pady=(0, 12), ipady=4)
+        ctx_box.pack(fill=tk.X, pady=(0, 10), ipady=4)
         self.lbl_dash_ctx = tk.Label(
             ctx_box,
             text="System Context: General | Active Power Profile: Balanced | Observer: Silent BG Active",
@@ -612,6 +640,26 @@ class RenDesktopApp:
             bg=COLOR_HEADER,
         )
         self.lbl_dash_ctx.pack(side=tk.LEFT, padx=12)
+
+        # Real-Time Telemetry Trend Chart (60-Second Ring Buffer)
+        chart_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
+        chart_card.pack(fill=tk.X, pady=(0, 10), ipady=4)
+
+        chart_head = tk.Frame(chart_card, bg="#0d1117")
+        chart_head.pack(fill=tk.X, padx=10, pady=(2, 4))
+        tk.Label(chart_head, text="📈 REAL-TIME HARDWARE ACTIVITY (60-SECOND RING BUFFER)", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(side=tk.LEFT)
+
+        self.lbl_chart_legend = tk.Label(
+            chart_head,
+            text="━ CPU: --% (Cyan)   ━ RAM: --% (Purple)",
+            font=("Segoe UI", 8, "bold"),
+            fg=COLOR_MUTED,
+            bg="#0d1117",
+        )
+        self.lbl_chart_legend.pack(side=tk.RIGHT)
+
+        self.chart_canvas = tk.Canvas(chart_card, bg="#12171f", height=68, highlightthickness=1, highlightbackground=COLOR_BORDER)
+        self.chart_canvas.pack(fill=tk.X, padx=10, pady=(0, 4))
 
         # Human-Driven Pending Recommendations
         rec_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
@@ -873,8 +921,12 @@ class RenDesktopApp:
 
     def _on_power_plan_selected(self):
         plan = self.var_power_plan.get()
-        res = set_power_profile(plan)
-        messagebox.showinfo("Power Profile", f"Power scheme configured to: {plan}")
+        res = action_executor.execute_action("power.set_plan", {"plan_name": plan})
+        if res.get("success"):
+            ver_note = " (Verified)" if res.get("verified", True) else " (Verification pending)"
+            messagebox.showinfo("Power Profile", f"Power scheme configured to: {plan}{ver_note}")
+        else:
+            messagebox.showwarning("Power Profile", res.get("message", "Failed to switch power scheme."))
 
     def _generate_battery_report(self):
         res = health_diagnostics.generate_battery_report()
@@ -893,9 +945,17 @@ class RenDesktopApp:
         pane = tk.Frame(self.content_area, bg=COLOR_PANEL)
         pane.pack(fill=tk.BOTH, expand=True, padx=14, pady=12)
 
-        # Top Buttons Bar
-        btn_bar = tk.Frame(pane, bg=COLOR_PANEL)
-        btn_bar.pack(fill=tk.X, pady=(0, 8))
+        notebook = ttk.Notebook(pane)
+        notebook.pack(fill=tk.BOTH, expand=True)
+
+        tab_cleaner = tk.Frame(notebook, bg="#0d1117")
+        tab_analyzer = tk.Frame(notebook, bg="#0d1117")
+        notebook.add(tab_cleaner, text="  🧹 Cleanable Caches & Junk  ")
+        notebook.add(tab_analyzer, text="  📊 Storage & Directory Analyzer  ")
+
+        # --- TAB 1: CACHES & JUNK CLEANER ---
+        btn_bar = tk.Frame(tab_cleaner, bg="#0d1117")
+        btn_bar.pack(fill=tk.X, padx=10, pady=8)
 
         btn_scan = tk.Button(
             btn_bar,
@@ -936,14 +996,13 @@ class RenDesktopApp:
         )
         btn_recycle.pack(side=tk.LEFT)
 
-        # Storage Cleaner Items Frame
-        self.cleaner_list_frame = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
-        self.cleaner_list_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
+        self.cleaner_list_frame = tk.Frame(tab_cleaner, bg="#0d1117", bd=1, relief=tk.SOLID)
+        self.cleaner_list_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 8))
 
         # Drives Overview Bar (Bottom)
-        drives_card = tk.Frame(pane, bg=COLOR_HEADER, bd=1, relief=tk.SOLID)
-        drives_card.pack(fill=tk.X, ipady=4)
-        tk.Label(drives_card, text="CONNECTED DRIVES OVERVIEW:", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=10)
+        drives_card = tk.Frame(tab_cleaner, bg=COLOR_HEADER, bd=1, relief=tk.SOLID)
+        drives_card.pack(fill=tk.X, padx=10, pady=(0, 6), ipady=4)
+        tk.Label(drives_card, text="CONNECTED DRIVES:", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=10)
 
         drives_str_list = []
         for d in storage_analyzer.get_drives():
@@ -951,6 +1010,92 @@ class RenDesktopApp:
         tk.Label(drives_card, text=" | ".join(drives_str_list), font=("Segoe UI", 9), fg=COLOR_TEXT, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=6)
 
         self._scan_storage_items()
+
+        # --- TAB 2: STORAGE & DIRECTORY ANALYZER ---
+        an_bar = tk.Frame(tab_analyzer, bg="#0d1117")
+        an_bar.pack(fill=tk.X, padx=10, pady=8)
+
+        tk.Label(an_bar, text="Target Directory:", font=("Segoe UI", 9, "bold"), fg=COLOR_TEXT, bg="#0d1117").pack(side=tk.LEFT, padx=(0, 6))
+        self.var_an_dir = tk.StringVar(value=preferences.get("downloads_folder", str(Path.home() / "Downloads")))
+        ent_an_dir = tk.Entry(an_bar, textvariable=self.var_an_dir, font=("Segoe UI", 9), bg=COLOR_PANEL, fg=COLOR_TEXT, width=40)
+        ent_an_dir.pack(side=tk.LEFT, padx=(0, 6), ipady=2)
+
+        btn_browse_an = tk.Button(an_bar, text="Browse...", font=("Segoe UI", 8), bg=COLOR_HEADER, fg=COLOR_TEXT, command=self._browse_analyzer_dir, cursor="hand2", padx=8)
+        btn_browse_an.pack(side=tk.LEFT, padx=(0, 8))
+
+        btn_run_an = tk.Button(an_bar, text="🔍 Analyze Directory", font=("Segoe UI", 8, "bold"), bg=COLOR_ACTIVE_NAV, fg="#ffffff", command=self._run_directory_analysis, cursor="hand2", padx=10)
+        btn_run_an.pack(side=tk.LEFT)
+
+        self.lbl_an_summary = tk.Label(tab_analyzer, text="Select a directory and click Analyze to view file type breakdown and recent large files.", font=("Segoe UI", 9), fg=COLOR_MUTED, bg="#0d1117")
+        self.lbl_an_summary.pack(anchor=tk.W, padx=12, pady=(0, 6))
+
+        # Split pane: Left = File Types, Right = Recent Large Files
+        an_split = tk.Frame(tab_analyzer, bg="#0d1117")
+        an_split.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 8))
+
+        card_ext = tk.Frame(an_split, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
+        card_ext.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 4))
+        tk.Label(card_ext, text="FILE TYPE DISTRIBUTION", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg=COLOR_PANEL).pack(anchor=tk.W, padx=8, pady=(4, 2))
+
+        cols_ext = ("ext", "count", "size")
+        self.tree_ext = ttk.Treeview(card_ext, columns=cols_ext, show="headings", selectmode="browse", height=8)
+        self.tree_ext.heading("ext", text="Extension")
+        self.tree_ext.heading("count", text="File Count")
+        self.tree_ext.heading("size", text="Total Size (MB)")
+        self.tree_ext.column("ext", width=90)
+        self.tree_ext.column("count", width=70, anchor=tk.CENTER)
+        self.tree_ext.column("size", width=90, anchor=tk.E)
+        self.tree_ext.pack(fill=tk.BOTH, expand=True, padx=4, pady=4)
+
+        card_large = tk.Frame(an_split, bg=COLOR_PANEL, bd=1, relief=tk.SOLID)
+        card_large.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=(4, 0))
+        tk.Label(card_large, text="RECENT LARGE FILES (>10MB, LAST 30 DAYS)", font=("Segoe UI", 9, "bold"), fg=COLOR_PURPLE, bg=COLOR_PANEL).pack(anchor=tk.W, padx=8, pady=(4, 2))
+
+        cols_large = ("name", "size", "date")
+        self.tree_large = ttk.Treeview(card_large, columns=cols_large, show="headings", selectmode="browse", height=8)
+        self.tree_large.heading("name", text="File Name")
+        self.tree_large.heading("size", text="Size (MB)")
+        self.tree_large.heading("date", text="Modified")
+        self.tree_large.column("name", width=140)
+        self.tree_large.column("size", width=70, anchor=tk.E)
+        self.tree_large.column("date", width=90, anchor=tk.CENTER)
+        self.tree_large.pack(fill=tk.BOTH, expand=True, padx=4, pady=4)
+
+    def _browse_analyzer_dir(self):
+        f = filedialog.askdirectory(initialdir=self.var_an_dir.get(), title="Select Folder to Analyze")
+        if f:
+            self.var_an_dir.set(f)
+
+    def _run_directory_analysis(self):
+        target = self.var_an_dir.get().strip()
+        if not target or not Path(target).exists():
+            messagebox.showwarning("Invalid Path", "Please select an existing directory.")
+            return
+
+        self.lbl_an_summary.config(text=f"Scanning '{target}' (Read-Only)...", fg=COLOR_CYAN)
+
+        def do_scan():
+            res = storage_analyzer.analyze_directory(target, top_n=15)
+            def update_ui():
+                if not res.get("success"):
+                    self.lbl_an_summary.config(text=f"✗ {res.get('message')}", fg=COLOR_RED)
+                    return
+                self.lbl_an_summary.config(
+                    text=f"✓ Scanned: {res.get('total_scanned_mb', 0)} MB across target folder (Read-Only verification preserved).",
+                    fg=COLOR_GREEN,
+                )
+                for item in self.tree_ext.get_children():
+                    self.tree_ext.delete(item)
+                for dist in res.get("type_distribution", []):
+                    self.tree_ext.insert("", tk.END, values=(dist["extension"], dist["count"], f"{dist['size_mb']} MB"))
+
+                for item in self.tree_large.get_children():
+                    self.tree_large.delete(item)
+                for lf in res.get("recent_large_files", []):
+                    self.tree_large.insert("", tk.END, values=(lf["name"], f"{lf['size_mb']} MB", lf["modified"]))
+            self.root.after(0, update_ui)
+
+        threading.Thread(target=do_scan, daemon=True).start()
 
     def _scan_storage_items(self):
         if not hasattr(self, "cleaner_list_frame") or not self.cleaner_list_frame.winfo_exists():
@@ -987,19 +1132,19 @@ class RenDesktopApp:
             btn_one.pack(side=tk.RIGHT, padx=8)
 
     def _clean_single_target(self, target_key: str):
-        res = storage_cleaner.clean_target(target_key)
-        messagebox.showinfo("Storage Cleaned", res.get("message"))
+        res = action_executor.execute_action("storage.clean_target", {"target_key": target_key})
+        messagebox.showinfo("Storage Cleaned", res.get("message", "Target cleaned."))
         self._scan_storage_items()
 
     def _clean_storage_items(self):
-        res = storage_cleaner.clean_all()
-        messagebox.showinfo("Storage Cleanup Complete", res.get("message"))
+        res = action_executor.execute_action("storage.clean_all")
+        messagebox.showinfo("Storage Cleanup Complete", res.get("message", "All targets cleaned."))
         self._scan_storage_items()
 
     def _empty_recycle_bin(self):
         if messagebox.askyesno("Empty Recycle Bin", "Permanently empty all files in the Windows Recycle Bin?"):
-            res = storage_cleaner.empty_recycle_bin()
-            messagebox.showinfo("Recycle Bin", res.get("message"))
+            res = action_executor.execute_action("storage.empty_recycle_bin", user_confirmed=True)
+            messagebox.showinfo("Recycle Bin", res.get("message", "Recycle bin emptied."))
             self._scan_storage_items()
 
     # =========================================================================
@@ -1064,9 +1209,9 @@ class RenDesktopApp:
         source = str(vals[2])
 
         if "Enabled" in status:
-            res = startup_manager.disable_startup_item(name, source)
+            res = action_executor.execute_action("startup.disable", {"name": name, "source": source})
         else:
-            res = startup_manager.enable_startup_item(name)
+            res = action_executor.execute_action("startup.enable", {"name": name})
 
         messagebox.showinfo("Startup Manager", res.get("message"))
         self._refresh_startup_table()
@@ -1146,13 +1291,7 @@ class RenDesktopApp:
             return
 
         name = str(self.svc_tree.item(sel[0])["values"][0])
-        if action_type == "start":
-            res = services_manager.start_service(name)
-        elif action_type == "stop":
-            res = services_manager.stop_service(name)
-        else:
-            res = services_manager.restart_service(name)
-
+        res = action_executor.execute_action(f"service.{action_type}", {"service_name": name})
         messagebox.showinfo("Service Action", res.get("message"))
         self._refresh_services_table()
 
@@ -1222,9 +1361,18 @@ class RenDesktopApp:
             return
 
         app_name = str(self.apps_tree.item(sel[0])["values"][0])
-        if messagebox.askyesno("Confirm Uninstallation", f"Are you sure you want to launch the uninstaller for:\n'{app_name}'?"):
-            res = app_manager.launch_uninstall(app_name)
-            messagebox.showinfo("Uninstaller Launched", res.get("message"))
+        if messagebox.askyesno("Confirm Uninstallation", f"Are you sure you want to launch the uninstaller for:\n'{app_name}'?\n(Risk Level: High)"):
+            uninst_cmd = ""
+            for a in app_manager.get_installed_apps(search_query=app_name, limit=5):
+                if a.name == app_name:
+                    uninst_cmd = a.uninstall_string
+                    break
+            res = action_executor.execute_action(
+                "app.uninstall",
+                {"display_name": app_name, "uninstall_string": uninst_cmd},
+                user_confirmed=True,
+            )
+            messagebox.showinfo("Uninstaller", res.get("message"))
 
     # =========================================================================
     # 8. TWEAKS & PRIVACY PANEL
@@ -1291,18 +1439,21 @@ class RenDesktopApp:
                 btn_protect.pack(side=tk.RIGHT)
 
     def _apply_tweak_ui(self, tweak_id: str):
-        res = tweaks_manager.apply_tweak(tweak_id)
-        messagebox.showinfo("Tweak Applied", res.get("message"))
+        res = action_executor.execute_action("tweak.apply", {"tweak_id": tweak_id})
+        ver_note = " (Verified)" if res.get("verified", True) else " (Verification pending)"
+        messagebox.showinfo("Tweak Applied", f"{res.get('message')}{ver_note}")
         self._build_tweaks_panel()
 
     def _revert_tweak_ui(self, tweak_id: str):
-        res = tweaks_manager.revert_tweak(tweak_id)
-        messagebox.showinfo("Tweak Reverted", res.get("message"))
+        res = action_executor.execute_action("tweak.revert", {"tweak_id": tweak_id})
+        ver_note = " (Verified)" if res.get("verified", True) else " (Verification pending)"
+        messagebox.showinfo("Tweak Reverted", f"{res.get('message')}{ver_note}")
         self._build_tweaks_panel()
 
     def _toggle_privacy_ui(self, privacy_id: str, enable: bool):
-        res = privacy_center.set_protection(privacy_id, enable)
-        messagebox.showinfo("Privacy Setting", res.get("message"))
+        res = action_executor.execute_action("privacy.set", {"tweak_id": privacy_id, "enabled": enable})
+        ver_note = " (Verified)" if res.get("verified", True) else " (Verification pending)"
+        messagebox.showinfo("Privacy Setting", f"{res.get('message')}{ver_note}")
         self._build_tweaks_panel()
 
     # =========================================================================
@@ -1315,43 +1466,75 @@ class RenDesktopApp:
 
         # Adapter Telemetry Card
         ad_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
-        ad_card.pack(fill=tk.X, pady=(0, 10), ipady=6)
+        ad_card.pack(fill=tk.X, pady=(0, 8), ipady=4)
         tk.Label(ad_card, text="🌐 NETWORK ADAPTERS", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 4))
 
         adapters = network_center.get_adapter_info()
         for a in adapters:
             st = "CONNECTED" if a["is_up"] else "DISCONNECTED"
-            tk.Label(ad_card, text=f"• {a['name']}: IPv4: {a['ipv4']} | MAC: {a['mac']} | Status: {st}", font=("Segoe UI", 9), fg=COLOR_TEXT, bg="#0d1117").pack(anchor=tk.W, padx=12)
+            tk.Label(ad_card, text=f"• {a['name']}: IPv4: {a['ipv4']} | MAC: {a['mac']} | Status: {st}", font=("Segoe UI", 8), fg=COLOR_TEXT, bg="#0d1117").pack(anchor=tk.W, padx=12)
 
-        # Ping Latency Tester & DNS Flush
+        # Diagnostics, DNS Lookup & Stack Resets Card
         diag_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
-        diag_card.pack(fill=tk.X, pady=(0, 10), ipady=8)
-        tk.Label(diag_card, text="⚡ LATENCY TEST & DNS ACTIONS", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 6))
+        diag_card.pack(fill=tk.X, pady=(0, 8), ipady=6)
+        tk.Label(diag_card, text="⚡ LATENCY TEST, DNS LOOKUP & STACK RESETS", font=("Segoe UI", 9, "bold"), fg=COLOR_CYAN, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(2, 4))
 
-        d_row = tk.Frame(diag_card, bg="#0d1117")
-        d_row.pack(fill=tk.X, padx=10, pady=2)
+        # Row 1: Ping & DNS Flush
+        d_row1 = tk.Frame(diag_card, bg="#0d1117")
+        d_row1.pack(fill=tk.X, padx=10, pady=2)
 
-        tk.Label(d_row, text="Ping Host:", font=("Segoe UI", 9), fg=COLOR_TEXT, bg="#0d1117").pack(side=tk.LEFT, padx=(0, 4))
+        tk.Label(d_row1, text="Ping Host:", font=("Segoe UI", 9), fg=COLOR_TEXT, bg="#0d1117").pack(side=tk.LEFT, padx=(0, 4))
         self.var_ping_host = tk.StringVar(value="1.1.1.1")
-        ent_host = tk.Entry(d_row, textvariable=self.var_ping_host, font=("Segoe UI", 9), bg=COLOR_PANEL, fg=COLOR_TEXT, width=16)
-        ent_host.pack(side=tk.LEFT, padx=(0, 8))
+        ent_host = tk.Entry(d_row1, textvariable=self.var_ping_host, font=("Segoe UI", 9), bg=COLOR_PANEL, fg=COLOR_TEXT, width=14)
+        ent_host.pack(side=tk.LEFT, padx=(0, 6))
 
-        btn_ping = tk.Button(d_row, text="Run Ping Test", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._run_ping_test, cursor="hand2", padx=8)
-        btn_ping.pack(side=tk.LEFT, padx=(0, 12))
+        btn_ping = tk.Button(d_row1, text="Run Ping Test", font=("Segoe UI", 8, "bold"), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._run_ping_test, cursor="hand2", padx=8)
+        btn_ping.pack(side=tk.LEFT, padx=(0, 8))
 
-        btn_flush = tk.Button(d_row, text="🧹 Flush DNS Resolver Cache", font=("Segoe UI", 8, "bold"), bg=COLOR_GREEN, fg="#ffffff", command=self._flush_dns_ui, cursor="hand2", padx=10)
-        btn_flush.pack(side=tk.LEFT)
+        btn_flush = tk.Button(d_row1, text="🧹 Flush DNS Resolver", font=("Segoe UI", 8, "bold"), bg=COLOR_GREEN, fg="#ffffff", command=self._flush_dns_ui, cursor="hand2", padx=8)
+        btn_flush.pack(side=tk.LEFT, padx=(0, 6))
+
+        btn_winsock = tk.Button(d_row1, text="⚠️ Reset Winsock", font=("Segoe UI", 8), bg=COLOR_HEADER, fg=COLOR_AMBER, command=self._reset_winsock_ui, cursor="hand2", padx=8)
+        btn_winsock.pack(side=tk.LEFT, padx=(0, 6))
+
+        btn_tcpip = tk.Button(d_row1, text="⚠️ Reset TCP/IP", font=("Segoe UI", 8), bg=COLOR_HEADER, fg=COLOR_AMBER, command=self._reset_tcpip_ui, cursor="hand2", padx=8)
+        btn_tcpip.pack(side=tk.LEFT)
+
+        # Row 2: DNS Lookup Tool
+        d_row2 = tk.Frame(diag_card, bg="#0d1117")
+        d_row2.pack(fill=tk.X, padx=10, pady=(4, 2))
+
+        tk.Label(d_row2, text="DNS Lookup:", font=("Segoe UI", 9), fg=COLOR_TEXT, bg="#0d1117").pack(side=tk.LEFT, padx=(0, 4))
+        self.var_dns_query = tk.StringVar(value="google.com")
+        ent_dns = tk.Entry(d_row2, textvariable=self.var_dns_query, font=("Segoe UI", 9), bg=COLOR_PANEL, fg=COLOR_TEXT, width=18)
+        ent_dns.pack(side=tk.LEFT, padx=(0, 6))
+
+        btn_lookup = tk.Button(d_row2, text="Resolve IP", font=("Segoe UI", 8), bg=COLOR_HEADER, fg=COLOR_CYAN, command=self._run_dns_lookup, cursor="hand2", padx=8)
+        btn_lookup.pack(side=tk.LEFT, padx=(0, 8))
+
+        self.lbl_dns_res = tk.Label(d_row2, text="", font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117")
+        self.lbl_dns_res.pack(side=tk.LEFT)
 
         self.lbl_ping_res = tk.Label(diag_card, text="Ping results will appear here.", font=("Segoe UI", 8), fg=COLOR_MUTED, bg="#0d1117")
-        self.lbl_ping_res.pack(anchor=tk.W, padx=10, pady=(6, 2))
+        self.lbl_ping_res.pack(anchor=tk.W, padx=10, pady=(4, 2))
+
+        # Security & Proxy Card
+        fw_info = network_center.get_firewall_status()
+        proxy_info = network_center.get_proxy_info()
+        sec_card = tk.Frame(pane, bg=COLOR_HEADER, bd=1, relief=tk.SOLID)
+        sec_card.pack(fill=tk.X, pady=(0, 8), ipady=3)
+        fw_badge = "✓ Firewall Active" if fw_info.get("is_enabled") else "⚠️ Firewall Inactive"
+        fw_col = COLOR_GREEN if fw_info.get("is_enabled") else COLOR_AMBER
+        proxy_badge = f"Proxy: {proxy_info.get('proxy_server')}"
+        tk.Label(sec_card, text=f"SECURITY STATUS:  {fw_badge}  |  {proxy_badge}", font=("Segoe UI", 8, "bold"), fg=fw_col, bg=COLOR_HEADER).pack(side=tk.LEFT, padx=10)
 
         # Active Network Connections
         conns_card = tk.Frame(pane, bg="#0d1117", bd=1, relief=tk.SOLID)
         conns_card.pack(fill=tk.BOTH, expand=True)
-        tk.Label(conns_card, text="🔌 ACTIVE NETWORK SOCKETS (ESTABLISHED)", font=("Segoe UI", 9, "bold"), fg=COLOR_PURPLE, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(4, 4))
+        tk.Label(conns_card, text="🔌 ACTIVE NETWORK SOCKETS (ESTABLISHED)", font=("Segoe UI", 9, "bold"), fg=COLOR_PURPLE, bg="#0d1117").pack(anchor=tk.W, padx=10, pady=(4, 2))
 
         cols = ("pid", "local", "remote", "status")
-        self.net_tree = ttk.Treeview(conns_card, columns=cols, show="headings", selectmode="browse", height=8)
+        self.net_tree = ttk.Treeview(conns_card, columns=cols, show="headings", selectmode="browse", height=6)
         self.net_tree.heading("pid", text="PID")
         self.net_tree.heading("local", text="Local Address")
         self.net_tree.heading("remote", text="Remote Address")
@@ -1365,22 +1548,49 @@ class RenDesktopApp:
         self.net_tree.pack(fill=tk.BOTH, expand=True, padx=8, pady=(0, 6))
         self._refresh_net_conns()
 
+    def _run_dns_lookup(self):
+        host = self.var_dns_query.get().strip()
+        if not host:
+            return
+        res = network_center.dns_lookup(host)
+        if res.get("success"):
+            ips = ", ".join(res.get("addresses", []))
+            self.lbl_dns_res.config(text=f"✓ Resolved: {ips}", fg=COLOR_GREEN)
+        else:
+            self.lbl_dns_res.config(text=f"✗ {res.get('message', 'Resolution failed')}", fg=COLOR_RED)
+
+    def _reset_winsock_ui(self):
+        if messagebox.askyesno("Reset Winsock Catalog", "Reset the Windows Winsock network catalog to default?\n(Requires system restart)"):
+            res = action_executor.execute_action("network.reset_winsock", user_confirmed=True)
+            messagebox.showinfo("Winsock Reset", res.get("message"))
+
+    def _reset_tcpip_ui(self):
+        if messagebox.askyesno("Reset TCP/IP Stack", "Reset the Windows TCP/IP network protocol stack to default?\n(Requires system restart)"):
+            res = action_executor.execute_action("network.reset_tcpip", user_confirmed=True)
+            messagebox.showinfo("TCP/IP Reset", res.get("message"))
+
     def _run_ping_test(self):
         host = self.var_ping_host.get().strip()
         self.lbl_ping_res.config(text=f"Pinging {host} (4 packets)...", fg=COLOR_CYAN)
         self.root.update_idletasks()
 
         def do_ping():
-            res = network_center.ping_test(host)
-            if res.get("success"):
-                self.lbl_ping_res.config(text=f"✓ Ping {host}: Avg Latency = {res['avg_latency_ms']} ms | Packet Loss = {res['packet_loss_percent']}%", fg=COLOR_GREEN)
-            else:
-                self.lbl_ping_res.config(text=f"✗ Ping failed: {res.get('message', 'Host unreachable')}", fg=COLOR_RED)
+            try:
+                res = network_center.ping_test(host)
+                if res.get("success"):
+                    msg = f"✓ Ping {host}: Avg Latency = {res['avg_latency_ms']} ms | Packet Loss = {res['packet_loss_percent']}%"
+                    self.root.after(0, lambda: self.lbl_ping_res.config(text=msg, fg=COLOR_GREEN))
+                else:
+                    err_msg = f"✗ Ping failed: {res.get('message', 'Host unreachable')}"
+                    self.root.after(0, lambda: self.lbl_ping_res.config(text=err_msg, fg=COLOR_RED))
+            except Exception as e:
+                logger.warning(f"Error in ping thread: {e}")
+                self.root.after(0, lambda: self.lbl_ping_res.config(text=f"Error: {e}", fg=COLOR_RED))
 
         threading.Thread(target=do_ping, daemon=True).start()
 
     def _flush_dns_ui(self):
-        res = network_center.flush_dns()
+        res = action_executor.execute_action("network.flush_dns")
         messagebox.showinfo("Flush DNS", res.get("message"))
 
     def _refresh_net_conns(self):
@@ -1454,7 +1664,7 @@ class RenDesktopApp:
     def _create_restore_point_ui(self):
         desc = "REN-AI Manual Safety Checkpoint"
         if messagebox.askyesno("Create Restore Point", f"Create a new Windows System Restore checkpoint named:\n'{desc}'?\n(Requires running as Administrator)"):
-            res = restore_center.create_restore_point(desc)
+            res = action_executor.execute_action("restore.create_point", {"description": desc}, user_confirmed=True)
             if res.get("success"):
                 messagebox.showinfo("Restore Point Created", res.get("message"))
                 self._build_health_panel()
@@ -1557,7 +1767,7 @@ class RenDesktopApp:
         btn_ctt.pack(anchor=tk.W, padx=12, pady=(4, 2))
 
     def _activate_mode_ui(self, mode_name: str):
-        res = modes_manager.set_mode(mode_name, apply_optimizations=True)
+        res = action_executor.execute_action("modes.set_mode", {"mode_name": mode_name})
         self.lbl_mode_badge.config(text=f"[{mode_name.upper()} MODE]")
         messagebox.showinfo("Mode Activated", res.get("message"))
         self._build_modes_panel()
@@ -1665,12 +1875,16 @@ class RenDesktopApp:
         self.root.update_idletasks()
 
         def do_bench():
-            res = benchmark_center.run_benchmark()
-            self.lbl_bench_status.config(
-                text=f"✓ Benchmark Complete! Composite Score: {res['composite_score']} (CPU: {res['cpu_score']}, RAM: {res['memory_speed_mb_s']} MB/s, Disk: {res['disk_write_mb_s']} MB/s)",
-                fg=COLOR_GREEN,
-            )
-            self._refresh_bench_history()
+            try:
+                res = benchmark_center.run_benchmark()
+                msg = f"✓ Benchmark Complete! Composite: {res['composite_score']} (CPU: {res['cpu_score']}, RAM: {res['memory_speed_mb_s']} MB/s, Disk: {res['disk_write_mb_s']} MB/s)"
+                def update_ui():
+                    self.lbl_bench_status.config(text=msg, fg=COLOR_GREEN)
+                    self._refresh_bench_history()
+                self.root.after(0, update_ui)
+            except Exception as e:
+                logger.warning(f"Error in benchmark thread: {e}")
+                self.root.after(0, lambda: self.lbl_bench_status.config(text=f"Benchmark error: {e}", fg=COLOR_RED))
 
         threading.Thread(target=do_bench, daemon=True).start()
 
@@ -1899,12 +2113,22 @@ class RenDesktopApp:
             cpu = snapshot["cpu_percent"]
             ram = snapshot["ram"]
             disk = snapshot["primary_disk_percent"]
-            bat = snapshot["battery"]
-            plan = snapshot["power_profile"]
+            ram_pct = ram.get("percent_used", 0) if isinstance(ram, dict) else 0
+
+            # Ring buffer telemetry recording
+            self.cpu_history.append(cpu)
+            self.ram_history.append(ram_pct)
+            self.disk_history.append(disk)
+
+            # Update real Windows system tray dynamic tooltip
+            mode_name = preferences.active_mode.capitalize()
+            self.tray_manager.update_tooltip(
+                f"REN-AI Control Center | {mode_name} Mode | CPU: {cpu}% | RAM: {ram_pct}%"
+            )
 
             # Header text
             self.lbl_header_metrics.config(
-                text=f"CPU: {cpu}% | RAM: {ram['percent_used']}% | Disk: {disk}% | Power: {plan}"
+                text=f"CPU: {cpu}% | RAM: {ram_pct}% | Disk: {disk}% | Power: {plan}"
             )
 
             # Dashboard widgets if dashboard is currently active
@@ -1912,111 +2136,128 @@ class RenDesktopApp:
                 self.lbl_dash_cpu.config(text=f"CPU Utilization: {cpu}%")
                 self.bar_dash_cpu["value"] = min(100, max(0, cpu))
 
-                self.lbl_dash_ram.config(text=f"RAM: {ram['percent_used']}% ({ram['used_gb']} GB used / {ram['total_gb']} GB)")
-                self.bar_dash_ram["value"] = min(100, max(0, ram["percent_used"]))
+                self.lbl_dash_ram.config(text=f"RAM: {ram_pct}% ({ram.get('used_gb', 0)} GB used / {ram.get('total_gb', 0)} GB)")
+                self.bar_dash_ram["value"] = min(100, max(0, ram_pct))
 
                 self.lbl_dash_disk.config(text=f"Storage: {disk}% used")
                 self.bar_dash_disk["value"] = min(100, max(0, disk))
 
                 ctx_cat = snapshot.get("context", {}).get("category", "general").upper()
                 self.lbl_dash_ctx.config(
-                    text=f"Context: {ctx_cat} | Active Power Scheme: {plan} | Silent Observer: ACTIVE"
+                    text=f"System Context: {ctx_cat} | Active Power Scheme: {plan} | Silent Observer: ACTIVE"
                 )
-        except Exception:
-            pass
+
+                # Render real-time 60s sparkline line chart
+                if hasattr(self, "chart_canvas") and self.chart_canvas.winfo_exists():
+                    self._draw_dashboard_sparkline(cpu, ram_pct)
+        except Exception as e:
+            logger.debug(f"Error in GUI refresh loop: {e}")
 
         self.root.after(2000, self._refresh_gui_loop)
 
+    def _draw_dashboard_sparkline(self, current_cpu: float, current_ram: float):
+        """Draws a high-performance 60-second hardware telemetry chart on the Tkinter Canvas."""
+        try:
+            c = self.chart_canvas
+            w = c.winfo_width()
+            h = c.winfo_height()
+            if w < 30 or h < 20:
+                return
+
+            c.delete("all")
+
+            # Subtle Cyber Grid reference lines (25%, 50%, 75%)
+            for pct in (0.25, 0.50, 0.75):
+                y = h - (pct * h)
+                c.create_line(0, y, w, y, fill="#1c2128", dash=(2, 4))
+
+            # Helper to map data points to canvas pixel coordinates
+            def make_coords(series):
+                if len(series) < 2:
+                    return []
+                coords = []
+                n = len(series)
+                dx = (w - 8) / max(1, n - 1)
+                for i, val in enumerate(series):
+                    x = 4 + (i * dx)
+                    clamped = min(100.0, max(0.0, float(val)))
+                    y = (h - 6) - (clamped / 100.0 * (h - 12)) + 3
+                    coords.extend([x, y])
+                return coords
+
+            # Plot RAM (Purple)
+            ram_coords = make_coords(self.ram_history)
+            if len(ram_coords) >= 4:
+                c.create_line(*ram_coords, fill=COLOR_PURPLE, width=2, smooth=True)
+
+            # Plot CPU (Cyan)
+            cpu_coords = make_coords(self.cpu_history)
+            if len(cpu_coords) >= 4:
+                c.create_line(*cpu_coords, fill=COLOR_CYAN, width=2, smooth=True)
+
+            # Update Legend label text
+            if hasattr(self, "lbl_chart_legend") and self.lbl_chart_legend.winfo_exists():
+                self.lbl_chart_legend.config(
+                    text=f"━ CPU: {current_cpu}% (Cyan)   ━ RAM: {current_ram}% (Purple)"
+                )
+        except Exception as e:
+            logger.debug(f"Error drawing sparkline: {e}")
+
     def on_close_window(self):
-        """Intercepts window close button to minimize to background."""
+        """Intercepts window close button to minimize to background system tray."""
         if preferences.get("close_to_background", True):
             self.minimize_to_background()
         else:
             self.quit_app_completely()
 
     def minimize_to_background(self):
-        """Hides the GUI window while keeping the background observer running."""
+        """Hides the GUI window while keeping the background observer running in notification area."""
         self.root.withdraw()
-        try:
-            self._ensure_restore_controller()
-        except Exception:
-            pass
-
-    def _ensure_restore_controller(self):
-        """Creates a small top-level controller so the user can easily restore."""
-        if hasattr(self, "tray_top") and self.tray_top.winfo_exists():
-            return
-
-        self.tray_top = tk.Toplevel(self.root)
-        self.tray_top.title("REN Running in BG")
-        self.tray_top.geometry("310x120+40+40")
-        self.tray_top.configure(bg=COLOR_PANEL)
-        self.tray_top.resizable(False, False)
-        self.tray_top.attributes("-topmost", True)
-
-        tk.Label(
-            self.tray_top,
-            text="🪐 REN-AI Control Center in BG",
-            font=("Segoe UI", 9, "bold"),
-            fg=COLOR_CYAN,
-            bg=COLOR_PANEL,
-        ).pack(pady=(10, 2))
-
-        tk.Label(
-            self.tray_top,
-            text="Silent observer active. Window minimized.",
-            font=("Segoe UI", 8),
-            fg=COLOR_MUTED,
-            bg=COLOR_PANEL,
-        ).pack()
-
-        btn_row = tk.Frame(self.tray_top, bg=COLOR_PANEL)
-        btn_row.pack(pady=8)
-
-        btn_restore = tk.Button(
-            btn_row,
-            text="Open Control Center",
-            font=("Segoe UI", 8, "bold"),
-            bg="#1f6feb",
-            fg="#ffffff",
-            command=self.restore_from_background,
-            cursor="hand2",
-            padx=8,
+        self.tray_manager.update_tooltip(
+            f"REN-AI Control Center | {preferences.active_mode.capitalize()} Mode"
         )
-        btn_restore.pack(side=tk.LEFT, padx=4)
-
-        btn_quit = tk.Button(
-            btn_row,
-            text="Exit Completely",
-            font=("Segoe UI", 8),
-            bg=COLOR_HEADER,
-            fg=COLOR_RED,
-            command=self.quit_app_completely,
-            cursor="hand2",
-            padx=8,
-        )
-        btn_quit.pack(side=tk.LEFT, padx=4)
 
     def restore_from_background(self):
-        """Restores the main window from background."""
-        if hasattr(self, "tray_top") and self.tray_top.winfo_exists():
-            self.tray_top.destroy()
+        """Restores and focuses the main window from system tray."""
         self.root.deiconify()
         self.root.lift()
         self.root.focus_force()
 
-    def quit_app_completely(self):
-        """Completely terminates background observer and destroys GUI."""
-        if messagebox.askyesno("Exit REN", "Are you sure you want to completely stop REN-AI Control Center and exit?"):
-            observer.stop()
+    def _open_settings_panel(self):
+        """Restores main window and switches to Settings panel."""
+        self.restore_from_background()
+        self.switch_panel("settings")
+
+    def force_quit_app(self):
+        """Completely terminates background observer, tray icon, and destroys GUI without prompt."""
+        try:
+            self.tray_manager.stop()
+        except Exception as e:
+            logger.debug(f"Error stopping tray: {e}")
+
+        if hasattr(self, "single_instance") and self.single_instance:
+            try:
+                self.single_instance.release()
+            except Exception as e:
+                logger.debug(f"Error releasing single instance lock: {e}")
+
+        observer.stop()
+        try:
             self.root.destroy()
-            sys.exit(0)
+        except Exception:
+            pass
+        sys.exit(0)
+
+    def quit_app_completely(self):
+        """Prompts confirmation, completely terminates background observer and destroys GUI."""
+        if messagebox.askyesno("Exit REN", "Are you sure you want to completely stop REN-AI Control Center and exit?"):
+            self.force_quit_app()
 
 
-def launch_gui():
+def launch_gui(single_instance=None):
     """Main function to launch REN-AI Windows Control Center."""
     root = tk.Tk()
-    app = RenDesktopApp(root)
+    app = RenDesktopApp(root, single_instance=single_instance)
     root.mainloop()
 
 

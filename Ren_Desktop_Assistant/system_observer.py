@@ -49,15 +49,26 @@ except ImportError:
     from actions import action_queue, Recommendation
 
 
+try:
+    from .logger import logger
+except ImportError:
+    try:
+        from logger import logger
+    except ImportError:
+        import logging
+        logger = logging.getLogger("RenAssistant")
+
+
 class SystemObserver:
     """
-    Background observer that monitors hardware health, power transitions,
+    Continuous background daemon. Inspects hardware metrics, battery status, power schemes,
     and user environment dynamically without disturbing the user.
     """
 
     def __init__(self, check_interval: int = 10):
         self.interval = check_interval
         self._running = False
+        self._is_paused = False
         self._thread: Optional[threading.Thread] = None
         self._lock = threading.Lock()
 
@@ -67,6 +78,22 @@ class SystemObserver:
         self.previous_power_state: Any = None
         self.previous_power_plan: Optional[str] = None
         self.observation_count = 0
+
+    def pause(self) -> None:
+        """Pauses polling and recommendation generation while keeping thread alive."""
+        with self._lock:
+            self._is_paused = True
+            logger.info("SystemObserver paused.")
+
+    def resume(self) -> None:
+        """Resumes active polling and evaluation passes."""
+        with self._lock:
+            self._is_paused = False
+            logger.info("SystemObserver resumed.")
+
+    @property
+    def is_paused(self) -> bool:
+        return self._is_paused
 
     def start_background(self) -> None:
         """Starts the observer daemon in a silent background thread."""
@@ -90,7 +117,15 @@ class SystemObserver:
 
     def observe_once(self) -> Dict[str, Any]:
         """Performs a single evaluation pass across all system metrics."""
-        snapshot = get_system_snapshot()
+        if self._is_paused:
+            return {}
+
+        try:
+            snapshot = get_system_snapshot()
+        except Exception as e:
+            logger.warning(f"Error reading system snapshot in observer: {e}")
+            return {}
+
         self.observation_count += 1
 
         # Check battery & power transitions
@@ -107,9 +142,10 @@ class SystemObserver:
 
         # Update previous state
         self.previous_snapshot = snapshot
-        self.previous_battery_config = snapshot["battery"]["percent"]
-        self.previous_power_state = snapshot["battery"]["is_plugged"]
-        self.previous_power_plan = snapshot["power_profile"]
+        if "battery" in snapshot and isinstance(snapshot["battery"], dict):
+            self.previous_battery_config = snapshot["battery"].get("percent")
+            self.previous_power_state = snapshot["battery"].get("is_plugged")
+        self.previous_power_plan = snapshot.get("power_profile")
 
         return snapshot
 
@@ -118,8 +154,8 @@ class SystemObserver:
         while self._running:
             try:
                 self.observe_once()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.error(f"Error in SystemObserver loop: {e}", exc_info=False)
             time.sleep(self.interval)
 
     # --- Dynamic Evaluation Routines ---

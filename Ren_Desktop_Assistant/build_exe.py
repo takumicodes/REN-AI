@@ -106,7 +106,14 @@ def build():
         "--hidden-import", "restore_center",
         "--hidden-import", "benchmark",
         "--hidden-import", "app_gui",
+        "--hidden-import", "logger",
+        "--hidden-import", "single_instance",
+        "--hidden-import", "tray_manager",
+        "--hidden-import", "pystray",
+        "--hidden-import", "pystray._win32",
         "--hidden-import", "PIL",
+        "--hidden-import", "PIL.Image",
+        "--hidden-import", "PIL.ImageDraw",
         "--hidden-import", "psutil",
         "--hidden-import", "powerplan",
         "--hidden-import", "tkinter",
@@ -159,7 +166,7 @@ def build():
             [str(FINAL_EXE), "--version"],
             capture_output=True,
             text=True,
-            timeout=10,
+            timeout=30,
         )
         print(f"[*] Verification test exit code: {test_proc.returncode}")
         if test_proc.returncode == 0:

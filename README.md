@@ -8,23 +8,24 @@
 
 ### 1. 🖥️ REN-AI Windows Control Center (`Ren_Desktop_Assistant/`) [v1.3.0]
 * **Pure Windows Native GUI & Standalone EXE:** Launch `Ren Desktop Assistant.exe` for an instant, high-DPI cyber Control Center without command-line dependencies or external runtimes.
+* **Genuine Windows System Tray Integration:** Powered by `pystray` and `Pillow`. Minimizes cleanly to the notification area with dynamic hover tooltips (`CPU: X% | RAM: Y% | Disk: Z%`), left-click restore/minimize toggle, and right-click menu (Open, Pause, Resume, Settings, Exit).
+* **Single-Instance Enforcement & Loopback IPC Wakeup:** Windows Named Mutex (`RenControlCenterSingleInstanceMutex`) combined with a localhost socket server (`127.0.0.1:52418`). Launching a duplicate instance immediately signals the running instance to wake up, de-minimize, and focus.
 * **14 Specialized Control Centers:**
-  * 📊 **Dashboard:** Real-time hardware telemetry (CPU, RAM, Disk, Power), active context detection, and pending human-driven recommendations.
+  * 📊 **Dashboard:** Real-time hardware telemetry gauges, live Cyber Canvas sparkline charts (60s ring buffers for CPU Cyan `#00f3ff` & RAM Purple `#bc13fe`), active context detection, and pending human-driven recommendations.
   * ⚡ **Process Explorer:** Interactive process viewer with CPU/RAM sorting, search, and core Windows system shields preventing accidental OS termination.
   * 🔋 **Power Center:** 1-click power scheme switcher (Balanced, High Performance, Power Saver, Ultimate) and official HTML battery report generator.
-  * 🧹 **Storage & Cleaner:** Multi-target scan (User temp, Windows temp, shader caches, crash dumps, Delivery Optimization, thumbnail cache) + 1-click Recycle Bin purge and storage analyzer.
+  * 🧹 **Storage & Cleaner:** Multi-target scan (User temp, Windows temp, shader caches, crash dumps, Delivery Optimization, thumbnail cache) + 1-click Recycle Bin purge, storage analyzer, and directory inspector with file distribution and large files (>10MB) discovery.
   * 🚀 **Startup Manager:** Registry (HKCU/HKLM) and folder startup apps inspector with safe disable/enable toggles and rollback preservation.
   * ⚙️ **Services Manager:** Enumerate services with standard user registry fallback, core service protection, and startup type management.
   * 📦 **Apps Manager:** Installed Win32 & UWP programs inspector with publisher, version, size, and uninstaller launcher.
   * 🛠️ **Tweaks & Privacy:** Explorer tweaks (extensions, hidden files, compact view, taskbar end task) + Privacy hardening (Ad ID, telemetry, activity history) with 1-click rollback.
-  * 🌐 **Network Center:** Adapter telemetry, ping latency test, DNS resolver cache flush with verification, and active socket connections monitor.
+  * 🌐 **Network Center:** Adapter telemetry, asynchronous ping tester, DNS lookup utility, DNS resolver cache flush, Firewall profile detection, Proxy settings info, Winsock & TCP/IP stack resets, and active socket connections monitor.
   * 🩺 **Health & Restore:** Drive dirty queries, Windows System Event Log error queries, file integrity guides (SFC/DISM), and System Restore points manager & creator.
   * 🎮 **Modes & Gaming:** 4 operational profiles (Programmer, Gaming, Balanced, Performance), Developer Arsenal (winget installer, dev caches cleaner), and Chris Titus WinUtil integration.
   * 📈 **Benchmark Center:** Deterministic, offline 3-part benchmark (CPU SHA-256 rounds, RAM copy bandwidth, Disk sequential write/read) with composite scores and history tracking.
   * 📜 **Change History & Rollback:** Persistent audit log of all system changes with pre/post-state capture and 1-click rollback execution.
   * ⚙️ **Preferences & Support:** Downloads folder settings with category organization and undo, YouTube @cyan_code channel link, and GitHub community links.
 * **100% Human-Driven Agency:** `Observe -> Understand -> Explain -> Recommend -> Ask User -> Execute -> Verify -> Rollback`. Zero unsolicited chatbot slop.
-* **Single-Instance Enforcement & System Tray:** Named Windows Mutex prevents multiple copies; closing to tray continues whisper-quiet background monitoring.
 
 ### 2. 🌌 Autonomous Core HUD & Cognitive Systems
 * **Neon Cyber HUD:** High-performance frontend built with Vanilla HTML/CSS/JS via Pywebview, featuring sliding control panels, status LEDs, dynamic diagnostics indicators, and a center-stage particle dynosphere.
@@ -89,8 +90,8 @@ python Ren_Desktop_Assistant/main.py --bg
 # Recompile standalone executable (PyInstaller)
 python Ren_Desktop_Assistant/build_exe.py
 
-# Run complete 21-test verification suite
-python -m unittest Ren_Desktop_Assistant/tests/test_desktop_assistant.py
+# Run complete 52-test verification suite (100% passing)
+python -m unittest discover -s Ren_Desktop_Assistant/tests
 ```
 
 ---
